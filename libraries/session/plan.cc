@@ -30,7 +30,7 @@ void Plan::Display(){
 
 	if (this->IsTextured() == false){
 		ImageLoad iload;
-		iload.setFilename("/home/rexeno-moc/Desktop/rexeno/libraries/textures/Damier.bmp");
+		iload.setFilename("damier.bmp");
 		if(!(iload.load())){
 			exit(1);
 		}

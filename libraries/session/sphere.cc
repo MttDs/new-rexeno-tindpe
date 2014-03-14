@@ -200,7 +200,7 @@ Sphere::Display()
 {
   if (this->IsTextured() == false){
     ImageLoad iload;
-    iload.setFilename("/home/rexeno-moc/Desktop/rexeno/libraries/textures/Sphere.bmp");
+    iload.setFilename("sphere.bmp");
     if(!(iload.load())){
       exit(1);
     }

@@ -78,17 +78,16 @@ Rectangle3d::Display(){
     break;
   }
 
-  ///////////////////////////// !!
-   float x = *_height;
-   float y = *_deep;
-   float z = *_width;
-  ///////////////////////////// !!
+  float x = *_height;
+  float y = *_deep;
+  float z = *_width;
 
-  // glTranslated(*_x,*_y+x,*_z);
   glTranslated(_x->value,_y->value+y,_z->value);
   if (this->IsTextured() == false){
+
     ImageLoad iload;
-    iload.setFilename("/home/rexeno-moc/Desktop/rexeno/libraries/textures/Caisse2.bmp");
+
+    iload.setFilename("caisse.bmp");
     if(!(iload.load())){
       exit(1);
     }

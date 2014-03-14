@@ -22,7 +22,7 @@ Aircraft::Aircraft(const ShapeInfo& si,
   vm.addVariable(_veloX = new Variable(si.attributes[6]));
   vm.addVariable(_dir = new Variable(si.attributes[7]));
 
- const char *file ="/home/rexeno-moc/Desktop/rexeno/libraries/3ds/aircraft/aircraft.3ds";
+ const char *file ="aircraft/aircraft.3ds";
  
 
  if (_load3ds.Import3DS(&_model3ds, file)== false){
