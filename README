@@ -23,14 +23,16 @@ Use lower level command line (recommanded to understand what is going on) :
 On a Xenomai Box :
 cd /to/the/rexeno/source/folder
 mkdir build
-cmake ..
+cd build
+cmake ../libraries -DXENO=ON -DDIR3PARTY=/path/to/rexeno/3rdparties/linux-ububuntu-12-04-[no]xeno/target
 make
 sudo make install
 
 On a regular linux box :
 cd /to/the/rexeno/source/folder
-mkdir build
-cmake .. -DXENO=OFF -DDIR3PARTY=/path/to/rexeno/3rdparties/linux-ububuntu-12-04-[no]xeno/target
+mkdir build_xenomai
+cd build_xenomai
+cmake ../libraries -DXENO=OFF -DDIR3PARTY=/path/to/rexeno/3rdparties/linux-ububuntu-12-04-[no]xeno/target
 make
 sudo make install
 
