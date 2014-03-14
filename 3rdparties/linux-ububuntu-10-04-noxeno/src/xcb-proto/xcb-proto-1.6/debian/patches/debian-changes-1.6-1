@@ -1,0 +1,778 @@
+Description: Upstream changes introduced in version 1.6-1
+ This patch has been created by dpkg-source during the package build.
+ Here's the last changelog entry, hopefully it gives details on why
+ those changes were made:
+ .
+ xcb-proto (1.6-1) unstable; urgency=low
+ .
+   * New upstream release
+   * Switch to format 3.0
+   * Bump standard version
+ .
+ The person named in the Author field signed this changelog entry.
+Author: Julien Danjou <acid@debian.org>
+
+---
+The information above should follow the Patch Tagging Guidelines, please
+checkout http://dep.debian.net/deps/dep3/ to learn about the format. Here
+are templates for supplementary fields that you might want to add:
+
+Origin: <vendor|upstream|other>, <url of original patch>
+Bug: <url in upstream bugtracker>
+Bug-Debian: http://bugs.debian.org/<bugnumber>
+Forwarded: <no|not-needed|url proving that it has been forwarded>
+Reviewed-By: <name and email of someone who approved the patch>
+Last-Update: <YYYY-MM-DD>
+
+--- /dev/null
++++ xcb-proto-1.6/autogen.sh
+@@ -0,0 +1,12 @@
++#! /bin/sh
++
++srcdir=`dirname $0`
++test -z "$srcdir" && srcdir=.
++
++ORIGDIR=`pwd`
++cd $srcdir
++
++autoreconf -v --install || exit 1
++cd $ORIGDIR || exit $?
++
++$srcdir/configure --enable-maintainer-mode "$@"
+--- /dev/null
++++ xcb-proto-1.6/src/import.py
+@@ -0,0 +1,66 @@
++#!/usr/bin/python
++
++from xml.sax.saxutils import XMLFilterBase, XMLGenerator
++from xml.sax import make_parser
++import sys, os
++
++path = [os.path.curdir, 'extensions']
++def find_file_on_path(name):
++	for d in path:
++		test = os.path.join(d, name)
++		if os.path.isfile(test):
++			return test
++	raise OSError(errno.ENOENT, os.strerror(errno.ENOENT), name)
++
++seen = {}
++
++class ProcessImports(XMLFilterBase):
++	def setContentHandler(self, handler):
++		self.handler = handler
++		XMLFilterBase.setContentHandler(self, handler)
++
++	def ensure(self, name):
++		if not seen.has_key(name):
++			child = ProcessImports(make_parser())
++			child.setContentHandler(self.handler)
++			child.parse(find_file_on_path(name + '.xml'))
++
++	def startDocument(self):
++		pass
++	def endDocument(self):
++		pass
++
++	inimport = None
++
++	def startElement(self, name, attrs):
++		assert self.inimport is None
++		if name == 'import':
++			self.inimport = ""
++			return
++		XMLFilterBase.startElement(self, name, attrs)
++		if name == 'xcb':
++			seen[attrs['header']] = True
++			self.ensure('xproto')
++
++	def characters(self, content):
++		if self.inimport is not None:
++			self.inimport += content
++		else:
++			XMLFilterBase.characters(self, content)
++
++	def endElement(self, name):
++		if name == 'import':
++			self.ensure(self.inimport)
++			self.inimport = None
++			return
++		XMLFilterBase.endElement(self, name)
++
++out = XMLGenerator()
++importer = ProcessImports(make_parser())
++importer.setContentHandler(out)
++out.startDocument()
++if len(sys.argv) > 1:
++	importer.parse(sys.argv[1])
++else:
++	importer.parse(sys.stdin)
++out.endDocument()
+--- /dev/null
++++ xcb-proto-1.6/src/xf86vidmode.xml
+@@ -0,0 +1,464 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++Copyright (C) 2009 Open Text Corporation.  All Rights Reserved.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
++ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++Except as contained in this notice, the names of the authors or their
++institutions shall not be used in advertising or otherwise to promote the
++sale, use or other dealings in this Software without prior written
++authorization from the authors.
++-->
++
++<xcb header="xf86vidmode" extension-xname="XFree86-VidModeExtension" extension-name="XF86VidMode"
++    major-version="2" minor-version="2">
++
++    <!-- In places where there are multiple versions of the protocol, this
++	 describes version 2.2. If you do not call xcb_xf86vidmode_set_client_version()
++	 then some requests may fail and some replies may not be what you expect. -->
++
++    <typedef oldname="CARD32" newname="SYNCRANGE" />  <!-- Min and Max fixed-decimal-point values -->
++    <typedef oldname="CARD32" newname="DOTCLOCK" />   <!-- A single fixed-decimal-point value -->
++
++    <enum name="ModeFlag">
++	<item name="Positive_HSync">	<bit>0</bit></item>
++	<item name="Negative_HSync">	<bit>1</bit></item>
++	<item name="Positive_VSync">	<bit>2</bit></item>
++	<item name="Negative_VSync">	<bit>3</bit></item>
++	<item name="Interlace">		<bit>4</bit></item>
++	<item name="Composite_Sync">	<bit>5</bit></item>
++	<item name="Positive_CSync">	<bit>6</bit></item>
++	<item name="Negative_CSync">	<bit>7</bit></item>
++	<item name="HSkew">		<bit>8</bit></item>
++	<item name="Broadcast">		<bit>9</bit></item>
++	<item name="Pixmux">		<bit>10</bit></item>
++	<item name="Double_Clock">	<bit>11</bit></item>
++	<item name="Half_Clock">	<bit>12</bit></item>
++    </enum>
++
++    <enum name="ClockFlag">
++	<item name="Programable">	<bit>0</bit></item>
++    </enum>
++
++    <enum name="Permission">
++	<item name="Read">		<bit>0</bit></item>
++	<item name="Write">		<bit>1</bit></item>
++    </enum>
++
++    <struct name="ModeInfo">
++	<field type="DOTCLOCK" name="dotclock" />
++	<field type="CARD16" name= "hdisplay" />
++	<field type="CARD16" name= "hsyncstart" />
++	<field type="CARD16" name= "hsyncend" />
++	<field type="CARD16" name= "htotal" />
++	<field type="CARD32" name= "hskew" />
++	<field type="CARD16" name= "vdisplay" />
++	<field type="CARD16" name= "vsyncstart" />
++	<field type="CARD16" name= "vsyncend" />
++	<field type="CARD16" name= "vtotal" />
++	<pad bytes="4" />
++	<field type="CARD32" name="flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<field type="CARD32" name="privsize" />
++    </struct>
++
++    <request name="QueryVersion" opcode="0">
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD16" name="major_version" />
++	    <field type="CARD16" name="minor_version" />
++	</reply>
++    </request>
++
++    <request name="GetModeLine" opcode="1">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="DOTCLOCK" name="dotclock" />
++	    <field type="CARD16" name= "hdisplay" />
++	    <field type="CARD16" name= "hsyncstart" />
++	    <field type="CARD16" name= "hsyncend" />
++	    <field type="CARD16" name= "htotal" />
++	    <field type="CARD16" name= "hskew" />
++	    <field type="CARD16" name= "vdisplay" />
++	    <field type="CARD16" name= "vsyncstart" />
++	    <field type="CARD16" name= "vsyncend" />
++	    <field type="CARD16" name= "vtotal" />
++	    <pad bytes="2" />
++	    <field type="CARD32" name="flags" mask="ModeFlag" />
++	    <pad bytes="12" />
++	    <field type="CARD32" name="privsize" />
++	    <list type="CARD8" name="private">
++		<fieldref>privsize</fieldref>
++	    </list>
++	</reply>
++    </request>
++
++    <request name="ModModeLine" opcode="2">
++	<field type="CARD32" name="screen" />
++	<field type="CARD16" name= "hdisplay" />
++	<field type="CARD16" name= "hsyncstart" />
++	<field type="CARD16" name= "hsyncend" />
++	<field type="CARD16" name= "htotal" />
++	<field type="CARD16" name= "hskew" />
++	<field type="CARD16" name= "vdisplay" />
++	<field type="CARD16" name= "vsyncstart" />
++	<field type="CARD16" name= "vsyncend" />
++	<field type="CARD16" name= "vtotal" />
++	<pad bytes="2" />
++	<field type="CARD32" name="flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<field type="CARD32" name="privsize" />
++	<list type="CARD8" name="private">
++	    <fieldref>privsize</fieldref>
++	</list>
++    </request>
++
++    <request name="SwitchMode" opcode="3">
++	<field type="CARD16" name="screen" />
++	<field type="CARD16" name="zoom" />
++    </request>
++
++    <request name="GetMonitor" opcode="4">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD8" name="vendor_length" />
++	    <field type="CARD8" name="model_length" />
++	    <field type="CARD8" name="num_hsync" />
++	    <field type="CARD8" name="num_vsync" />
++	    <pad bytes="20" />
++	    <list type="SYNCRANGE" name="hsync">
++		<fieldref>num_hsync</fieldref>
++	    </list>
++	    <list type="SYNCRANGE" name="vsync">
++		<fieldref>num_vsync</fieldref>
++	    </list>
++	    <list type="char" name="vendor">
++		<fieldref>vendor_length</fieldref>
++	    </list>
++	    <list type="void" name="alignment_pad">
++		<op op="-">
++		    <op op="&amp;">
++			<op op="+">
++			    <fieldref>vendor_length</fieldref>
++			    <value> 3 </value>
++			</op>
++			<value>0xFFFFFFFC</value>
++		    </op>
++		    <fieldref>vendor_length</fieldref>
++		</op>
++	    </list>
++	    <list type="char" name="model">
++		<fieldref>model_length</fieldref>
++	    </list>
++	</reply>
++    </request>
++
++    <request name="LockModeSwitch" opcode="5">
++	<field type="CARD16" name="screen" />
++	<field type="CARD16" name="lock" />
++    </request>
++
++    <request name="GetAllModeLines" opcode="6">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD32" name="modecount" />
++	    <pad bytes="20" />
++	    <list type="ModeInfo" name="modeinfo">
++		<fieldref>modecount</fieldref>
++	    </list>
++	</reply>
++    </request>
++
++    <request name="AddModeLine" opcode="7">
++	<field type="CARD32" name="screen" />
++	<field type="DOTCLOCK" name="dotclock" />
++	<field type="CARD16" name= "hdisplay" />
++	<field type="CARD16" name= "hsyncstart" />
++	<field type="CARD16" name= "hsyncend" />
++	<field type="CARD16" name= "htotal" />
++	<field type="CARD16" name= "hskew" />
++	<field type="CARD16" name= "vdisplay" />
++	<field type="CARD16" name= "vsyncstart" />
++	<field type="CARD16" name= "vsyncend" />
++	<field type="CARD16" name= "vtotal" />
++	<pad bytes="2" />
++	<field type="CARD32" name="flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<field type="CARD32" name="privsize" />
++	<field type="DOTCLOCK" name="after_dotclock" />
++	<field type="CARD16" name= "after_hdisplay" />
++	<field type="CARD16" name= "after_hsyncstart" />
++	<field type="CARD16" name= "after_hsyncend" />
++	<field type="CARD16" name= "after_htotal" />
++	<field type="CARD16" name= "after_hskew" />
++	<field type="CARD16" name= "after_vdisplay" />
++	<field type="CARD16" name= "after_vsyncstart" />
++	<field type="CARD16" name= "after_vsyncend" />
++	<field type="CARD16" name= "after_vtotal" />
++	<pad bytes="2" />
++	<field type="CARD32" name="after_flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<list type="CARD8" name="private">
++	    <fieldref>privsize</fieldref>
++	</list>
++    </request>
++
++    <request name="DeleteModeLine" opcode="8">
++	<field type="CARD32" name="screen" />
++	<field type="DOTCLOCK" name="dotclock" />
++	<field type="CARD16" name= "hdisplay" />
++	<field type="CARD16" name= "hsyncstart" />
++	<field type="CARD16" name= "hsyncend" />
++	<field type="CARD16" name= "htotal" />
++	<field type="CARD16" name= "hskew" />
++	<field type="CARD16" name= "vdisplay" />
++	<field type="CARD16" name= "vsyncstart" />
++	<field type="CARD16" name= "vsyncend" />
++	<field type="CARD16" name= "vtotal" />
++	<pad bytes="2" />
++	<field type="CARD32" name="flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<field type="CARD32" name="privsize" />
++	<list type="CARD8" name="private">
++	    <fieldref>privsize</fieldref>
++	</list>
++    </request>
++
++    <request name="ValidateModeLine" opcode="9">
++	<field type="CARD32" name="screen" />
++	<field type="DOTCLOCK" name="dotclock" />
++	<field type="CARD16" name= "hdisplay" />
++	<field type="CARD16" name= "hsyncstart" />
++	<field type="CARD16" name= "hsyncend" />
++	<field type="CARD16" name= "htotal" />
++	<field type="CARD16" name= "hskew" />
++	<field type="CARD16" name= "vdisplay" />
++	<field type="CARD16" name= "vsyncstart" />
++	<field type="CARD16" name= "vsyncend" />
++	<field type="CARD16" name= "vtotal" />
++	<pad bytes="2" />
++	<field type="CARD32" name="flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<field type="CARD32" name="privsize" />
++	<list type="CARD8" name="private">
++	    <fieldref>privsize</fieldref>
++	</list>
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD32" name="status" />
++	    <pad bytes="20" />
++	</reply>
++    </request>
++
++    <request name="SwitchToMode" opcode="10">
++	<field type="CARD32" name="screen" />
++	<field type="DOTCLOCK" name="dotclock" />
++	<field type="CARD16" name= "hdisplay" />
++	<field type="CARD16" name= "hsyncstart" />
++	<field type="CARD16" name= "hsyncend" />
++	<field type="CARD16" name= "htotal" />
++	<field type="CARD16" name= "hskew" />
++	<field type="CARD16" name= "vdisplay" />
++	<field type="CARD16" name= "vsyncstart" />
++	<field type="CARD16" name= "vsyncend" />
++	<field type="CARD16" name= "vtotal" />
++	<pad bytes="2" />
++	<field type="CARD32" name="flags" mask="ModeFlag" />
++	<pad bytes="12" />
++	<field type="CARD32" name="privsize" />
++	<list type="CARD8" name="private">
++	    <fieldref>privsize</fieldref>
++	</list>
++    </request>
++
++    <request name="GetViewPort" opcode="11">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD32" name="x" />
++	    <field type="CARD32" name="y" />
++	    <pad bytes="16" />
++	</reply>
++    </request>
++
++    <request name="SetViewPort" opcode="12">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<field type="CARD32" name="x" />
++	<field type="CARD32" name="y" />
++    </request>
++
++    <!-- new for version 2.x  -->
++    <request name="GetDotClocks" opcode="13">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD32" name="flags" mask="ClockFlag" />
++	    <field type="CARD32" name="clocks" />
++	    <field type="CARD32" name="maxclocks" />
++	    <pad bytes="12" />
++	    <list type="CARD32" name="clock">
++		<!-- Only if flags does not include Programable:
++		    (1 - (flags & 1)) * clocks
++		-->
++		<op op="*">
++		    <op op = "-">
++			<value>1</value>
++			<op op="&amp;">
++			    <fieldref>flags</fieldref>
++			    <value>1</value>
++			</op>
++		    </op>
++		    <fieldref>clocks</fieldref>
++		</op>
++	    </list>
++	</reply>
++    </request>
++
++    <request name="SetClientVersion" opcode="14">
++	<field type="CARD16" name="major" />
++	<field type="CARD16" name="minor" />
++    </request>
++
++    <request name="SetGamma" opcode="15">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<field type="CARD32" name="red" />
++	<field type="CARD32" name="green" />
++	<field type="CARD32" name="blue" />
++	<pad bytes="12" />
++    </request>
++
++    <request name="GetGamma" opcode="16">
++	<field type="CARD16" name="screen" />
++	<pad bytes="26" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD32" name="red" />
++	    <field type="CARD32" name="green" />
++	    <field type="CARD32" name="blue" />
++	    <pad bytes="12" />
++	</reply>
++    </request>
++
++    <request name="GetGammaRamp" opcode="17">
++	<field type="CARD16" name="screen" />
++	<field type="CARD16" name="size" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD16" name="size" />
++	    <pad bytes="22" />
++	    <list type="CARD16" name="red">
++		<op op="&amp;">
++		    <op op = "+">
++			<fieldref>size</fieldref>
++			<value>1</value>
++		    </op>
++		    <value>0xFFFFFFFE</value>
++		</op>
++	    </list>
++	    <list type="CARD16" name="green">
++		<op op="&amp;">
++		    <op op = "+">
++			<fieldref>size</fieldref>
++			<value>1</value>
++		    </op>
++		    <value>0xFFFFFFFE</value>
++		</op>
++	    </list>
++	    <list type="CARD16" name="blue">
++		<op op="&amp;">
++		    <op op = "+">
++			<fieldref>size</fieldref>
++			<value>1</value>
++		    </op>
++		    <value>0xFFFFFFFE</value>
++		</op>
++	    </list>
++	</reply>
++    </request>
++
++    <request name="SetGammaRamp" opcode="18">
++	<field type="CARD16" name="screen" />
++	<field type="CARD16" name="size" />
++	<list type="CARD16" name="red">
++	    <op op="&amp;">
++		<op op = "+">
++		    <fieldref>size</fieldref>
++		    <value>1</value>
++		</op>
++		<value>0xFFFFFFFE</value>
++	    </op>
++	</list>
++	<list type="CARD16" name="green">
++	    <op op="&amp;">
++		<op op = "+">
++		    <fieldref>size</fieldref>
++		    <value>1</value>
++		</op>
++		<value>0xFFFFFFFE</value>
++	    </op>
++	</list>
++	<list type="CARD16" name="blue">
++	    <op op="&amp;">
++		<op op = "+">
++		    <fieldref>size</fieldref>
++		    <value>1</value>
++		</op>
++		<value>0xFFFFFFFE</value>
++	    </op>
++	</list>
++    </request>
++
++    <request name="GetGammaRampSize" opcode="19">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD16" name="size" />
++	    <pad bytes="22" />
++	</reply>
++    </request>
++
++    <request name="GetPermissions" opcode="20">
++	<field type="CARD16" name="screen" />
++	<pad bytes="2" />
++	<reply>
++	    <pad bytes="1" />
++	    <field type="CARD32" name="permissions" mask="Permission" />
++	    <pad bytes="20" />
++	</reply>
++    </request>
++
++    <error name="BadClock" number="0" />
++    <error name="BadHTimings" number="1" />
++    <error name="BadVTimings" number="2" />
++    <error name="ModeUnsuitable" number="3" />
++    <error name="ExtensionDisabled" number="4" />
++    <error name="ClientNotLocal" number="5" />
++    <error name="ZoomLocked" number="6" />
++
++</xcb>
+--- /dev/null
++++ xcb-proto-1.6/src/ge.xml
+@@ -0,0 +1,42 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!--
++Copyright (C) 2009 Open Text Corporation.  All Rights Reserved.
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
++ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++
++Except as contained in this notice, the names of the authors or their
++institutions shall not be used in advertising or otherwise to promote the
++sale, use or other dealings in this Software without prior written
++authorization from the authors.
++-->
++<xcb header="ge" extension-xname="Generic Event Extension" extension-name="GenericEvent"
++    major-version="1" minor-version="0">
++
++  <!-- Version 1 -->
++  <request name="QueryVersion" opcode="0">
++    <field type="CARD16" name="client_major_version" />
++    <field type="CARD16" name="client_minor_version" />
++    <reply>
++      <pad bytes="1" />
++      <field type="CARD16" name="major_version" />
++      <field type="CARD16" name="minor_version" />
++      <pad bytes="20" />
++    </reply>
++  </request>
++
++</xcb>
+--- /dev/null
++++ xcb-proto-1.6/src/type.py
+@@ -0,0 +1,74 @@
++#!/usr/bin/python
++
++from xml.sax.saxutils import XMLFilterBase, XMLGenerator
++from xml.sax.xmlreader import AttributesImpl
++from xml.sax import make_parser
++import sys
++
++def AttributesUnion(base, **values):
++	baseitems = dict(base)
++	baseitems.update(values)
++	return AttributesImpl(baseitems)
++
++class AnnotateType(XMLFilterBase):
++	scopes = []
++	map = dict([(name, [name]) for name in [
++			'BOOL', 'BYTE',
++			'CARD8', 'CARD16', 'CARD32',
++			'INT8', 'INT16', 'INT32',
++			'char', 'void',
++			'float', 'double',
++			'XID',
++		]])
++	def startScope(self, name):
++		self.scopes.insert(0, name)
++	def declareType(self, name):
++		assert ':' not in name
++		qname = self.scopes[0] + ':' + name
++		self.map.setdefault(name, []).insert(0, qname)
++	def getQualifiedType(self, name):
++		if ':' in name:
++			return name
++		names = self.map.get(name, [])
++		return names[0]
++	def endScope(self):
++		self.scopes.pop(0)
++
++	def startElement(self, name, attrs):
++		attnames = []
++		if name == 'xcb':
++			self.startScope(attrs['header'])
++		elif name in ['struct', 'union', 'xidtype', 'enum', 'event', 'eventcopy', 'error', 'errorcopy']:
++			self.declareType(attrs['name'])
++			attnames = ['name']
++			if name.endswith('copy'):
++				attnames.append('ref')
++		elif name == 'typedef':
++			self.declareType(attrs['newname'])
++			attnames = ['oldname', 'newname']
++		elif name == 'valueparam':
++			attnames = ['value-mask-type']
++		elif attrs.has_key('type'):
++			attnames = ['type']
++		newattrs = {}
++		for attname in attnames:
++			newattrs[attname] = self.getQualifiedType(attrs[attname])
++		if newattrs:
++			attrs = AttributesUnion(attrs, **newattrs)
++		XMLFilterBase.startElement(self, name, attrs)
++
++	def endElement(self, name):
++		XMLFilterBase.endElement(self, name)
++		if name == 'xcb':
++			self.endScope()
++
++annotator = AnnotateType(make_parser())
++annotator.setContentHandler(XMLGenerator())
++if len(sys.argv) > 1:
++	annotator.parse(sys.argv[1])
++else:
++	annotator.parse(sys.stdin)
++
++for name,names in annotator.map.iteritems():
++	if len(names) != 1:
++		print "<!-- warning:", name, "has the following definitions:", names, "-->"
+--- /dev/null
++++ xcb-proto-1.6/src/size.py
+@@ -0,0 +1,76 @@
++#!/usr/bin/python
++
++from xml.sax.saxutils import XMLFilterBase, XMLGenerator
++from xml.sax.xmlreader import AttributesImpl
++from xml.sax import make_parser
++import sys
++
++def AttributesUnion(base, **values):
++	baseitems = dict(base)
++	baseitems.update(values)
++	return AttributesImpl(baseitems)
++
++class AnnotateSize(XMLFilterBase):
++	types = {
++		'BYTE': 1, 'BOOL': 1,
++		'CARD8': 1, 'CARD16': 2, 'CARD32': 4,
++		'INT8': 1, 'INT16': 2, 'INT32': 4,
++		'char': 1, 'void': 1,
++		'float': 4, 'double': 8,
++		'XID': 4,
++	}
++	header = []
++	def setTypeSize(self, name, size):
++		assert not self.types.has_key(name), "size of " + name + " declared as both " + str(size) + " and " + str(self.types[name])
++		self.types[name] = size
++
++	struct = None
++	union = None
++	def startElement(self, name, attrs):
++		if name == 'xcb':
++			self.header.insert(0, attrs['header'])
++		elif name == 'field':
++			size = self.types.get(attrs['type'], 0)
++			if self.struct is not None:
++				self.totalsize += size
++			elif self.union is not None:
++				self.totalsize = max(self.totalsize, size)
++			attrs = AttributesUnion(attrs, bytes=str(size))
++		elif name == 'pad':
++			assert self.union is None
++			if self.struct is not None:
++				self.totalsize += int(attrs['bytes'])
++		elif name == 'xidtype':
++			self.setTypeSize(attrs['name'], 4)
++		elif name == 'typedef':
++			self.setTypeSize(attrs['newname'], self.types[attrs['oldname']])
++		elif name == 'struct' or name == 'union':
++			assert self.struct is None and self.union is None
++			setattr(self, name, attrs['name'])
++			self.totalsize = 0
++
++		if len(self.header) == 1 or name == 'xcb':
++			XMLFilterBase.startElement(self, name, attrs)
++
++	def characters(self, content):
++		if len(self.header) == 1:
++			XMLFilterBase.characters(self, content)
++
++	def endElement(self, name):
++		if len(self.header) == 1 or name == 'xcb':
++			XMLFilterBase.endElement(self, name)
++
++		if name == 'xcb':
++			self.header.pop(0)
++		elif name == 'struct' or name == 'union':
++			assert getattr(self, name) is not None
++			self.setTypeSize(getattr(self, name), self.totalsize)
++			setattr(self, name, None)
++			del self.totalsize
++
++annotator = AnnotateSize(make_parser())
++annotator.setContentHandler(XMLGenerator())
++if len(sys.argv) > 1:
++	annotator.parse(sys.argv[1])
++else:
++	annotator.parse(sys.stdin)

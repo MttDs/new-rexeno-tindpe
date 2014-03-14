@@ -1,0 +1,31 @@
+#!/usr/bin/make -f
+
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_BUILDDIR = obj-$(DEB_BUILD_GNU_TYPE)
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/autotools.mk
+
+$(DEB_BUILDDIR)/config.status: configure
+
+configure:
+	autoreconf -vfi
+
+DEB_MAKE_CHECK_TARGET=check
+DEB_DH_INSTALL_SOURCEDIR=debian/tmp
+DEB_DESTDIR=$(CURDIR)/debian/tmp
+
+debian/copyright: debian/copyright.debian COPYING
+	cat $+ > $@
+
+clean::
+	-rm -f debian/copyright
+	rm -f aclocal.m4 configure install-sh missing py-compile
+	rm -f $$(find -name Makefile.in)
+	rm -rf $(DEB_BUILDDIR)
+
+common-install-prehook-arch common-install-prehook-indep:: debian/copyright
+
+binary-install/python-xcbgen::
+	dh_pysupport -p$(cdbs_curpkg)
+	sed -i -e 's,^pythondir=.*,pythondir=/nonexistent,' debian/xcb-proto/usr/share/pkgconfig/xcb-proto.pc

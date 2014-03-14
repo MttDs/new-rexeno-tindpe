@@ -1,0 +1,16 @@
+Square Name Radius Angle Time_Start Time_End Red Green Blue Size StrobeId 
+Cross Name=Eye Radius=0 Angle=0 Time_Start=0 Time_End Red=255 Green=0 Blue=0 Size=0.3
+Time duration_of_trial
+WrongWindow Name=Wrong Radius Angle Time_Start Time_End Red=255 Green=0 Blue=0 Height Width Validation_Time
+CorrectWindow Name=Correct Radius Angle Time_Start Time_End Red=0 Green=255 Blue=0 Height Width Validation_Time
+FixationWindow Name=Fixate Radius Angle Time_Start Time_End Red=0 Green=0 Blue=255 Height Width Validation_Time
+Variable Name Values
+NeutralWindow Name=Neutral Radius Angle Time_Start Time_End Red=0 Green=255 Blue=255 Height Width
+KeyboardWaiter Name Radius Angle Time_Start Time_End
+Circle Name Radius Angle Time_Start Time_End Red Green Blue Size
+X Name Radius Angle Time_Start Time_End Red Green Blue Size
+Cadre Name Radius Angle Time_Start Time_End Red Green Blue Hauteur Largeur
+Rectangle Name Radius Angle Time_Start Time_End Red Green Blue Hauteur Largeur Alpha
+Cross_Y Name=Respi Radius=0 Angle=0 Time_Start=0 Time_End Red=255 Green=0 Blue=0 Size=0.3
+RedoWindow Name=Redo Radius Angle Time_Start Time_End Red=255 Green=255 Blue=0 Height Width Validation_Time
+

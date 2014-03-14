@@ -1,0 +1,8 @@
+#! /bin/sh
+
+# usage : rexeno-create-protocole <name>
+regularFiles='/usr/rexeno/'
+
+
+mkdir $1
+cp ${regularFiles}/* $1

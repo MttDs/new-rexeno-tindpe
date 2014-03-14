@@ -1,0 +1,11 @@
+prefix=/home/xeno1/rexeno/rexeno/3rdparties/linux-ububuntu-10-04-noxeno/target/xcb-glx0
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: XCB Screensaver
+Description: XCB Screensaver Extension
+Version: 1.5
+Requires: xcb
+Libs: -L${libdir} -lxcb-screensaver
+Cflags: -I${includedir}

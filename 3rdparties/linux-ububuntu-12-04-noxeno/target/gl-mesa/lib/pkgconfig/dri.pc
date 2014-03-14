@@ -1,0 +1,11 @@
+prefix=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa
+exec_prefix=${prefix}
+libdir=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa/lib
+includedir=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa/include
+dridriverdir=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa/lib/dri
+
+Name: dri
+Description: Direct Rendering Infrastructure
+Version: 8.0.4
+Requires.private: libdrm >= 2.4.24
+Cflags: -I${includedir}

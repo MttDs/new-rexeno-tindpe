@@ -1,0 +1,36 @@
+Index: libx11/nls/compose.dir.pre
+===================================================================
+--- libx11.orig/nls/compose.dir.pre	2009-12-04 11:47:39.000000000 +0200
++++ libx11/nls/compose.dir.pre	2009-12-04 11:47:39.000000000 +0200
+@@ -425,6 +425,7 @@
+ en_US.UTF-8/Compose:		ks_IN@devanagari.UTF-8
+ en_US.UTF-8/Compose:		kw_GB.UTF-8
+ en_US.UTF-8/Compose:		ky_KG.UTF-8
++en_US.UTF-8/Compose:		la_AU.UTF-8
+ en_US.UTF-8/Compose:		lo_LA.UTF-8
+ en_US.UTF-8/Compose:		lt_LT.UTF-8
+ en_US.UTF-8/Compose:		lv_LV.UTF-8
+Index: libx11/nls/locale.alias.pre
+===================================================================
+--- libx11.orig/nls/locale.alias.pre	2009-12-04 11:47:39.000000000 +0200
++++ libx11/nls/locale.alias.pre	2009-12-04 11:47:39.000000000 +0200
+@@ -779,6 +779,7 @@
+ ky_KG:							ky_KG.UTF-8
+ ky_KG.utf8:						ky_KG.UTF-8
+ ky_KG.UTF-8:					ky_KG.UTF-8
++la_AU.utf8:					la_AU.UTF-8
+ lo:						lo_LA.MULELAO-1
+ lo_LA:						lo_LA.MULELAO-1
+ lo_LA.cp1133:					lo_LA.IBM-CP1133
+Index: libx11/nls/locale.dir.pre
+===================================================================
+--- libx11.orig/nls/locale.dir.pre	2009-12-04 11:47:38.000000000 +0200
++++ libx11/nls/locale.dir.pre	2009-12-04 11:47:39.000000000 +0200
+@@ -415,6 +415,7 @@
+ ko_KR.UTF-8/XLC_LOCALE:			ko_KR.UTF-8
+ en_US.UTF-8/XLC_LOCALE:			kw_GB.UTF-8
+ en_US.UTF-8/XLC_LOCALE:			ky_KG.UTF-8
++en_US.UTF-8/XLC_LOCALE:			la_AU.UTF-8
+ en_US.UTF-8/XLC_LOCALE:			lo_LA.UTF-8
+ en_US.UTF-8/XLC_LOCALE:			lt_LT.UTF-8
+ en_US.UTF-8/XLC_LOCALE:			lv_LV.UTF-8

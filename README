@@ -1,0 +1,59 @@
+== Introduction ==
+
+This is the new version of rexeno.
+It is designed to become the 1.0 version.
+Enjoy !
+
+== Configuration ==
+sudo apt-get install qt-sdk
+
+== TODO ==
+3rdparties : add libxcb.so
+sudo apt-get install libxcb-glx0-dev
+sudo apt-get install libnvidia-current-dev
+sudo apt-get install libgl1-mesa-dev
+sudo apt-get install xcb-proto
+sudo apt-get install python-xcb-gen
+=> j'ai installé des sources libxcb-glx/
+
+== Installation Rexeno Libraries ==
+
+Use lower level command line (recommanded to understand what is going on) :
+
+On a Xenomai Box :
+cd /to/the/rexeno/source/folder
+mkdir build
+cmake ..
+make
+sudo make install
+
+On a regular linux box :
+cd /to/the/rexeno/source/folder
+mkdir build
+cmake .. -DXENO=OFF -DDIR3PARTY=/path/to/rexeno/3rdparties/linux-ububuntu-12-04-[no]xeno/target
+make
+sudo make install
+
+== Create a new protocole from scratch ==
+
+Once the rexeno project installed, you can have access to several tools to create you new protocole :
+
+
+== Trace Information == 
+
+Inside the conf trial you can adjust how verbose the logging
+file will be by attributing an integer value to the traceLevel variable.
+
+0 : log nothing
+1 : log important information, errors, etc
+2 : log EVERYTHING and every input/output, shapes size, etc
+== Code ==
+
+= Conventions =
+
+Class and Methods begin with uppercase
+Fields begin with minuscule
+
+privates : start with underscore
+
+Author : Hadrien CARON

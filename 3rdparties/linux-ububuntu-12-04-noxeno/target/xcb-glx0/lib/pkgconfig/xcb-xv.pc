@@ -1,0 +1,11 @@
+prefix=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/xcb-glx0
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: XCB Xv
+Description: XCB Xv Extension
+Version: 1.8.1
+Requires: xcb xcb-shm
+Libs: -L${libdir} -lxcb-xv
+Cflags: -I${includedir}

@@ -1,0 +1,32 @@
+--- Installation ---
+
+
+--- Create a new protocol ---
+
+
+-- Tune output --
+
+- Log -
+
+Inside the conf trial you can adjust how verbose the logging
+file will be by attributing an integer value to the traceLevel value.
+
+10 - Debug mode : log is also sent to cout
+9 - Everything : 
+  * Each and every displaying is saved (if a square is displayed on 3 consecutive frames,
+                                       then it is recorded 3 times)
+  * Every shape constructor is logged
+8 - Each and every displaying is saved (if a square is displayed on 3 consecutive frames,
+                                       then it is recorded 3 times)
+7 - Only subject-visible shapes are recorder.
+0 - Empty Log
+
+--- Code ---
+
+-- Conventions --
+
+Class and Methods begin with uppercase
+Fields begin with minuscule
+
+privates : start with underscore
+

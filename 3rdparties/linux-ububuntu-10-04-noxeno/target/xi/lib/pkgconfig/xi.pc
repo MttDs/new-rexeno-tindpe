@@ -1,0 +1,12 @@
+prefix=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/xi
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Xi
+Description: X Input Extension Library
+Version: 1.6.0
+Requires: inputproto
+Requires.private: x11 xext
+Cflags: -I${includedir}
+Libs: -L${libdir} -lXi

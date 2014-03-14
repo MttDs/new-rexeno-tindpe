@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structreply__list.html" title="reply_list" alt="" coords="5,117,80,147"/>
+<area shape="rect" id="node5" href="$structpending__reply.html" title="pending_reply" alt="" coords="157,117,259,147"/>
+<area shape="rect" id="node8" href="$structreader__list.html" title="reader_list" alt="" coords="336,117,419,147"/>
+<area shape="rect" id="node11" href="$structevent__list.html" title="event_list" alt="" coords="496,117,573,147"/>
+<area shape="rect" id="node13" href="$structxcb__generic__event__t.html" title="Generic event." alt="" coords="464,5,605,35"/>
+<area shape="rect" id="node16" href="$struct__xcb__map.html" title="_xcb_map" alt="" coords="651,117,733,147"/>
+<area shape="rect" id="node18" href="$structnode.html" title="node" alt="" coords="667,5,717,35"/>
+</map>

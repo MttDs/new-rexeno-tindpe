@@ -1,0 +1,17 @@
+# DO NOT DELETE
+
+glew.o: ../../include/GL/glew.h /usr/include/stdint.h /usr/include/features.h
+glew.o: /usr/include/bits/predefs.h /usr/include/sys/cdefs.h
+glew.o: /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h
+glew.o: /usr/include/gnu/stubs-32.h /usr/include/bits/wchar.h
+glew.o: ../../include/GL/glu.h ../../include/GL/gl.h ../../include/GL/glxew.h
+glew.o: /usr/include/X11/Xlib.h /usr/include/sys/types.h
+glew.o: /usr/include/bits/types.h /usr/include/bits/typesizes.h
+glew.o: /usr/include/time.h /usr/include/endian.h /usr/include/bits/endian.h
+glew.o: /usr/include/bits/byteswap.h /usr/include/sys/select.h
+glew.o: /usr/include/bits/select.h /usr/include/bits/sigset.h
+glew.o: /usr/include/bits/time.h /usr/include/sys/sysmacros.h
+glew.o: /usr/include/bits/pthreadtypes.h /usr/include/X11/X.h
+glew.o: /usr/include/X11/Xfuncproto.h /usr/include/X11/Xosdefs.h
+glew.o: /usr/include/X11/Xutil.h /usr/include/X11/keysym.h
+glew.o: /usr/include/X11/keysymdef.h /usr/include/X11/Xmd.h

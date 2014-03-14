@@ -1,0 +1,21 @@
+	if (name=="Square"){
+		id=1;
+	}
+	else if (name=="Cross"){
+		id=2;
+	}
+	else if (name=="WrongWindow"){
+		id=3;
+	}
+	else if (name=="CorrectWindow"){
+		id=4;
+	}
+	else if (name=="NeutralWindow"){
+		id=5;
+	}
+	else if (name=="FixationWindow"){
+		id=6;
+	}
+	else if (name=="Sphere"){
+		id=7;
+	}

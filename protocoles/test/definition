@@ -1,0 +1,12 @@
+name= TEST
+logLevel= 9
+
+| PROTO1 300 0 0.5 0 0 1 1.8 0 0 0
+> Plan Plan 0 0 0 -1 40 80 40
+> Sphere       Sphere1    -1.5 0  -3  0 145 20 20 0.2 0.8 0 0 1 0
+> Sphere       Sphere2     0   0  -1  0 60 20 20 0.2 0.4 0 0.8 0 2
+> Rectangle3d  Rectangle1 -1   0  -2  15   -1 0.2 0.2 0.2   0 1 1 0
+> Rectangle3d  Rectangle2  1   0  -1  50   -1 0.2 0.2 0.2   0 1 1 0
+> Aircraft     Aircraft1   0   0   0   0   -1 0.3 1
+;
+

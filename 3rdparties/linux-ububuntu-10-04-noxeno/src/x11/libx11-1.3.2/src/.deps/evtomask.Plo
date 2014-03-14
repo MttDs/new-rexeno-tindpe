@@ -1,0 +1,5 @@
+evtomask.lo: evtomask.c config.h /usr/include/X11/X.h
+
+config.h:
+
+/usr/include/X11/X.h:

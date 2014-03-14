@@ -1,0 +1,19 @@
+#! /bin/sh
+
+sudo ./session_name.sh
+nvidia-settings --load-config-only
+xset s off
+sudo analogyBindDriver.sh
+
+dirname=`date +%F-%kh%Mmn | sed -E 's/\ /-/g' | sed -E 's/:/-/g'`
+if [ -e "session_name.txt" ] ;
+then
+    dirname=`cat session_name.txt`
+    rm session_name.txt
+fi
+
+
+path=`pwd`
+
+sudo ./display
+

@@ -1,0 +1,13 @@
+prefix=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa
+exec_prefix=${prefix}
+libdir=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa/lib
+includedir=/home/hadrien/Bureau/Work/GITs/xenomai/newRexeno/3rdparties/linux-ububuntu-12-04-noxeno/target/gl-mesa/include
+
+Name: glu
+Description: Mesa OpenGL Utility library
+Requires: gl
+Requires.private: 
+Version: 8.0.4
+Libs: -L${libdir} -lGLU
+Libs.private: -lm 
+Cflags: -I${includedir} 

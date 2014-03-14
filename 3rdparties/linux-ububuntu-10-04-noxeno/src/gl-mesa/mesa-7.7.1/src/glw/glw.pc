@@ -1,0 +1,13 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=/usr/local/lib
+includedir=/usr/local/include
+
+Name: glw
+Description: Mesa OpenGL widget library
+Requires: gl
+Requires.private: 
+Version: 1.0.0
+Libs: -L${libdir} -lGLw
+Libs.private: 
+Cflags: -I${includedir} 

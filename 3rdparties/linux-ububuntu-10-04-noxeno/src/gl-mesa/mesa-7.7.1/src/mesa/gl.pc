@@ -1,0 +1,12 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=/usr/local/lib
+includedir=/usr/local/include
+
+Name: gl
+Description: Mesa OpenGL library
+Requires.private: 
+Version: 7.7.1
+Libs: -L${libdir} -lGL
+Libs.private: 
+Cflags: -I${includedir} 
