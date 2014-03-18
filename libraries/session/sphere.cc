@@ -23,21 +23,23 @@ Sphere::Sphere(const ShapeInfo& si,
   vm.addVariable(_x = new Variable(si.attributes[1]));
   vm.addVariable(_y = new Variable(si.attributes[2]));
   vm.addVariable(_z = new Variable(si.attributes[3]));
-  vm.addVariable(_frameStart = new Variable(si.attributes[4]));
-  vm.addVariable(_frameEnd = new Variable(si.attributes[5]));
+  vm.addVariable(_randomX = new Variable(si.attributes[4]));
+  vm.addVariable(_randomZ = new Variable(si.attributes[5])); 
+  vm.addVariable(_frameStart = new Variable(si.attributes[6]));
+  vm.addVariable(_frameEnd = new Variable(si.attributes[7]));
   vm.addVariable(_R = new Variable(255));
   vm.addVariable(_G = new Variable(255));
   vm.addVariable(_B = new Variable(255));
-  vm.addVariable(_stacks = new Variable(si.attributes[6]));
-  vm.addVariable(_slices = new Variable(si.attributes[7]));
-  vm.addVariable(_radius = new Variable(si.attributes[8]));
-  vm.addVariable(_veloX = new Variable(si.attributes[9]));
-  vm.addVariable(_veloY = new Variable(si.attributes[10]));
-  vm.addVariable(_veloZ = new Variable(si.attributes[11]));
-  vm.addVariable(_dirX = new Variable(si.attributes[12]));
-  vm.addVariable(_dirZ = new Variable(si.attributes[13]));
+  vm.addVariable(_stacks = new Variable(si.attributes[8]));
+  vm.addVariable(_slices = new Variable(si.attributes[9]));
+  vm.addVariable(_radius = new Variable(si.attributes[10]));
+  vm.addVariable(_veloX = new Variable(si.attributes[11]));
+  vm.addVariable(_veloY = new Variable(si.attributes[12]));
+  vm.addVariable(_veloZ = new Variable(si.attributes[13]));
+  
 
   _angleX = 0.0f;
+  _angleV = 0.0f;
   _angleY = 0.0f;
   _angleZ = 0.0f;
 
@@ -49,7 +51,7 @@ Sphere::Sphere(const ShapeInfo& si,
 
   SphereShadow* s = new SphereShadow(*_radius, *_z, *_stacks, true);
   _shadow = s;
-
+  /*
   if (_dirX->value == (-1)){
     _randomDir = true;
     RandomDir();
@@ -58,13 +60,10 @@ Sphere::Sphere(const ShapeInfo& si,
     _randomDir = false;
   }
   
-  int nbFrame = 600;//_frameEnd->value-_frameStart->value; 
-  double sec = nbFrame/60;
-  float Xend = sec*_veloX->value;
-  float Zend = sec*_veloZ->value;
-   _anglePos = atan(Xend/Zend)*360/(2*M_PI);
-
-   // printf("Nb frame %d time %f X %f Z %f %f\n", nbFrame, sec, Xend, Zend, _anglePos);
+  if (_randomX->value != 0){
+   printf("number => %f\n", _getRandomNumber(_x->value, _randomX->value));
+  }
+  */
 
 }
 
@@ -111,88 +110,21 @@ Sphere::React2input(Status& s,
 
   session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
  
-  float moveX = *_veloX/60;
-  float angleX = moveX / *_radius*180.0 / M_PI;
+  float veloV = sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
+  float moveV = veloV/60.0;
 
+  _angleV+= moveV/ *_radius*180.0 / M_PI;
 
-  float moveZ = *_veloZ/60;
-  float angleZ = moveZ / *_radius*180.0 / M_PI;
+  float OrientV=atan2((*_veloZ),(*_veloX));
+  float OrientRot=OrientV-(M_PI/2.0);
+  
+  RotAxe[0]=cos(OrientRot);
+  RotAxe[1]=sin(OrientRot);
 
-  //double nb = 0.0;
- 
-  if (_dirX->value == 1){
-   
-    _angleX = _angleX-angleX;   
-    if (_angleX<0){
-      //    nb = 360.0 + _angleX;
-      //  _angleX=nb;
-    }
-    *_x = *_x+moveX;
-    
-    if (_dirZ->value==1){
-      _angleZ = _angleZ-angleZ;
-      if(_angleZ<0){
-	//	nb = 0.0 + _angleZ;
-	//	_angleZ=nb;
-      }
+  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
-      *_z = *_z-moveZ;
-    }
-    else if (_dirZ->value==2){
-      _angleZ = _angleZ+angleZ;
-      if(_angleZ<0){
-	//nb = 360.0 + _angleZ;
-	//_angleZ=nb;
-      }
-
-      *_z = *_z+moveZ;
-    }
-  }
-  else if (_dirX->value == 2){
-
-    _angleX = _angleX+angleX;
-    if (_angleX<0){
-      // nb = 360 + _angleX;
-      // _angleX=nb;
-    }
-    *_x = *_x-moveX;
-    
-
-    if (_dirZ->value == 1){
-      _angleZ = _angleZ - angleZ;
-      if (_angleZ<0.0){
-	//	nb = 
-      }
-      _z->value = _z->value-moveZ;
-    }
-    else if (_dirZ->value == 2){
-      _angleZ = _angleZ + angleZ;
-      if (_angleZ>360.0){
-	//nb = 360.0-_angleZ;
-	//_angleZ = nb;
-      }
-      _z->value = _z->value+moveZ;
-    }
-
-  }
-  else if (_dirX->value == 0){
-    if (_dirZ->value==1){
-      _angleZ = _angleZ + angleZ;
-      if (_angleZ>360.0){
-	//nb = 360.0-_angleZ;
-	//_angleZ = nb;
-      }
-      _z->value = _z->value+moveZ;
-    }
-    else if (_dirZ->value==2){
-      _angleZ = _angleZ - angleZ;
-      if (_angleZ<0.0){
-	//	nb = 
-      }
-      _z->value = _z->value-moveZ;
-    }
-  }
-
+  *_x = *_x+(moveV*cos(OrientV));
+  *_z = *_z+(moveV*sin(OrientV));
 }
 
 void
@@ -220,32 +152,21 @@ Sphere::Display()
   }
 
   glPushMatrix();
-  glColor3f(1.0, 1.0, 1.0);
 
   glEnable( GL_TEXTURE_2D );
+
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
   
-  // glTranslatef(0,*_radius,0);
-   glTranslatef(*_x,*_radius+*_y,*_z);
+  glTranslatef(*_x,*_radius+*_y,*_z);
+  glRotatef(_angleV,RotAxe[0],0,RotAxe[1]);
   
-  if ((_dirX->value != 0) && (_dirZ->value == 0)){
-    glRotatef(_angleX,0,0,1);
-  }
-  else if ((_dirX->value == 0) && (_dirZ->value != 0)){
-    glRotatef(_angleZ,1,0,0);
-  }
-  else if ((_dirX->value != 0) && (_dirZ->value != 0)){
-    glRotatef(_angleZ,1,0,1);
-  }
-
-  glRotatef(_anglePos,1,0,0);
-
+  glRotated(90.0f,1,0,0);
   gluSphere(_params, *_radius, *_stacks, *_slices);
-
-  glPopMatrix();
 
   glBindTexture(GL_TEXTURE_2D, 0);
   glDisable( GL_TEXTURE_2D );
+
+  glPopMatrix();
 
   _shadow->setPos(*_x, *_y, *_z);
   _shadow->Display();
@@ -253,6 +174,10 @@ Sphere::Display()
 
 void
 Sphere::Reset(){
+
+  _angleX = 0.0;
+  _angleY = 0.0;
+  _angleZ = 0.0;
 
   *_x = _initX;
   *_y = _initY;
@@ -268,8 +193,9 @@ Sphere::Reset(){
 
 void
 Sphere::RandomDir(){
+  /*
   int dir = rand()%(3-1)+1;
-  *_dirX = dir;
+  *_dirX = dir;*/
 }
 void
 Sphere::DisplayMonitor()

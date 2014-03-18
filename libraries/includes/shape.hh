@@ -69,8 +69,8 @@ public:
   virtual void Reset();
   virtual string getAttrsToString();
   double RoundNdecimal(int n, float nb);
-
   bool IsTextured(){ return _istexured;}
+
 
 protected:
   // Use these functions for opengl's drawing scale. 
@@ -78,6 +78,7 @@ protected:
   double _demiHorizontal(); // inside sub square-screen
   double _xGL(); // inside sub square-screen
   double _yGL(); // inside sub square-screen
+  float _getRandomNumber(float pos, float nb);
 
   int _id;
 

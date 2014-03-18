@@ -29,8 +29,6 @@ public:
   string getAttrsToString();
 
 protected:
-  float _anglePos; /* deg */
-
   float _angleX;
   float _angleY;
   float _angleZ;
@@ -39,7 +37,12 @@ protected:
   float _initY;
   float _initZ;
 
+  float _angleV; 
+  float RotAxe[2];
   bool _randomDir;
+  
+  Variable* _randomX;
+  Variable* _randomZ;
 
   Variable* _slices;
   Variable* _stacks;
@@ -50,8 +53,7 @@ protected:
   Variable* _veloZ;
 
   Variable* _z;
-  Variable* _dirX;
-  Variable* _dirZ;
+
   SphereShadow* _shadow;
 
 };

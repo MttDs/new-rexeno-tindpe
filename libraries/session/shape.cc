@@ -16,19 +16,19 @@ using boost::lexical_cast;
 void
 Shape::Display()
 {
-	double xGL = _xGL();
-	double yGL = _yGL();
-	double demi_horizontal = _demiHorizontal();
-	double demi_vertical = _demiVertical();
-	glDisable(GL_LIGHTING);
-	glBegin(GL_QUADS);
-		glColor3ub(*_R,*_G,*_B);
-		glVertex3d(xGL-demi_horizontal, yGL-demi_vertical,0.f);
-		glVertex3d(xGL+demi_horizontal, yGL-demi_vertical,0.f);
-		glVertex3d(xGL+demi_horizontal, yGL+demi_vertical,0.f);
-		glVertex3d(xGL-demi_horizontal, yGL+demi_vertical,0.f);
-	glEnd();
-	glEnable(GL_LIGHTING);
+  double xGL = _xGL();
+  double yGL = _yGL();
+  double demi_horizontal = _demiHorizontal();
+  double demi_vertical = _demiVertical();
+  glDisable(GL_LIGHTING);
+  glBegin(GL_QUADS);
+  glColor3ub(*_R,*_G,*_B);
+  glVertex3d(xGL-demi_horizontal, yGL-demi_vertical,0.f);
+  glVertex3d(xGL+demi_horizontal, yGL-demi_vertical,0.f);
+  glVertex3d(xGL+demi_horizontal, yGL+demi_vertical,0.f);
+  glVertex3d(xGL-demi_horizontal, yGL+demi_vertical,0.f);
+  glEnd();
+  glEnable(GL_LIGHTING);
 }
 
 /** 
@@ -56,7 +56,7 @@ Shape::Displayable(int frameId)
 
   res &= (frameId >= frameStart()) || (frameStart() == -1);
   res &= (frameId <= frameEnd()) || (frameEnd() == -1);
- // PDEBUG("Shape::Displayable ", "shape " << name() << " is displayable: " << res << " start " << frameStart() << " end " << frameEnd());
+  // PDEBUG("Shape::Displayable ", "shape " << name() << " is displayable: " << res << " start " << frameStart() << " end " << frameEnd());
   return res;
 }
 
@@ -158,24 +158,24 @@ Shape::React2input(Status& s,
 
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
-  {
-    _logged = true;
-	string s;
-	ostringstream ostr;
-	ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
-	s = ostr.str();
-	session->recorder->Save(s, "events.txt");
-  }
+    {
+      _logged = true;
+      string s;
+      ostringstream ostr;
+      ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
+      s = ostr.str();
+      session->recorder->Save(s, "events.txt");
+    }
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
-  {
-	string s;
-	ostringstream ostr;
-	ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
-	s = ostr.str();
-	session->recorder->Save(s, "events.txt");
-    _loggedEnd = true;
-  }
+    {
+      string s;
+      ostringstream ostr;
+      ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
+      s = ostr.str();
+      session->recorder->Save(s, "events.txt");
+      _loggedEnd = true;
+    }
 
   session->recorder->Save(_name + "\n" + lexical_cast<string>(this->_x->value) + "\n" + lexical_cast<string>(this->_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
 
@@ -190,67 +190,102 @@ Shape::React2input(Status& s,
 void
 Shape::initTexture(int sizeX, int sizeY, char * data){
 
-	glGenTextures(1, &this->_texture[0]);// Donne numero de texture
-	glBindTexture(GL_TEXTURE_2D, this->_texture[0]); //Selectionne la texture
+  glGenTextures(1, &this->_texture[0]);// Donne numero de texture
+  glBindTexture(GL_TEXTURE_2D, this->_texture[0]); //Selectionne la texture
 
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glTexImage2D(
-		GL_TEXTURE_2D,		//Type de texture
-		0,					//Mipmap : aucun
-		3,					//Couleurs: 4
-		sizeY,					//Largeur: 2
-		sizeX,					//Hauteur: 2
-		0,					//Largeur des bords: 0
-		GL_RGB,			//RGBA format
-		GL_UNSIGNED_BYTE,	//Type des couleurs
-		data			//Adresse de l'image
-	);
+  glTexImage2D(
+	       GL_TEXTURE_2D,		//Type de texture
+	       0,					//Mipmap : aucun
+	       3,					//Couleurs: 4
+	       sizeY,					//Largeur: 2
+	       sizeX,					//Hauteur: 2
+	       0,					//Largeur des bords: 0
+	       GL_RGB,			//RGBA format
+	       GL_UNSIGNED_BYTE,	//Type des couleurs
+	       data			//Adresse de l'image
+	       );
 
-	if (_texture[0] != 0){
-		_istexured = true;
-	}
-	else{
-		printf("ERROR ! Impossible d'appliquer la texture!");
-		exit(0);
-	}
+  if (_texture[0] != 0){
+    _istexured = true;
+  }
+  else{
+    printf("ERROR ! Impossible d'appliquer la texture!");
+    exit(0);
+  }
 }
 
 void
 Shape::Reset(){
 
-//	_logged = false;
-//	_loggedEnd = false;
+  //	_logged = false;
+  //	_loggedEnd = false;
 }
+
+
+string
+Shape::getAttrsToString(){
+  string s;
+  ostringstream ostr;
+  ostr << _name << ": Width "<< *_width <<" Height "<<*_height << " Pos ["<< *_x <<", "<< *_y <<"] RGB ["<<*_R<<", "<<*_G<<", "<<*_B<<"]";
+  s = ostr.str();
+  return s;
+}
+
+double
+Shape::RoundNdecimal(int n, float nb){
+  int i, res = 1;
+
+  for (i=0;i<n;i++){
+    res *= 10;
+  }
+
+  return floor((nb*res+0.5)/res*100)/100;
+}
+
+float 
+Shape::_getRandomNumber(float pos, float nb){
+
+  const char* chars = _name.c_str();
+  unsigned int i = 0, sum = 0, tmp = 0;
+  int seed = 0;
+  float min = (float) (pos-(nb/2.0))*1000;
+  float max = (float) (pos+(nb/2.0))*1000 ;
+  float newPos = 0.0;
+
+  if (max<min){
+    tmp = max;
+    max = min;
+    min = tmp;
+  }
+
+  printf("min => %f max => %f\n", min, max);
+
+  for(i=0; i < strlen(chars); i++){
+    sum += (int) chars[i]*2;
+  }
+
+  seed = (int) (std::time(0)+sum);
+  std::srand(seed);
+  cout << "Le seed =>  " << seed << endl;
+
+  newPos = (std::rand() % (int)max + (int)min);
+  newPos = newPos/1000;
+  cout << "La nouvelle position => " << newPos << endl; 
+  cout << endl;
+  return newPos;
+}
+
 
 /**
  * Abstract Constructor : inits some bool values
  *
  */
-
-string
-Shape::getAttrsToString(){
-	string s;
-	ostringstream ostr;
-	ostr << _name << ": Width "<< *_width <<" Height "<<*_height << " Pos ["<< *_x <<", "<< *_y <<"] RGB ["<<*_R<<", "<<*_G<<", "<<*_B<<"]";
-	s = ostr.str();
-	return s;
-}
-
-double
-Shape::RoundNdecimal(int n, float nb){
-	int i, res = 1;
-
-	for (i=0;i<n;i++){
-		res *= 10;
-	}
-
-	return floor((nb*res+0.5)/res*100)/100;
-}
 Shape::Shape()
 {
   _id = 0;

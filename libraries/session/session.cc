@@ -222,7 +222,7 @@ Session::displayHeader()
 	displayFrame();
       }
       if (loop==1){
-	displayFrame();
+	//	displayFrame();
 	/* Double le nombre de frame + 
 	   ne se place pas correct + 
 	   enlever les intéractions inutiles */
@@ -286,9 +286,9 @@ Session::run(int argc,
   glutInitWindowPosition(0, 0);
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");;
 
-  glutGameModeString("3840x1080:32@60");
-  glutEnterGameMode();
-  glutFullScreen();
+  //  glutGameModeString("3840x1080:32@60");
+  // glutEnterGameMode();
+  //glutFullScreen();
   //glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
   glutDisplayFunc (displayRexeno);
