@@ -153,27 +153,24 @@ Shape::React2input(Status& s,
 {
 
   Session* session = Session::getInstance();
-
+  string str;
+  ostringstream ostr;
 
 
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
     {
       _logged = true;
-      string s;
-      ostringstream ostr;
       ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
-      s = ostr.str();
-      session->recorder->Save(s, "events.txt");
+      str = ostr.str();
+      session->recorder->Save(str, "events.txt");
     }
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
-      string s;
-      ostringstream ostr;
       ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
-      s = ostr.str();
-      session->recorder->Save(s, "events.txt");
+      str = ostr.str();
+      session->recorder->Save(str, "events.txt");
       _loggedEnd = true;
     }
 
@@ -250,37 +247,38 @@ Shape::RoundNdecimal(int n, float nb){
 
 float 
 Shape::_getRandomNumber(float pos, float nb){
+  std::ostringstream oss;
 
-  const char* chars = _name.c_str();
+  oss << rand();
+  std::string result = oss.str();
+  const char* chars = result.c_str();
+
   unsigned int i = 0, sum = 0, tmp = 0;
   int seed = 0;
-  float min = (float) (pos-(nb/2.0))*1000;
-  float max = (float) (pos+(nb/2.0))*1000 ;
+  float min = (float) (pos-(nb));
+  float max = (float) (pos+(nb));
   float newPos = 0.0;
 
   if (max<min){
-    tmp = max;
-    max = min;
-    min = tmp;
+	tmp = max;
+	max = min;
+	min = tmp;
   }
 
-  printf("min => %f max => %f\n", min, max);
-
   for(i=0; i < strlen(chars); i++){
-    sum += (int) chars[i]*2;
+	sum += (int) chars[i]*2;
   }
 
   seed = (int) (std::time(0)+sum);
-  std::srand(seed);
-  cout << "Le seed =>  " << seed << endl;
+  srand(seed);
+ // cout << "Le seed =>  " << seed << endl;
 
-  newPos = (std::rand() % (int)max + (int)min);
-  newPos = newPos/1000;
-  cout << "La nouvelle position => " << newPos << endl; 
+  newPos = (rand() * (max - min) / RAND_MAX) + min;
+  newPos = newPos;
+//  cout << "La nouvelle position => " << newPos << endl;
   cout << endl;
-  return newPos;
+  return RoundNdecimal(2,newPos);
 }
-
 
 /**
  * Abstract Constructor : inits some bool values

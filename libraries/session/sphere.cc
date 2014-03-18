@@ -59,12 +59,8 @@ Sphere::Sphere(const ShapeInfo& si,
   else{
     _randomDir = false;
   }
-  
-  if (_randomX->value != 0){
-   printf("number => %f\n", _getRandomNumber(_x->value, _randomX->value));
-  }
-  */
-
+    */
+  RandomPosXZ();
 }
 
 Sphere::~Sphere()
@@ -81,24 +77,25 @@ Sphere::React2input(Status& s,
 {
 
   Session* session = Session::getInstance();
+  string str;
+  ostringstream ostr;
+
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
     {
       _logged = true;
-      string s;
-      ostringstream ostr;
+
       ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << RoundNdecimal(2,_x->value) << ", " << RoundNdecimal(2,_y->value) << ", " << RoundNdecimal(2,_z->value) <<"]";
-      s = ostr.str();
-      session->recorder->Save(s, "events.txt");
+      str = ostr.str();
+      session->recorder->Save(str, "events.txt");
     }
+
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
-      string s;
-      ostringstream ostr;
       ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << RoundNdecimal(2,_x->value) << ", " << RoundNdecimal(2,_y->value) << ", " << RoundNdecimal(2,_z->value) <<"]";
-      s = ostr.str();
-      session->recorder->Save(s, "events.txt");
+      str = ostr.str();
+      session->recorder->Save(str, "events.txt");
       _loggedEnd = true;
     }
   session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
@@ -121,7 +118,7 @@ Sphere::React2input(Status& s,
   RotAxe[0]=cos(OrientRot);
   RotAxe[1]=sin(OrientRot);
 
-  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
+  //  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
   *_x = *_x+(moveV*cos(OrientV));
   *_z = *_z+(moveV*sin(OrientV));
@@ -183,20 +180,13 @@ Sphere::Reset(){
   *_y = _initY;
   *_z = _initZ;
 
+  RandomPosXZ();
+
   _logged = false;
   _loggedEnd = false;
 
-  if (_randomDir == true){
-    RandomDir();
-  }
 }
 
-void
-Sphere::RandomDir(){
-  /*
-  int dir = rand()%(3-1)+1;
-  *_dirX = dir;*/
-}
 void
 Sphere::DisplayMonitor()
 {
@@ -205,9 +195,7 @@ Sphere::DisplayMonitor()
 
 string
 Sphere::getAttrsToString(){
-  string s;
-
-
+  string str;
   float move = *_veloX/60;
   float angleX = (move / *_radius*180.0 / M_PI);
   move = *_veloY/60;
@@ -222,7 +210,17 @@ Sphere::getAttrsToString(){
        <<RoundNdecimal(2,angleY)
        <<", "
        <<RoundNdecimal(2,angleZ) <<"]";
-  s = ostr.str();
-  return s;
+  str = ostr.str();
+  return str;
 }
 
+
+void 
+Sphere::RandomPosXZ(){
+   if (_randomX->value != 0){
+   _x->value =  _getRandomNumber(_initX, _randomX->value);
+  }
+  if (_randomZ->value != 0){
+    _z->value = _getRandomNumber(_initZ, _randomZ->value);
+  }
+}

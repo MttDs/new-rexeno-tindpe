@@ -176,7 +176,7 @@ Session::displayHeader()
   else{
  				
     int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
-    int window_width = glutGet(GLUT_WINDOW_WIDTH)/2;
+    int window_width = glutGet(GLUT_WINDOW_WIDTH);
     float ratio = 0.0;
     if (window_width >= window_height){
       ratio = float (window_width/window_height);
