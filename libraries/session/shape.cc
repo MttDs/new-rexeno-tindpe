@@ -271,12 +271,10 @@ Shape::_getRandomNumber(float pos, float nb){
 
   seed = (int) (std::time(0)+sum);
   srand(seed);
- // cout << "Le seed =>  " << seed << endl;
 
   newPos = (rand() * (max - min) / RAND_MAX) + min;
   newPos = newPos;
-//  cout << "La nouvelle position => " << newPos << endl;
-  cout << endl;
+
   return RoundNdecimal(2,newPos);
 }
 

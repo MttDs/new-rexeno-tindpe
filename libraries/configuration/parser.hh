@@ -55,6 +55,7 @@ namespace configuration
     std::string name;
     std::string x_channel;
     std::string y_channel;
+    std::string save;
     int frequency;
     int traceLevel;
     std::vector<TrialInfo> trials;

@@ -41,6 +41,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 			  (std::string, name)
                           (std::string, x_channel)
                           (std::string, y_channel)
+			  (std::string, save)
                           (int, traceLevel)
                           (int, frequency)
 			  (std::vector<configuration::TrialInfo>, trials)
@@ -93,6 +94,7 @@ namespace configuration
 	"name="	>> word
         >> -("x_channel=" >> word)
         >> -("y_channel=" >> word)
+	>> -("save=" >> word) 
         >> -("logLevel=" >> int_)
         >> -("frequency=" >> int_)
 	>> +trial

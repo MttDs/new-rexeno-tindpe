@@ -1,4 +1,5 @@
 name= TEST
+save= /home/rexeno-moc/Desktop/rexeno/protocoles/test/datas/
 logLevel= 9
 frequency= 60
 

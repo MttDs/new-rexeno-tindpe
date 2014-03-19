@@ -42,7 +42,7 @@ Session::Session(configuration::SessionInfo& s,
   afterTrial = NULL;
   _inputData.resize(8);
 
-  recorder = new Recorder("/tmp/", s.traceLevel);
+  recorder = new Recorder(s.save, s.traceLevel);
   recorder->AddFile("results.txt");
   recorder->AddFile("trials.txt");
   recorder->AddFile("events.txt");
