@@ -27,6 +27,7 @@
 # include "parser.hh"
 # include "variable.hh"
 # include "types.hh"
+# include "session.hh"
 
 using namespace configuration;
 using namespace std;
@@ -97,7 +98,7 @@ protected:
   Variable* _B;
   uint _ttl;
   Trial* _father;
-
+  Session* _session;
   bool _logged;
   bool _loggedEnd;
   bool _subjectVisible;

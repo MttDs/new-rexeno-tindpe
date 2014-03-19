@@ -20,7 +20,6 @@ public:
 
   void Display();
   void DisplayMonitor();
-
   void Reset();
   void RandomPosXZ();
   double z() { return _z->value; }
@@ -28,6 +27,7 @@ public:
   string getAttrsToString();
 
 protected:
+
   float _angleX;
   float _angleY;
   float _angleZ;

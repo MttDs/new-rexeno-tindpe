@@ -12,8 +12,7 @@ Trial::Trial(TrialInfo& ti)
     _start(true),
     _subjectResponse(false)
 {
-
-
+  _session = NULL;
   assert(ti.attributes.size() == 10);
 
   variables.addVariable(_time = new Variable(ti.attributes[0]));
@@ -75,15 +74,7 @@ Trial::Trial(TrialInfo& ti)
 	    _nbFrames = newShape->frameEnd();
 	}
     }
-  /*
-  _eyeX = 0;
-  _eyeY = 1;
-  _eyeZ = 1.8;
 
-  _centerX = 0;
-  _centerY = 0;
-  _centerZ = 0;
-  */
   _status[RUNNING] = true;
   _status[PAUSE] = false;
   _status[WRONG_REDO] = false;
@@ -114,18 +105,16 @@ Trial::~Trial()
 int
 Trial::displayFrame(Driver* driver)
 {
-  Session* s = Session::getInstance();
-
-  // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  // glMatrixMode(GL_MODELVIEW);
-  // glLoadIdentity();
-
-  _eyeX->value = _eyeX->value+(_cameraVeloX->value/60);
-  _centerX->value = _centerX->value+(_cameraVeloX->value/60);
-  _eyeY->value = _eyeY->value+(_cameraVeloY->value/60);
-  _centerY->value = _eyeY->value+(_cameraVeloY->value/60);
-  _eyeZ->value = _eyeZ->value+(_cameraVeloZ->value/60);
-  _centerZ->value = _centerZ->value+(_cameraVeloZ->value/60);
+  if (_session == NULL){
+    _session = Session::getInstance();
+  }
+  int fps = _session->getFrequency();
+  _eyeX->value = _eyeX->value+(_cameraVeloX->value/fps);
+  _centerX->value = _centerX->value+(_cameraVeloX->value/fps);
+  _eyeY->value = _eyeY->value+(_cameraVeloY->value/fps);
+  _centerY->value = _eyeY->value+(_cameraVeloY->value/fps);
+  _eyeZ->value = _eyeZ->value+(_cameraVeloZ->value/fps);
+  _centerZ->value = _centerZ->value+(_cameraVeloZ->value/fps);
 
   gluLookAt(_eyeX->value,_eyeY->value,_eyeZ->value, _centerX->value,_centerY->value,_centerZ->value, 0,1,0);
 
@@ -146,14 +135,14 @@ Trial::displayFrame(Driver* driver)
     {
       Shape *curShape = *it;
       glPushMatrix();
-      //glTranslatef(0.5, 0, 0);
+ 
       if (curShape->id()==7){
 	spheres.push_back(curShape);
       }
       if (curShape->Displayable(_curFrameId)){
     	curShape->Display();
       }
-      //  std::cout << "Time > "<< (driver->GetTime()-_displayTime) << endl;
+
       glPopMatrix();
 
       if ((curShape->id() != 7) && (curShape->id()!=10)){
@@ -161,7 +150,7 @@ Trial::displayFrame(Driver* driver)
 	if (curShape->MonitorDisplayable())
 	  {
 	    glPushMatrix();
-	    //glTranslatef(-0.5, 0, 0);
+
 	    if (curShape->Displayable(_curFrameId))
 	      curShape->DisplayMonitor();
 	    glPopMatrix();
@@ -184,9 +173,6 @@ Trial::displayFrame(Driver* driver)
   if (nbSphereNotDisplayable==nbSphere){
     spheresEnd = true;
   }
-  // glutSwapBuffers();
-  //glutPostRedisplay();
-  // glClear(GL_COLOR_BUFFER_BIT);
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
 
@@ -201,25 +187,25 @@ Trial::displayFrame(Driver* driver)
     ostringstream ostr;
     ostr << _name << " Camera Velo " << "[" << _cameraVeloX << "," << _cameraVeloY << "," << _cameraVeloZ << "]";
     str = ostr.str();
-    s->recorder->Save(str,"trials.txt");
+    _session->recorder->Save(str,"trials.txt");
     for (it = _shapes.begin(); it != _shapes.end(); ++it)
       {
 	Shape *curShape = *it;
 
 	if ((_curFrameId == 0) && (!_logged))
 	  {
-	    s->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
+	    _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
 	  }
 
       }
     _start = false;
-    s->recorder->Save("" ,"trials.txt");
+    _session->recorder->Save("" ,"trials.txt");
   }
   
   if ((_curFrameId == 0) && (!_logged))
     {
-      s->recorder->Save("TrialStart_ " + lexical_cast<string>(displayTime), "events.txt");
-      s->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
+      _session->recorder->Save("TrialStart_ " + lexical_cast<string>(displayTime), "events.txt");
+      _session->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
 
       _logged = true;
     }
@@ -232,7 +218,7 @@ Trial::displayFrame(Driver* driver)
       ostringstream ostr;
       ostr << "Response "<< lexical_cast<string>(displayTime) << " : " << Setup::keysName;
       str = ostr.str();
-      s->recorder->Save(str, "events.txt");
+      _session->recorder->Save(str, "events.txt");
       _subjectResponse = true;
     }
     _status[CORRECT] = true;
@@ -247,7 +233,7 @@ Trial::displayFrame(Driver* driver)
 
       if ((_curFrameId == 0) && (!_logged))
 	{
-	  s->recorder->Save(curShape->getAttrsToString() ,"events.txt");
+	  _session->recorder->Save(curShape->getAttrsToString() ,"events.txt");
 	}
 
       //PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
@@ -374,6 +360,7 @@ Trial::Reset(Driver *d)
   
   Setup::reset();
 }
+
 
 bool
 Trial::status(int key)

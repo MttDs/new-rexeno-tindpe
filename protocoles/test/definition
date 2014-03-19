@@ -1,8 +1,9 @@
 name= TEST
 logLevel= 9
+frequency= 60
 
 | PROTO1 300 0 0.0 0 0 1 1.8 0 0 0
 > Plan Plan 0 0 0 -1 40 80 80
-> Sphere       Sphere2     0   0  -3   1  2  0   300  20     20    0.2     0.2   0   0.2
-> Sphere       Sphere2     0   0  -3   1  2  0   300  20     20    0.2     0.2   0  -0.2
+> Sphere       Sphere2     0   0  -3   1  2  0   150  20     20    0.2     0.2   0   0.2
+> Sphere       Sphere2     0   0  -3   1  2  0   150  20     20    0.2     0.2   0  -0.2
 ;

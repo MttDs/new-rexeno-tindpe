@@ -56,10 +56,13 @@ public:
   void addTtl();
   bool status(int);
   int frameEnd() {return _nbFrames;}
+  Session* session() {return _session;}
   VariableManager variables;
   void Reset(Driver * d);
-
+  
 private:
+  Session* _session;
+
   int _react2status();
   void _sendTtls(Driver* d);
 

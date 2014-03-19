@@ -36,10 +36,12 @@ Session::Session(configuration::SessionInfo& s,
       t = new Trial(*it);
       _trialsDefinitions.push_back(t);
     }
+  _frequency = s.frequency;
   _currentTrial = _trialsOrder.begin();
   beforeTrial = NULL;
   afterTrial = NULL;
   _inputData.resize(8);
+
   recorder = new Recorder("/tmp/", s.traceLevel);
   recorder->AddFile("results.txt");
   recorder->AddFile("trials.txt");
@@ -131,13 +133,11 @@ reshape(int width, int height){
     ratio = float (height/width);
   }
   /*
-
-  glViewport(0,0,width, height); //Taille de la zone de sortie
-  glMatrixMode(GL_PROJECTION); // Charge la matrice de données GL_PROJECTION = Forme
-  glLoadIdentity(); // Reset la matrice
-  gluPerspective(90, ratio, 1.0f, 2000.0f); // Angle de la perspective, largeur de celle-ci et zone de clipping
-  glMatrixMode(GL_MODELVIEW); // GL_MODELVIEW = Camera
-  //printf("Width => %d Height => %d\n", width, height);
+  glViewport(0,0,width, height); 
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity(); 
+  gluPerspective(90, ratio, 1.0f, 2000.0f);
+  glMatrixMode(GL_MODELVIEW); 
   */
 }
 
@@ -165,7 +165,6 @@ Session::displayHeader()
 
       if (nbInitFrames() < nbFrame4init())
 	{
-	  //getTime() % (int) setup->refreshRate();
 	  ++_nbInitFrames;
 	}
       else
@@ -178,40 +177,42 @@ Session::displayHeader()
     int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
     int window_width = glutGet(GLUT_WINDOW_WIDTH);
     float ratio = 0.0;
+
     if (window_width >= window_height){
       ratio = float (window_width/window_height);
     }
     else{
       ratio = float (window_height/window_width);
     }
+
     glClear (GL_COLOR_BUFFER_BIT);
 
     for (int loop=0; loop<2; loop++){
 
       if (loop==0){
 
-	glViewport(0,0,window_width, window_height); //Taille de la zone de sortie
-	glMatrixMode(GL_PROJECTION); // Charge la matrice de données GL_PROJECTION = Forme
-	glLoadIdentity(); // Reset la matrice
-	gluPerspective(90, ratio, 1.0f, 2000.0f); // Angle de la perspective, largeur de celle-ci et zone de clipping
+	glViewport(0,0,window_width, window_height); 
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(90, ratio, 1.0f, 2000.0f); 
 	glMatrixMode(GL_MODELVIEW);
-	//	gluOrtho2D(0,0,window_width/2, window_height);
 	/*
 	  glViewport (0, window_height/2, window_width/2, window_height/2);
 	  glMatrixMode (GL_PROJECTION);	
 	  glLoadIdentity ();						
-	  gluOrtho2D(0, window_width/2, window_height/2, 0);*/
+	  gluOrtho2D(0, window_width/2, window_height/2, 0);
+	*/
       }
       if (loop==1){
 	glViewport(window_width,0,window_width, window_height);
-	glMatrixMode(GL_PROJECTION); // Charge la matrice de données GL_PROJECTION = Forme
-	glLoadIdentity(); // Reset la matrice
-	gluPerspective(90, ratio, 1.0f, 2000.0f); // Angle de la perspective, largeur de celle-ci et zone de clipping
+	glMatrixMode(GL_PROJECTION); 
+	glLoadIdentity(); 
+	gluPerspective(90, ratio, 1.0f, 2000.0f); 
 	glMatrixMode(GL_MODELVIEW);
-	//	gluOrtho2D(window_width/2,0,window_width/2, window_height);
 	/*
 	  glViewport (window_width/2, window_height/2, window_width/2, window_height/2);
-	  glMatrixMode (GL_PROJECTION);	   */
+	  glMatrixMode (GL_PROJECTION);	  
+	*/
       }
 
       glMatrixMode (GL_MODELVIEW);		
@@ -223,7 +224,7 @@ Session::displayHeader()
       }
       if (loop==1){
 	//	displayFrame();
-	/* Double le nombre de frame + 
+	/* /2 le nombre de frame + 
 	   ne se place pas correct + 
 	   enlever les intéractions inutiles */
       }
@@ -254,9 +255,9 @@ InitGL(){
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable( GL_BLEND );
 
-  glEnable(GL_DEPTH_TEST); // est de profondeur
-  glEnable(GL_LIGHTING); // Active l'éclairage
-  glEnable(GL_LIGHT0); // Allume la lumière numero 1;
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0); 
 	
   glShadeModel(GL_SMOOTH);
   glMatrixMode(GL_PROJECTION);
@@ -316,7 +317,6 @@ Session::displayFrame()
       Trial* t = _trialsDefinitions[*_currentTrial];
       if (t->atStart() && beforeTrial)
 	{
-	  //   std::cout << "Name => " << t->variables << endl;
 	  beforeTrial(t->name(), t->variables);
 	};
       int b = t->displayFrame(_driver);

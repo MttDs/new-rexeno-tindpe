@@ -58,6 +58,7 @@ public:
   int nbFrame4init() {return _nbFrame4init;}
   int nbInitFrames() {return _nbInitFrames;}
   ms getTime();
+  int getFrequency(){return _frequency; }
   bool initialized();
 private:
   Session(configuration::SessionInfo& s,
@@ -78,6 +79,7 @@ private:
   int _nbFrame4init;
   int _nbInitFrames;
   double _offsetVsync; // offset between 0 and 16.666 (if 60Hz)
+  int _frequency;
 
 #ifdef DEBUG
   int __debug_FrameNumber;

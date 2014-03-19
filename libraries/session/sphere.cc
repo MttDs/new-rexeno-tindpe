@@ -37,6 +37,7 @@ Sphere::Sphere(const ShapeInfo& si,
   vm.addVariable(_veloY = new Variable(si.attributes[12]));
   vm.addVariable(_veloZ = new Variable(si.attributes[13]));
   
+  _session = NULL;
 
   _angleX = 0.0f;
   _angleV = 0.0f;
@@ -51,15 +52,7 @@ Sphere::Sphere(const ShapeInfo& si,
 
   SphereShadow* s = new SphereShadow(*_radius, *_z, *_stacks, true);
   _shadow = s;
-  /*
-  if (_dirX->value == (-1)){
-    _randomDir = true;
-    RandomDir();
-  }
-  else{
-    _randomDir = false;
-  }
-    */
+
   RandomPosXZ();
 }
 
@@ -75,8 +68,10 @@ Sphere::React2input(Status& s,
 		    int frameId,
 		    ms displayTime)
 {
-
-  Session* session = Session::getInstance();
+  if (_session == NULL){
+    _session = _father->session();
+  }
+  int fps = _session->getFrequency();
   string str;
   ostringstream ostr;
 
@@ -87,7 +82,7 @@ Sphere::React2input(Status& s,
 
       ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << RoundNdecimal(2,_x->value) << ", " << RoundNdecimal(2,_y->value) << ", " << RoundNdecimal(2,_z->value) <<"]";
       str = ostr.str();
-      session->recorder->Save(str, "events.txt");
+      _session->recorder->Save(str, "events.txt");
     }
 
   // Saving of shape disparation
@@ -95,20 +90,20 @@ Sphere::React2input(Status& s,
     {
       ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << RoundNdecimal(2,_x->value) << ", " << RoundNdecimal(2,_y->value) << ", " << RoundNdecimal(2,_z->value) <<"]";
       str = ostr.str();
-      session->recorder->Save(str, "events.txt");
+      _session->recorder->Save(str, "events.txt");
       _loggedEnd = true;
     }
-  session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
+  _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
 
   if (frameId > frameEnd())
     s[RUNNING] |= false;
   else
     s[RUNNING] = true;
 
-  session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
+  _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
  
   float veloV = sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
-  float moveV = veloV/60.0;
+  float moveV = veloV/fps;
 
   _angleV+= moveV/ *_radius*180.0 / M_PI;
 
@@ -127,6 +122,7 @@ Sphere::React2input(Status& s,
 void
 Sphere::Display()
 {
+
   if (this->IsTextured() == false){
     ImageLoad iload;
     iload.setFilename("sphere.bmp");
@@ -195,12 +191,16 @@ Sphere::DisplayMonitor()
 
 string
 Sphere::getAttrsToString(){
+  if (_session == NULL){
+    _session = _father->session();
+  }
   string str;
-  float move = *_veloX/60;
+  int fps = _session->getFrequency();
+  float move = *_veloX/fps;
   float angleX = (move / *_radius*180.0 / M_PI);
-  move = *_veloY/60;
+  move = *_veloY/fps;
   float angleY = (move / *_radius*180.0 / M_PI);
-  move = *_veloZ/60;
+  move = *_veloZ/fps;
   float angleZ = (move / *_radius*180.0 / M_PI);
   ostringstream ostr;
   ostr <<  _name << ": Radius ["
