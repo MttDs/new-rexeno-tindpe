@@ -92,6 +92,8 @@ private:
   Variable*  _cameraVeloX;
   Variable*  _cameraVeloY;
   Variable*  _cameraVeloZ;
+  
+  Sphere* _sphereLead;
 
   Variable* _time;
 

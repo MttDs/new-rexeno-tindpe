@@ -40,9 +40,11 @@ Trial::Trial(TrialInfo& ti)
     {
       (*dataIt) = vector<Element>(20); // 20 samples per channel
     }
- 
+  
   vector<ShapeInfo>::iterator it;
+  vector<Sphere*> spheres;
 
+  int nbSphere = 0;
   for (it = ti.shapes.begin(); it != ti.shapes.end(); ++it)
     {
       Shape *newShape = NULL;
@@ -58,8 +60,21 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new NeutralWindow(*it, variables, this);
       if (it->name == "FixationWindow")
 	newShape = new FixationWindow(*it, variables, this);
-      if (it->name == "Sphere")
-	newShape = new Sphere(*it, variables, this);
+      if (it->name == "Sphere"){
+	  nbSphere++;
+	if (nbSphere<3){
+	  newShape = new Sphere(*it, variables, this);
+	  spheres.push_back(new Sphere(*it, variables, this));
+	  if (spheres.size()==2){
+	    if (spheres.at(0)->lead()==spheres.at(1)->lead()){
+	      printf("Les deux spheres ont le meme rang!\n");exit(1);
+	    }
+	  }
+	}
+	else{
+	  printf("Sphere numero %d ignorée (2 spheres max)\n", nbSphere);
+	}
+      }
       if (it->name == "Plan")
 	newShape = new Plan(*it, variables, this);
       if (it->name == "Rectangle3d")
@@ -211,7 +226,7 @@ Trial::displayFrame(Driver* driver)
     }
 
 
-  if ((Setup::keysName != "") && (spheresEnd)){
+  if ((Setup::keysName != -1) && (spheresEnd)){
     if (_subjectResponse == false){
       std::cout << "Reponse => " << Setup::keysName << endl;
       string str;
@@ -224,7 +239,7 @@ Trial::displayFrame(Driver* driver)
     _status[CORRECT] = true;
   }
   else{
-    Setup::keysName = "";
+    Setup::keysName = -1;
   }
 
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
