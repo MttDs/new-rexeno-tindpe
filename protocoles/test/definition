@@ -1,10 +1,10 @@
 name= TEST
-save= /home/rexeno-moc/Desktop/rexeno/protocoles/test/datas/
+save= /home/xeno1/Desktop/new-rexeno-tindpe/protocoles/test/datas/
 logLevel= 9
 frequency= 60
 
 | PROTO1 300 0 0.0 0 0 1 1.8 0 0 0
 > Plan Plan 0 0 0 -1 40 80 80
-> Sphere       Sphere2        0   0  -3   0  0  0      60  20     20    0.2     0.8   0   0  97   0.1   g   1
+> Sphere       Sphere2        0   0  -3   0  0  0      60  20     20    0.2     0.3   0   0  97   0.1   g   1
 > Sphere       Sphere2     -0.8   0  -3   0  0  60    120  20     20    0.2     0.8   0   0  98   0.1   g   0
 ;

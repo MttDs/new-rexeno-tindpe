@@ -51,6 +51,10 @@ Sphere::Sphere(const ShapeInfo& si,
   _initX = *_x;
   _initY = *_y;
   _initZ = *_z;
+  
+  _gainX = _veloX->value;
+  _gainY = _veloY->value;
+  _gainZ = _veloZ->value;
 
   _father = father;
 
@@ -106,12 +110,12 @@ Sphere::React2input(Status& s,
 
   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
  
-  float veloV = sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
+  float veloV = sqrt((_gainX)*(_gainX)+(_gainZ)*(_gainZ));
   float moveV = veloV/fps;
 
   _angleV+= moveV/ *_radius*180.0 / M_PI;
 
-  float OrientV=atan2((*_veloZ),(*_veloX));
+  float OrientV=atan2((_gainZ),(_gainX));
   float OrientRot=OrientV-(M_PI/2.0);
   
   RotAxe[0]=cos(OrientRot);
@@ -123,6 +127,20 @@ Sphere::React2input(Status& s,
   *_z = *_z+(moveV*sin(OrientV));
 }
 
+void 
+Sphere::updateVelo(int rep){
+
+  if (rep == 1){
+    _gainX = _gainX  * (1.0f+_gain->value);
+    _gainZ = _gainZ  * (1.0f+_gain->value);
+    std::cout << rep << " gainX " << _gainX <<  endl;
+  }
+  else{
+   _gainX = _gainX  * (1.0f-_gain->value);
+   _gainZ = _gainZ  * (1.0f-_gain->value);
+  }
+  
+}
 void
 Sphere::Display()
 {
@@ -198,6 +216,7 @@ Sphere::getAttrsToString(){
   if (_session == NULL){
     _session = _father->session();
   }
+
   string str;
   int fps = _session->getFrequency();
   float move = *_veloX/fps;

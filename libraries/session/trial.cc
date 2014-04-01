@@ -67,7 +67,8 @@ Trial::Trial(TrialInfo& ti)
 	  spheres.push_back(new Sphere(*it, variables, this));
 	  if (spheres.size()==2){
 	    if (spheres.at(0)->lead()==spheres.at(1)->lead()){
-	      printf("Les deux spheres ont le meme rang!\n");exit(1);
+	      printf("Les deux spheres ont le meme rang!\n");
+	      exit(1);
 	    }
 	  }
 	}
@@ -144,47 +145,38 @@ Trial::displayFrame(Driver* driver)
   glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
   vector<Shape*>::iterator it;
-  vector<Shape*> spheres;
+  vector<Sphere*> spheres;
 
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
     {
       Shape *curShape = *it;
       glPushMatrix();
- 
+
       if (curShape->id()==7){
-	spheres.push_back(curShape);
+	spheres.push_back(dynamic_cast<Sphere*>(curShape));
       }
+
       if (curShape->Displayable(_curFrameId)){
     	curShape->Display();
       }
 
       glPopMatrix();
-
-      if ((curShape->id() != 7) && (curShape->id()!=10)){
-    
-	if (curShape->MonitorDisplayable())
-	  {
-	    glPushMatrix();
-
-	    if (curShape->Displayable(_curFrameId))
-	      curShape->DisplayMonitor();
-	    glPopMatrix();
-	  }
-      }
-
     }
   
   bool spheresEnd = false;
   int nbSphere = spheres.size();
   int nbSphereNotDisplayable = 0;
-  
-  for (it = spheres.begin(); it != spheres.end(); ++it){
-    Shape *curSphere = *it;
+
+  vector<Sphere*>::iterator itt;
+  for (itt = spheres.begin(); itt != spheres.end(); ++itt){
+    Shape *curSphere = *itt;
+
     if (!curSphere->Displayable(_curFrameId)){
+    
       nbSphereNotDisplayable++;
     }
   }
-
+ 
   if (nbSphereNotDisplayable==nbSphere){
     spheresEnd = true;
   }
@@ -196,13 +188,14 @@ Trial::displayFrame(Driver* driver)
   driver->React2input();
   driver->AnalogIn(_data);
   ms displayTime = driver->GetTime();
-
+ 
   if((_curFrameId == 0) && (_start)){
     string str;
     ostringstream ostr;
     ostr << _name << " Camera Velo " << "[" << _cameraVeloX << "," << _cameraVeloY << "," << _cameraVeloZ << "]";
     str = ostr.str();
     _session->recorder->Save(str,"trials.txt");
+
     for (it = _shapes.begin(); it != _shapes.end(); ++it)
       {
 	Shape *curShape = *it;
@@ -225,18 +218,35 @@ Trial::displayFrame(Driver* driver)
       _logged = true;
     }
 
+  if (spheresEnd){
+  ;
+    Sphere* sphereLead = spheres.at(1);
+    Sphere* sphere = spheres.at(0);  
+    if (spheres.at(0)->lead()==1){
 
-  if ((Setup::keysName != -1) && (spheresEnd)){
-    if (_subjectResponse == false){
-      std::cout << "Reponse => " << Setup::keysName << endl;
-      string str;
-      ostringstream ostr;
-      ostr << "Response "<< lexical_cast<string>(displayTime) << " : " << Setup::keysName;
-      str = ostr.str();
-      _session->recorder->Save(str, "events.txt");
-      _subjectResponse = true;
+      sphereLead = spheres.at(0);
+      sphere = spheres.at(1);
     }
-    _status[CORRECT] = true;
+    if ((Setup::keysName == sphereLead->key()) || (Setup::keysName == sphere->key())){
+      if (_subjectResponse == false){
+
+	std::cout << "Reponse => " << Setup::keysName << endl;
+	string str;
+	ostringstream ostr;
+	ostr << "Response "<< lexical_cast<string>(displayTime) << " : " << Setup::keysName;
+	str = ostr.str();
+
+	_session->recorder->Save(str, "events.txt");
+	_subjectResponse = true;
+	if (Setup::keysName == sphereLead->key()){
+	  sphere->updateVelo(1);
+	}
+	else{
+	  sphere->updateVelo(0);
+	}
+      }
+      _status[CORRECT] = true;
+    }
   }
   else{
     Setup::keysName = -1;
