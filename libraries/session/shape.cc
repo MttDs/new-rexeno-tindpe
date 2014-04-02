@@ -278,6 +278,20 @@ Shape::_getRandomNumber(float pos, float nb){
   return RoundNdecimal(2,newPos);
 }
 
+void
+Shape::getAdaptsByKey(vector<Adapt*>*k){
+  vector<Adapt*>::iterator it;
+  for (it = _adapts.begin(); it!= _adapts.end(); it++){
+    //    (*k).push_back((int)(*it)->key()->value); 
+    (*k).push_back(*it);
+  }
+}
+
+void 
+Shape::updateVelo(double coef){
+   _gainX = _gainX  * (coef);
+   _gainZ = _gainZ  * (coef);  
+}
 /**
  * Abstract Constructor : inits some bool values
  *

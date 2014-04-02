@@ -5,6 +5,10 @@ frequency= 60
 
 | PROTO1 300 0 0.0 0 0 1 1.8 0 0 0
 > Plan Plan 0 0 0 -1 40 80 80
-> Sphere       Sphere2        0   0  -3   0  0  0      60  20     20    0.2     0.3   0   0  97   0.1   g   1
-> Sphere       Sphere2     -0.8   0  -3   0  0  60    120  20     20    0.2     0.8   0   0  98   0.1   g   0
+> Sphere       Sphere2        0   0  -3   0  0  0      60  20     20    0.2     0.8   0   0  97   0.1   g   0  
+> adapt Sphere2 97   0.9   g   
+> adapt Sphere2 98   1.1   g  
+> Sphere       Sphere3     -0.8   0  -3   0  0  60    120  20     20    0.2     0.4   0   0  98   0.1   g   0
+> adapt Sphere3 97   1.1   g   
+> adapt Sphere3 98   1.1   g  
 ;

@@ -37,9 +37,7 @@ typedef map<int, bool> Status;
 
 
 class Trial;
-
-
-
+class Adapt;
 
 class Shape
 {
@@ -71,8 +69,9 @@ public:
   virtual string getAttrsToString();
   double RoundNdecimal(int n, float nb);
   bool IsTextured(){ return _istexured;}
-
-
+  void addAdapt(Adapt *a){_adapts.push_back(a);}
+  void getAdaptsByKey(vector<Adapt*>*k);
+  void updateVelo(double coef);
 protected:
   // Use these functions for opengl's drawing scale. 
   double _demiVertical(); // inside sub square-screen
@@ -80,7 +79,7 @@ protected:
   double _xGL(); // inside sub square-screen
   double _yGL(); // inside sub square-screen
   float _getRandomNumber(float pos, float nb);
-
+ 
   int _id;
 
   GLuint _texture[1];
@@ -103,6 +102,17 @@ protected:
   bool _loggedEnd;
   bool _subjectVisible;
   bool _istexured;
+
+  Variable* _veloX;
+  Variable* _veloY;
+  Variable* _veloZ;
+  
+  float _gainX;
+  float _gainY;
+  float _gainZ;
+
+
+  vector<Adapt*> _adapts;
 };
 
 #endif

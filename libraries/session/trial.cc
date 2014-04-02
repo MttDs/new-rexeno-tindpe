@@ -42,12 +42,12 @@ Trial::Trial(TrialInfo& ti)
     }
   
   vector<ShapeInfo>::iterator it;
-  vector<Sphere*> spheres;
 
-  int nbSphere = 0;
   for (it = ti.shapes.begin(); it != ti.shapes.end(); ++it)
     {
       Shape *newShape = NULL;
+      Adapt *newAdapt = NULL;
+
       if (it->name == "Square")
 	newShape = new Square(*it, variables, this);
       if (it->name == "Cross")
@@ -60,29 +60,24 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new NeutralWindow(*it, variables, this);
       if (it->name == "FixationWindow")
 	newShape = new FixationWindow(*it, variables, this);
-      if (it->name == "Sphere"){
-	  nbSphere++;
-	if (nbSphere<3){
+      if (it->name == "Sphere")
 	  newShape = new Sphere(*it, variables, this);
-	  spheres.push_back(new Sphere(*it, variables, this));
-	  if (spheres.size()==2){
-	    if (spheres.at(0)->lead()==spheres.at(1)->lead()){
-	      printf("Les deux spheres ont le meme rang!\n");
-	      exit(1);
-	    }
-	  }
-	}
-	else{
-	  printf("Sphere numero %d ignorée (2 spheres max)\n", nbSphere);
-	}
-      }
       if (it->name == "Plan")
 	newShape = new Plan(*it, variables, this);
       if (it->name == "Rectangle3d")
 	newShape = new Rectangle3d(*it, variables, this);
       if (it->name == "Aircraft")
 	newShape = new Aircraft(*it, variables, this);
-
+      if (it->name == "adapt"){
+	string name = it->attributes[0];
+	Sphere* s = getSphereByName(it->attributes[0]);
+	if (s==NULL){
+	  std::cout << "Insertion 'adapt' Erreur : impossible de trouver la Sphere parente: " <<  name << endl;
+	  exit(0);
+	}
+	newAdapt = new Adapt(*it, variables, s);
+	s->addAdapt(newAdapt);
+      }
       if (newShape)
 	{
 	  _shapes.push_back(newShape);
@@ -147,6 +142,12 @@ Trial::displayFrame(Driver* driver)
   vector<Shape*>::iterator it;
   vector<Sphere*> spheres;
 
+  bool spheresEnd = false;
+  int nbSphereNotDisplayable = 0;
+
+  vector<Adapt*> adapts;
+  vector<Adapt*>*pAdapts = &adapts;
+
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
     {
       Shape *curShape = *it;
@@ -154,8 +155,11 @@ Trial::displayFrame(Driver* driver)
 
       if (curShape->id()==7){
 	spheres.push_back(dynamic_cast<Sphere*>(curShape));
+	if (!curShape->Displayable(_curFrameId)){
+	  nbSphereNotDisplayable++;
+	}
       }
-
+      curShape->getAdaptsByKey(pAdapts);
       if (curShape->Displayable(_curFrameId)){
     	curShape->Display();
       }
@@ -163,19 +167,7 @@ Trial::displayFrame(Driver* driver)
       glPopMatrix();
     }
   
-  bool spheresEnd = false;
   int nbSphere = spheres.size();
-  int nbSphereNotDisplayable = 0;
-
-  vector<Sphere*>::iterator itt;
-  for (itt = spheres.begin(); itt != spheres.end(); ++itt){
-    Shape *curSphere = *itt;
-
-    if (!curSphere->Displayable(_curFrameId)){
-    
-      nbSphereNotDisplayable++;
-    }
-  }
  
   if (nbSphereNotDisplayable==nbSphere){
     spheresEnd = true;
@@ -219,15 +211,26 @@ Trial::displayFrame(Driver* driver)
     }
 
   if (spheresEnd){
-  ;
-    Sphere* sphereLead = spheres.at(1);
-    Sphere* sphere = spheres.at(0);  
-    if (spheres.at(0)->lead()==1){
 
-      sphereLead = spheres.at(0);
-      sphere = spheres.at(1);
-    }
-    if ((Setup::keysName == sphereLead->key()) || (Setup::keysName == sphere->key())){
+    vector<Adapt*>::iterator intIt;
+
+    Shape* adpShape = NULL;
+    int key;
+    bool submit = false;
+    for (intIt = (*pAdapts).begin(); intIt != (*pAdapts).end(); intIt++){
+
+      key = (int)(*intIt)->key()->value;
+      if (key == Setup::keysName){
+	adpShape = (*intIt)->parent();
+	
+	if (true){
+	  adpShape->updateVelo((*intIt)->coef()->value);
+	}
+	submit = true;
+      }
+    }  
+    if (submit){
+
       if (_subjectResponse == false){
 
 	std::cout << "Reponse => " << Setup::keysName << endl;
@@ -238,12 +241,6 @@ Trial::displayFrame(Driver* driver)
 
 	_session->recorder->Save(str, "events.txt");
 	_subjectResponse = true;
-	if (Setup::keysName == sphereLead->key()){
-	  sphere->updateVelo(1);
-	}
-	else{
-	  sphere->updateVelo(0);
-	}
       }
       _status[CORRECT] = true;
     }
@@ -386,6 +383,21 @@ Trial::Reset(Driver *d)
   Setup::reset();
 }
 
+Sphere*
+Trial::getSphereByName(string name){
+  Shapes::iterator it;
+  Sphere* s = NULL;
+  it = _shapes.begin();
+
+  while((s == NULL) && (it!=_shapes.end())){
+    if ((*it)->name()==name){
+      s = dynamic_cast<Sphere*>(*it);
+    }
+    it++; 
+  }
+
+  return s;
+}
 
 bool
 Trial::status(int key)

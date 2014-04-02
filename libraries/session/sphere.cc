@@ -127,20 +127,7 @@ Sphere::React2input(Status& s,
   *_z = *_z+(moveV*sin(OrientV));
 }
 
-void 
-Sphere::updateVelo(int rep){
 
-  if (rep == 1){
-    _gainX = _gainX  * (1.0f+_gain->value);
-    _gainZ = _gainZ  * (1.0f+_gain->value);
-    std::cout << rep << " gainX " << _gainX <<  endl;
-  }
-  else{
-   _gainX = _gainX  * (1.0f-_gain->value);
-   _gainZ = _gainZ  * (1.0f-_gain->value);
-  }
-  
-}
 void
 Sphere::Display()
 {

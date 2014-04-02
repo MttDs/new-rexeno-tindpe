@@ -3,8 +3,8 @@
 
 # include "shape.hh"
 # include "sphereshadow.hh"
+# include <GL/glut.h>
 
-#include <GL/glut.h>
 class Sphere : public Shape
 {
 public:
@@ -22,12 +22,11 @@ public:
   void DisplayMonitor();
   void Reset();
   void RandomPosXZ();
-  void updateVelo(int rep);
   double z() { return _z->value; }
   float lead(){ return _lead->value;}
   int key(){ return _key->value;}
   string getAttrsToString();
-
+  
 protected:
 
   float _angleX;
@@ -47,14 +46,6 @@ protected:
   Variable* _slices;
   Variable* _stacks;
   Variable* _radius;
-
-  Variable* _veloX;
-  Variable* _veloY;
-  Variable* _veloZ;
-  
-  float _gainX;
-  float _gainY;
-  float _gainZ;
 
   Variable* _z;
   
