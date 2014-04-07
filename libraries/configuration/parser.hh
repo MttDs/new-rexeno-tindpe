@@ -18,31 +18,24 @@ namespace configuration
   ///////////////////////////////////////////////////////////////////////////
   //  Our moses struct
   ///////////////////////////////////////////////////////////////////////////
+ struct ShapeListener
+  {
+    int key;
+    float coef;
+    std::string gain;
+  };
+
   struct ShapeInfo
   {
     std::string name;
     std::vector<std::string> attributes;
+    std::vector<ShapeListener> listeners;
   };
 
   struct TrialInfo
   {
     std::string name;
     std::vector<std::string> attributes;
-    /*
-    int time;
-
-    float eyeX;
-    float eyeY;
-    float eyeZ;
-
-    float centerX;
-    float centerY;
-    float centerZ;
-
-    float cameraVeloX;
-    float cameraVeloY;
-    float cameraVeloZ;*/
-
     std::vector<ShapeInfo> shapes;
   };
 

@@ -15,9 +15,11 @@ using namespace configuration;
 class Adapt
 {
 public:
-  Adapt(const ShapeInfo& si,
-	VariableManager& vm,
-	Shape* father);
+  Adapt(VariableManager& vm,
+	Shape* father,
+	int key, 
+	float coef,
+	std::string gain);
   ~Adapt();
   Variable* key(){return _key;}
   Variable* coef(){return _coef;}

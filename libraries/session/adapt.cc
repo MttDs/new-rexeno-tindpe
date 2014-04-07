@@ -1,14 +1,14 @@
 #include "adapt.hh"
 
-Adapt::Adapt(const ShapeInfo& si,
-	     VariableManager& vm,
-	     Shape* father){
-  assert(si.attributes.size() == 4);
+Adapt::Adapt(VariableManager& vm,
+	     Shape* father,
+	     int key, 
+	     float coef,
+	     std::string gain){
 
-  vm.addVariable(_parentName = new Variable(si.attributes[0]));
-  vm.addVariable(_key = new Variable(si.attributes[1]));
-  vm.addVariable(_coef = new Variable(si.attributes[2]));
-  vm.addVariable(_action = new Variable(si.attributes[3]));
+  vm.addVariable(_key = new Variable(key));
+  vm.addVariable(_coef = new Variable(coef));
+  vm.addVariable(_action = new Variable(gain));
   _parent = father;
 }
 

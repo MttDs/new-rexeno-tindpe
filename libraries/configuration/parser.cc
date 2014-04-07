@@ -24,9 +24,17 @@ namespace standard = boost::spirit::standard;
 // be in global scope according to official Boost Spirit tutorial.
 
 BOOST_FUSION_ADAPT_STRUCT(
+			  configuration::ShapeListener,
+			  (int, key)
+			  (float, coef)
+			  (std::string, gain)
+			  )
+
+BOOST_FUSION_ADAPT_STRUCT(
 			  configuration::ShapeInfo,
 			  (std::string, name)
 			  (std::vector<std::string>, attributes)
+			  (std::vector<configuration::ShapeListener>, listeners)
 			  )
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -47,6 +55,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 			  (std::vector<configuration::TrialInfo>, trials)
 			  )
 
+
 namespace configuration
 {
   ///////////////////////////////////////////////////////////////////////////////
@@ -66,12 +75,18 @@ namespace configuration
       using boost::fusion::vector;
       using qi::eol;
 
-      word %= lexeme[ +(char_ - ' ' - "|" - ">" - ";" - "\n")];
-
+      word %= lexeme[ +(char_ - ' ' - "|" - "+" - ">" -  ";" - "\n")];
+      
+      listener %= "+" 
+        >> int_
+	>> float_
+	>> word
+	;
 
       shape %= ">"
 	>> word // Shape name
 	>> +word // Shape attributes
+       	>> *listener
 	;
 
       trial %= "|"
@@ -81,14 +96,6 @@ namespace configuration
 	>> +shape
 	>> ";"
 	;
-      /*    >> (int_)
-...
-    >> (float_)
-    >> (float_)
-    >> (float_)
-	>> +shape
-	>> ";"
-	;*/
 
       session %=
 	"name="	>> word
@@ -103,6 +110,8 @@ namespace configuration
     }
 
     qi::rule<Iterator, std::string(), standard::space_type> word;
+
+    qi::rule<Iterator, configuration::ShapeListener(), standard::space_type> listener;
     qi::rule<Iterator, configuration::ShapeInfo(), standard::space_type> shape;
     qi::rule<Iterator, configuration::TrialInfo(), standard::space_type> trial;
     qi::rule<Iterator, configuration::SessionInfo(), standard::space_type> session;

@@ -46,7 +46,7 @@ Trial::Trial(TrialInfo& ti)
   for (it = ti.shapes.begin(); it != ti.shapes.end(); ++it)
     {
       Shape *newShape = NULL;
-      Adapt *newAdapt = NULL;
+      //   Adapt *newAdapt = NULL;
 
       if (it->name == "Square")
 	newShape = new Square(*it, variables, this);
@@ -68,7 +68,7 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new Rectangle3d(*it, variables, this);
       if (it->name == "Aircraft")
 	newShape = new Aircraft(*it, variables, this);
-      if (it->name == "adapt"){
+      /*      if (it->name == "adapt"){
 	string name = it->attributes[0];
 	Sphere* s = getSphereByName(it->attributes[0]);
 	if (s==NULL){
@@ -77,7 +77,7 @@ Trial::Trial(TrialInfo& ti)
 	}
 	newAdapt = new Adapt(*it, variables, s);
 	s->addAdapt(newAdapt);
-      }
+	}*/
       if (newShape)
 	{
 	  _shapes.push_back(newShape);

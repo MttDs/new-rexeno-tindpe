@@ -14,8 +14,8 @@ class Trial;
 Sphere::Sphere(const ShapeInfo& si,
 	       VariableManager& vm,
 	       Trial* father)
-{
-  assert(si.attributes.size() == 18);
+{  
+  assert(si.attributes.size() == 14);
 
   _name = si.attributes[0];
   _id = 7;
@@ -36,11 +36,16 @@ Sphere::Sphere(const ShapeInfo& si,
   vm.addVariable(_veloX = new Variable(si.attributes[11]));
   vm.addVariable(_veloY = new Variable(si.attributes[12]));
   vm.addVariable(_veloZ = new Variable(si.attributes[13]));
-  vm.addVariable(_key = new Variable(si.attributes[14]));
-  vm.addVariable(_gain = new Variable(si.attributes[15]));
-  vm.addVariable(_action = new Variable(si.attributes[16]));
-  vm.addVariable(_lead = new Variable(si.attributes[17]));
-
+  
+  Adapt* adapt;
+  for (unsigned int it = 0; it< si.listeners.size();it++){
+    adapt = new Adapt(vm,
+		      this,
+		      si.listeners[it].key, 
+		      si.listeners[it].coef, 
+		      si.listeners[it].gain);
+    _adapts.push_back(adapt);
+  }
   _session = NULL;
 
   _angleX = 0.0f;

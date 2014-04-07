@@ -23,8 +23,6 @@ public:
   void Reset();
   void RandomPosXZ();
   double z() { return _z->value; }
-  float lead(){ return _lead->value;}
-  int key(){ return _key->value;}
   string getAttrsToString();
   
 protected:
@@ -48,11 +46,6 @@ protected:
   Variable* _radius;
 
   Variable* _z;
-  
-  Variable* _key;
-  Variable* _gain;
-  Variable* _action;
-  Variable* _lead;
 
   SphereShadow* _shadow;
 
