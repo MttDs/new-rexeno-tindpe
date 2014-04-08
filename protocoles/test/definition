@@ -1,11 +1,16 @@
 name= TEST
 save= /home/xeno1/Desktop/new-rexeno-tindpe/protocoles/test/datas/
 logLevel= 9
-frequency= 60
+frequency= 60 
+width= 3840
+height= 1080
 
 | PROTO1 300 0 0.0 0 0 1 1.8 0 0 0
-> Sphere       Sphere1        0   0  -3   0  0  0       60   20     20    0.2     0.8   0   0  
-> Sphere       Sphere2        0   0  -3   0  0  60      120  20     20    0.2     0.8   0   0   
-+ 97   0.9   g   
-+ 98   1.1   g
+> Plan Plan 0 0 0 -1 40 80 80
+> Sphere       Sphere2        0   0  -1   0  0  0       60   20     20    0.2     0.8   0   0   
+> Sphere       Sphere1        0   0  -3   0  0  0       60   20     20    0.2     0.7   0   0   
++ 97   0.87   g   
++ 98   1.16   g 
++ 99   0.27   g   
++ 100   1.63   g
 ;

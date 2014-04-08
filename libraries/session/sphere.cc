@@ -85,36 +85,7 @@ Sphere::React2input(Status& s,
     _session = _father->session();
   }
   int fps = _session->getFrequency();
-  string str;
-  ostringstream ostr;
 
-  // Saving of shape apparition
-  if ((frameId == frameStart()) && (!_logged))
-    {
-      _logged = true;
-
-      ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << RoundNdecimal(2,_x->value) << ", " << RoundNdecimal(2,_y->value) << ", " << RoundNdecimal(2,_z->value) <<"]";
-      str = ostr.str();
-      _session->recorder->Save(str, "events.txt");
-    }
-
-  // Saving of shape disparation
-  if ((frameId == frameEnd()) && (!_loggedEnd))
-    {
-      ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << RoundNdecimal(2,_x->value) << ", " << RoundNdecimal(2,_y->value) << ", " << RoundNdecimal(2,_z->value) <<"]";
-      str = ostr.str();
-      _session->recorder->Save(str, "events.txt");
-      _loggedEnd = true;
-    }
-  _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
-
-  if (frameId > frameEnd())
-    s[RUNNING] |= false;
-  else
-    s[RUNNING] = true;
-
-  _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
- 
   float veloV = sqrt((_gainX)*(_gainX)+(_gainZ)*(_gainZ));
   float moveV = veloV/fps;
 
@@ -128,6 +99,55 @@ Sphere::React2input(Status& s,
 
   //  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
+  ostringstream ostr;
+
+
+
+  // Saving of shape apparition
+  if ((frameId == frameStart()) && (!_logged))
+    {
+      float move = *_veloX/fps;
+      float angleX = (move / *_radius*180.0 / M_PI);
+      move = *_veloZ/fps;
+      float angleZ = (move / *_radius*180.0 / M_PI);
+
+      _logged = true;
+      // start time x z angleX angleZ angleV veloX veloZ veloV 
+      ostr << _name 
+	   << " start " << lexical_cast<string>(displayTime) 
+	   << " " << _x->value
+	   << " " << _z->value 
+	   << " " << angleX
+	   << " " << angleZ
+	   << " " << _angleV
+	   << " " << _gainX
+	   << " " << _gainZ
+	   << " " << veloV ;
+  
+      _session->recorder->Save(ostr.str(), "events.txt");
+    }
+
+  // Saving of shape disparation
+  if ((frameId == frameEnd()) && (!_loggedEnd))
+    {
+      // end name time x z
+      ostr << _name 
+	   << " end " << lexical_cast<string>(displayTime) 
+	   << " " << RoundNdecimal(2,_x->value) 
+	   << " " << RoundNdecimal(2,_z->value);
+
+      _session->recorder->Save(ostr.str(), "events.txt");
+      _loggedEnd = true;
+    }
+  _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
+
+  if (frameId > frameEnd())
+    s[RUNNING] |= false;
+  else
+    s[RUNNING] = true;
+
+  _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
+ 
   *_x = *_x+(moveV*cos(OrientV));
   *_z = *_z+(moveV*sin(OrientV));
 }
@@ -209,24 +229,33 @@ Sphere::getAttrsToString(){
     _session = _father->session();
   }
 
-  string str;
+  
   int fps = _session->getFrequency();
   float move = *_veloX/fps;
   float angleX = (move / *_radius*180.0 / M_PI);
-  move = *_veloY/fps;
-  float angleY = (move / *_radius*180.0 / M_PI);
   move = *_veloZ/fps;
   float angleZ = (move / *_radius*180.0 / M_PI);
+
   ostringstream ostr;
-  ostr <<  _name << ": Radius ["
-       << *_radius << "] Velocity [" << *_veloX << ", " << *_veloY <<", " << *_veloZ <<"] Angle ["
-       <<RoundNdecimal(2,angleX)
-       <<", "
-       <<RoundNdecimal(2,angleY)
-       <<", "
-       <<RoundNdecimal(2,angleZ) <<"]";
-  str = ostr.str();
-  return str;
+
+  ostr <<  _name << ": "
+       << "Pos["
+       << _x->value << ", "
+       << _z->value 
+       << "] Radius ["
+       << *_radius << "] Velocity [" 
+       << *_veloX << ", " 
+       << *_veloZ <<"] Angle ["
+       << RoundNdecimal(2,angleX)
+       << ", "
+       << RoundNdecimal(2,angleZ) 
+       <<"]"
+       << " Frame start "
+       << _frameStart->value
+       << " Frame end " 
+       << _frameEnd->value;
+  
+  return  ostr.str();
 }
 
 

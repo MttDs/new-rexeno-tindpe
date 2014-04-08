@@ -153,24 +153,32 @@ Shape::React2input(Status& s,
 {
 
   Session* session = Session::getInstance();
-  string str;
   ostringstream ostr;
 
 
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
     {
+      // name time x y
       _logged = true;
-      ostr << _name << " start " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
-      str = ostr.str();
-      session->recorder->Save(str, "events.txt");
+      ostr << _name << " start "
+	   << lexical_cast<string>(displayTime) 
+	   << " " 
+	   << _x->value 
+	   << " " 
+	   << _y->value;
+      session->recorder->Save(ostr.str(), "events.txt");
     }
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
-      ostr << _name << " end " << lexical_cast<string>(displayTime) << " Pos [" << *_x << ", " << *_y <<"]";
-      str = ostr.str();
-      session->recorder->Save(str, "events.txt");
+      ostr << _name << " end " 
+	   << lexical_cast<string>(displayTime) 
+	   << " "
+	   << _x->value 
+	   << " " 
+	   << _y->value;
+      session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
     }
 
@@ -278,11 +286,13 @@ Shape::_getRandomNumber(float pos, float nb){
   return RoundNdecimal(2,newPos);
 }
 
+/*
+Add adapts in "k" (k = pAdapts (Trial::DisplayFrame))
+ */
 void
-Shape::getAdaptsByKey(vector<Adapt*>*k){
+Shape::setAdapts(vector<Adapt*>*k){
   vector<Adapt*>::iterator it;
   for (it = _adapts.begin(); it!= _adapts.end(); it++){
-    //    (*k).push_back((int)(*it)->key()->value); 
     (*k).push_back(*it);
   }
 }

@@ -69,8 +69,8 @@ public:
   virtual string getAttrsToString();
   double RoundNdecimal(int n, float nb);
   bool IsTextured(){ return _istexured;}
-  void addAdapt(Adapt *a){_adapts.push_back(a);}
-  void getAdaptsByKey(vector<Adapt*>*k);
+  //  void addAdapt(Adapt *a){_adapts.push_back(a);}
+  void setAdapts(vector<Adapt*>*k);
   void updateVelo(double coef);
 protected:
   // Use these functions for opengl's drawing scale. 

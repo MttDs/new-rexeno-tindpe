@@ -46,7 +46,6 @@ Trial::Trial(TrialInfo& ti)
   for (it = ti.shapes.begin(); it != ti.shapes.end(); ++it)
     {
       Shape *newShape = NULL;
-      //   Adapt *newAdapt = NULL;
 
       if (it->name == "Square")
 	newShape = new Square(*it, variables, this);
@@ -68,16 +67,7 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new Rectangle3d(*it, variables, this);
       if (it->name == "Aircraft")
 	newShape = new Aircraft(*it, variables, this);
-      /*      if (it->name == "adapt"){
-	string name = it->attributes[0];
-	Sphere* s = getSphereByName(it->attributes[0]);
-	if (s==NULL){
-	  std::cout << "Insertion 'adapt' Erreur : impossible de trouver la Sphere parente: " <<  name << endl;
-	  exit(0);
-	}
-	newAdapt = new Adapt(*it, variables, s);
-	s->addAdapt(newAdapt);
-	}*/
+
       if (newShape)
 	{
 	  _shapes.push_back(newShape);
@@ -116,10 +106,12 @@ Trial::~Trial()
 int
 Trial::displayFrame(Driver* driver)
 {
+
   if (_session == NULL){
     _session = Session::getInstance();
   }
   int fps = _session->getFrequency();
+
   _eyeX->value = _eyeX->value+(_cameraVeloX->value/fps);
   _centerX->value = _centerX->value+(_cameraVeloX->value/fps);
   _eyeY->value = _eyeY->value+(_cameraVeloY->value/fps);
@@ -127,18 +119,14 @@ Trial::displayFrame(Driver* driver)
   _eyeZ->value = _eyeZ->value+(_cameraVeloZ->value/fps);
   _centerZ->value = _centerZ->value+(_cameraVeloZ->value/fps);
 
-  gluLookAt(_eyeX->value,_eyeY->value,_eyeZ->value, _centerX->value,_centerY->value,_centerZ->value, 0,1,0);
-
-  float Sun =  0.5f;
-
-  GLfloat lightPosition[4] = {0.0f,0.0f,0.0f,1.0f};
-  GLfloat lightAmbient[4] = {Sun,Sun,Sun,2.0f};
-  GLfloat lightDiffuse[4] = {1.0f,1.0f,1.0f,1.0f};
-
-  glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-  glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
+  gluLookAt(_eyeX->value,
+	    _eyeY->value,
+	    _eyeZ->value, 
+	    _centerX->value,
+	    _centerY->value,
+	    _centerZ->value, 
+	    0,1,0);
+ 
   vector<Shape*>::iterator it;
   vector<Sphere*> spheres;
 
@@ -147,7 +135,6 @@ Trial::displayFrame(Driver* driver)
 
   vector<Adapt*> adapts;
   vector<Adapt*>*pAdapts = &adapts;
-
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
     {
       Shape *curShape = *it;
@@ -159,17 +146,17 @@ Trial::displayFrame(Driver* driver)
 	  nbSphereNotDisplayable++;
 	}
       }
-      curShape->getAdaptsByKey(pAdapts);
+
+      curShape->setAdapts(pAdapts);
+ 
       if (curShape->Displayable(_curFrameId)){
     	curShape->Display();
       }
 
       glPopMatrix();
     }
-  
-  int nbSphere = spheres.size();
  
-  if (nbSphereNotDisplayable==nbSphere){
+  if (nbSphereNotDisplayable==(int)spheres.size()){
     spheresEnd = true;
   }
 
@@ -178,13 +165,18 @@ Trial::displayFrame(Driver* driver)
   _sendTtls(driver);
 
   driver->React2input();
-  driver->AnalogIn(_data);
+  driver->AnalogIn(_data);    
   ms displayTime = driver->GetTime();
  
   if((_curFrameId == 0) && (_start)){
     string str;
     ostringstream ostr;
-    ostr << _name << " Camera Velo " << "[" << _cameraVeloX << "," << _cameraVeloY << "," << _cameraVeloZ << "]";
+    ostr << _name 
+	 << " Camera Velo [" 
+	 << _cameraVeloX->value << "," << _cameraVeloY->value << "," << _cameraVeloZ->value 
+	 << "] Camera Eye ["
+	 << _eyeX << ", " << _eyeY << ", " << _eyeZ
+	 << "]";
     str = ostr.str();
     _session->recorder->Save(str,"trials.txt");
 
@@ -215,12 +207,10 @@ Trial::displayFrame(Driver* driver)
     vector<Adapt*>::iterator intIt;
 
     Shape* adpShape = NULL;
-    int key;
     bool submit = false;
     for (intIt = (*pAdapts).begin(); intIt != (*pAdapts).end(); intIt++){
 
-      key = (int)(*intIt)->key()->value;
-      if (key == Setup::keysName){
+      if ((*intIt)->key()->value == Setup::keysName){
 	adpShape = (*intIt)->parent();
 	
 	if (true){
@@ -228,18 +218,17 @@ Trial::displayFrame(Driver* driver)
 	}
 	submit = true;
       }
-    }  
+    } 
     if (submit){
 
       if (_subjectResponse == false){
 
 	std::cout << "Reponse => " << Setup::keysName << endl;
-	string str;
+
 	ostringstream ostr;
 	ostr << "Response "<< lexical_cast<string>(displayTime) << " : " << Setup::keysName;
-	str = ostr.str();
 
-	_session->recorder->Save(str, "events.txt");
+	_session->recorder->Save(ostr.str(), "events.txt");
 	_subjectResponse = true;
       }
       _status[CORRECT] = true;
@@ -382,7 +371,7 @@ Trial::Reset(Driver *d)
   
   Setup::reset();
 }
-
+/*
 Sphere*
 Trial::getSphereByName(string name){
   Shapes::iterator it;
@@ -397,7 +386,7 @@ Trial::getSphereByName(string name){
   }
 
   return s;
-}
+  }*/
 
 bool
 Trial::status(int key)

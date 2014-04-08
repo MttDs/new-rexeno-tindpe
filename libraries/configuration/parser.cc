@@ -52,6 +52,8 @@ BOOST_FUSION_ADAPT_STRUCT(
 			  (std::string, save)
                           (int, traceLevel)
                           (int, frequency)
+			  (int, width)
+			  (int, height)
 			  (std::vector<configuration::TrialInfo>, trials)
 			  )
 
@@ -104,6 +106,8 @@ namespace configuration
 	>> -("save=" >> word) 
         >> -("logLevel=" >> int_)
         >> -("frequency=" >> int_)
+        >> -("width=" >> int_)
+	>> -("height=" >> int_)
 	>> +trial
 	;
 

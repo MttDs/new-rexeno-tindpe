@@ -51,6 +51,8 @@ namespace configuration
     std::string save;
     int frequency;
     int traceLevel;
+    int width;
+    int height;
     std::vector<TrialInfo> trials;
   };
 
