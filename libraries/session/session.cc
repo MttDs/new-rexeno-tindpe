@@ -5,7 +5,6 @@
 
 #include "driver.hh"
 #include "order_parser.hh"
-#include <GL/glut.h>
 
 using namespace configuration;
 
@@ -23,11 +22,8 @@ int mainWindow;
  */
 Session::Session(configuration::SessionInfo& s,
                  Order& o)
-  : _trialsOrder(o.getOrder()),
-    _R(0),
-    _G(0),
-    _B(0)
-{
+  : _trialsOrder(o.getOrder()){
+
   Trial* t = NULL;
   vector<TrialInfo>::iterator it;
 
@@ -51,11 +47,30 @@ Session::Session(configuration::SessionInfo& s,
   recorder->AddFile("square_targets.txt");
   recorder->AddFile("logger.txt");
   recorder->AddFile("general.txt");
-
+  
   _offsetVsync = -1;
   _initialized = false;
   _nbFrame4init = 120;
   _nbInitFrames = 0;
+  
+  _windowWidth = s.width;
+  _windowHeight = s.height;
+
+  stringstream ss;
+  
+  ss << _windowWidth 
+     << "x" 
+     << _windowHeight 
+     << ":32@" 
+     << s.frequency;
+
+  _gameMode = ss.str();
+
+  _lP[0] = 0.0f; _lP[1] = 0.0f; _lP[2] = 0.0f;  _lP[3] = 1.0f; //{0.0,0.0,0.0,1.0f};
+  _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; // {0.5,0.5,0.5,2.0f};
+  _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f ;// {1.0f,1.0f,1.0f,1.0f};
+  _RGB[0] = 0.0f; _RGB[1] = 0.51; _RGB[2] = 0.73;
+
 #ifdef DEBUG
   __debug_FrameNumber = 0;
 #endif
@@ -187,6 +202,12 @@ Session::displayHeader()
 
     glClear (GL_COLOR_BUFFER_BIT);
 
+
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
+    glLightfv(GL_LIGHT0, GL_POSITION, _lP);
+
     for (int loop=0; loop<2; loop++){
 
       if (loop==0){
@@ -237,17 +258,10 @@ Session::displayHeader()
 
 
 GLvoid
-InitGL(){
-
-  float Sun =  0.5f;
-  float rgb[3] = {0.0f, 0.51f, 0.73f};
-
-  GLfloat lightPosition[4] = {0.0f,1.0f,0.0f,0.0f};
-  GLfloat lightAmbient[4] = {Sun,Sun,Sun,2.0f};
-  GLfloat lightDiffuse[4] = {1.0f,1.0f,1.0f,1.0f};
-
+Session::InitGL(){
   glEnable(GL_TEXTURE_2D);
-  glClearColor(rgb[0],rgb[1],rgb[2],1.0f);
+ 
+  glClearColor(_RGB[0],_RGB[1],_RGB[2], 1.0f);
   glClearDepth(1.0);
   glDepthFunc(GL_LESS);
   glDepthFunc (GL_LEQUAL);
@@ -263,10 +277,6 @@ InitGL(){
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
-  glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-  glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
 }
 
 /**
@@ -279,15 +289,18 @@ void
 Session::run(int argc,
              char** argv)
 {
+  // configuration::SessionInfo& s;
+
+  
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-  glutInitWindowSize(3840,1080);
+  glutInitWindowSize(_windowWidth,_windowHeight);
   //	glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH)-3840)/2,
   //			               (glutGet(GLUT_SCREEN_HEIGHT)-1080)/2);
   glutInitWindowPosition(0, 0);
-  mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");;
+  mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
-  //  glutGameModeString("3840x1080:32@60");
+  glutGameModeString( _gameMode.c_str());
   // glutEnterGameMode();
   //glutFullScreen();
   //glutSetCursor(GLUT_CURSOR_NONE);

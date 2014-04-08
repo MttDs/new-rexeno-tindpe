@@ -17,6 +17,7 @@
 # include <vector>
 # include <list>
 # include "types.hh"
+#include <GL/glut.h>
 
 class Driver;
 class VariableManager;
@@ -60,6 +61,7 @@ public:
   ms getTime();
   int getFrequency(){return _frequency; }
   bool initialized();
+  GLvoid InitGL();
 private:
   Session(configuration::SessionInfo& s,
           Order& o);
@@ -71,8 +73,6 @@ private:
   static Session* _instance;
   vector<pair<double, ms> > _inputData;
   vector<int>::iterator _currentTrial;
-  // Background Color :
-  int _R, _G, _B;
   // Guardian Trial : in charge of
   // evaluating the offset value of display
   bool _initialized;
@@ -80,6 +80,17 @@ private:
   int _nbInitFrames;
   double _offsetVsync; // offset between 0 and 16.666 (if 60Hz)
   int _frequency;
+  int _windowWidth;
+  int _windowHeight;
+  string _gameMode;
+  // Background Color :
+  GLfloat _RGB[3];
+  // Light Position : 
+  GLfloat _lP[4]; 
+  // Light Ambient : 
+  GLfloat _lA[4];
+  // Light Diffuse :
+  GLfloat _lD[4];
 
 #ifdef DEBUG
   int __debug_FrameNumber;
