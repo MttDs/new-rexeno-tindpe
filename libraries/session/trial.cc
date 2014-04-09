@@ -13,6 +13,7 @@ Trial::Trial(TrialInfo& ti)
     _subjectResponse(false)
 {
   _session = NULL;
+
   assert(ti.attributes.size() == 10);
 
   variables.addVariable(_time = new Variable(ti.attributes[0]));
@@ -60,7 +61,7 @@ Trial::Trial(TrialInfo& ti)
       if (it->name == "FixationWindow")
 	newShape = new FixationWindow(*it, variables, this);
       if (it->name == "Sphere")
-	  newShape = new Sphere(*it, variables, this);
+	newShape = new Sphere(*it, variables, this);
       if (it->name == "Plan")
 	newShape = new Plan(*it, variables, this);
       if (it->name == "Rectangle3d")
@@ -130,8 +131,8 @@ Trial::displayFrame(Driver* driver)
   vector<Shape*>::iterator it;
   vector<Sphere*> spheres;
 
-  bool spheresEnd = false;
-  int nbSphereNotDisplayable = 0;
+  bool canAnswer = false;
+  int nbSphereEnd = 0, nbSphere = 0;
 
   vector<Adapt*> adapts;
   vector<Adapt*>*pAdapts = &adapts;
@@ -141,9 +142,9 @@ Trial::displayFrame(Driver* driver)
       glPushMatrix();
 
       if (curShape->id()==7){
-	spheres.push_back(dynamic_cast<Sphere*>(curShape));
+	nbSphere++;
 	if (!curShape->Displayable(_curFrameId)){
-	  nbSphereNotDisplayable++;
+	  nbSphereEnd++;
 	}
       }
 
@@ -156,8 +157,8 @@ Trial::displayFrame(Driver* driver)
       glPopMatrix();
     }
  
-  if (nbSphereNotDisplayable==(int)spheres.size()){
-    spheresEnd = true;
+  if (nbSphere==nbSphereEnd){
+    canAnswer = true;
   }
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
@@ -173,9 +174,9 @@ Trial::displayFrame(Driver* driver)
     ostringstream ostr;
     ostr << _name 
 	 << " Camera Velo [" 
-	 << _cameraVeloX->value << "," << _cameraVeloY->value << "," << _cameraVeloZ->value 
+	 << _cameraVeloX->value << "," << _cameraVeloY->value << "," << _cameraVeloZ->value
 	 << "] Camera Eye ["
-	 << _eyeX << ", " << _eyeY << ", " << _eyeZ
+	 << _eyeX->value << "," << _eyeY->value << "," << _eyeZ->value
 	 << "]";
     str = ostr.str();
     _session->recorder->Save(str,"trials.txt");
@@ -202,40 +203,41 @@ Trial::displayFrame(Driver* driver)
       _logged = true;
     }
 
-  if (spheresEnd){
+  if (canAnswer){
 
-    vector<Adapt*>::iterator intIt;
+    vector<Adapt*>::iterator aIt;
 
-    Shape* adpShape = NULL;
+    Shape* parent  = NULL;
     bool submit = false;
-    for (intIt = (*pAdapts).begin(); intIt != (*pAdapts).end(); intIt++){
+    for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++){
 
-      if ((*intIt)->key()->value == Setup::keysName){
-	adpShape = (*intIt)->parent();
+      if ((*aIt)->key()->value == Setup::key){
+	parent = (*aIt)->parent();
 	
 	if (true){
-	  adpShape->updateVelo((*intIt)->coef()->value);
+	  parent->updateVelo((*aIt)->coef()->value);
 	}
 	submit = true;
       }
     } 
-    if (submit){
 
-      if (_subjectResponse == false){
+    if ((submit) && (!_subjectResponse)){
+	
+      std::cout << "Reponse => " << Setup::key << endl;
 
-	std::cout << "Reponse => " << Setup::keysName << endl;
+      ostringstream ostr;
+      ostr << "Response "
+	   << lexical_cast<string>(displayTime) 
+	   << " : " << Setup::key;
 
-	ostringstream ostr;
-	ostr << "Response "<< lexical_cast<string>(displayTime) << " : " << Setup::keysName;
-
-	_session->recorder->Save(ostr.str(), "events.txt");
-	_subjectResponse = true;
-      }
+      _session->recorder->Save(ostr.str(), "events.txt");
+      _subjectResponse = true;
+      
       _status[CORRECT] = true;
     }
   }
   else{
-    Setup::keysName = -1;
+    Setup::key = -1;
   }
 
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
@@ -371,22 +373,6 @@ Trial::Reset(Driver *d)
   
   Setup::reset();
 }
-/*
-Sphere*
-Trial::getSphereByName(string name){
-  Shapes::iterator it;
-  Sphere* s = NULL;
-  it = _shapes.begin();
-
-  while((s == NULL) && (it!=_shapes.end())){
-    if ((*it)->name()==name){
-      s = dynamic_cast<Sphere*>(*it);
-    }
-    it++; 
-  }
-
-  return s;
-  }*/
 
 bool
 Trial::status(int key)

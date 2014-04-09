@@ -60,7 +60,6 @@ public:
   Session* session() {return _session;}
   VariableManager variables;
   void Reset(Driver * d);
-  // Sphere* getSphereByName(string name);
   
 private:
   Session* _session;

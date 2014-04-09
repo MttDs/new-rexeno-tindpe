@@ -41,6 +41,7 @@ Session::Session(configuration::SessionInfo& s,
   recorder = new Recorder(s.save, s.traceLevel);
   recorder->AddFile("results.txt");
   recorder->AddFile("trials.txt");
+  
   recorder->AddFile("events.txt");
   recorder->AddFile("X.txt");
   recorder->AddFile("id_trials.txt");
@@ -66,9 +67,9 @@ Session::Session(configuration::SessionInfo& s,
 
   _gameMode = ss.str();
 
-  _lP[0] = 0.0f; _lP[1] = 0.0f; _lP[2] = 0.0f;  _lP[3] = 1.0f; //{0.0,0.0,0.0,1.0f};
-  _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; // {0.5,0.5,0.5,2.0f};
-  _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f ;// {1.0f,1.0f,1.0f,1.0f};
+  _lP[0] = 0.0f; _lP[1] = 0.0f; _lP[2] = 0.0f;  _lP[3] = 1.0f; 
+  _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; 
+  _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f;
   _RGB[0] = 0.0f; _RGB[1] = 0.51; _RGB[2] = 0.73;
 
 #ifdef DEBUG
@@ -125,7 +126,7 @@ displayRexeno()
 void processNormalKeys(unsigned char key, int x, int y)
 {
   Setup::keys[key] = true;
-  Setup::keysName = key;
+  Setup::key = key;
   if (key == 27)
     {
       exit(0);
@@ -147,13 +148,6 @@ reshape(int width, int height){
   else{
     ratio = float (height/width);
   }
-  /*
-  glViewport(0,0,width, height); 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity(); 
-  gluPerspective(90, ratio, 1.0f, 2000.0f);
-  glMatrixMode(GL_MODELVIEW); 
-  */
 }
 
 /** 
@@ -202,8 +196,6 @@ Session::displayHeader()
 
     glClear (GL_COLOR_BUFFER_BIT);
 
-
-
     glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
     glLightfv(GL_LIGHT0, GL_POSITION, _lP);
@@ -217,12 +209,6 @@ Session::displayHeader()
 	glLoadIdentity();
 	gluPerspective(90, ratio, 1.0f, 2000.0f); 
 	glMatrixMode(GL_MODELVIEW);
-	/*
-	  glViewport (0, window_height/2, window_width/2, window_height/2);
-	  glMatrixMode (GL_PROJECTION);	
-	  glLoadIdentity ();						
-	  gluOrtho2D(0, window_width/2, window_height/2, 0);
-	*/
       }
       if (loop==1){
 	glViewport(window_width,0,window_width, window_height);
@@ -230,10 +216,6 @@ Session::displayHeader()
 	glLoadIdentity(); 
 	gluPerspective(90, ratio, 1.0f, 2000.0f); 
 	glMatrixMode(GL_MODELVIEW);
-	/*
-	  glViewport (window_width/2, window_height/2, window_width/2, window_height/2);
-	  glMatrixMode (GL_PROJECTION);	  
-	*/
       }
 
       glMatrixMode (GL_MODELVIEW);		
@@ -295,13 +277,11 @@ Session::run(int argc,
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
   glutInitWindowSize(_windowWidth,_windowHeight);
-  //	glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH)-3840)/2,
-  //			               (glutGet(GLUT_SCREEN_HEIGHT)-1080)/2);
   glutInitWindowPosition(0, 0);
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
-  glutGameModeString( _gameMode.c_str());
-  // glutEnterGameMode();
+  glutGameModeString(_gameMode.c_str());
+  //glutEnterGameMode();
   //glutFullScreen();
   //glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);

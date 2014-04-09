@@ -17,7 +17,7 @@ public:
   static void reset();
   
   static bool* keys; // Create an array of boolean values of length 256 (0-255)
-  static int keysName;
+  static int key;
 private:
   // centimenters
   double _screenHeight;
