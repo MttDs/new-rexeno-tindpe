@@ -66,7 +66,7 @@ Session::Session(configuration::SessionInfo& s,
      << s.frequency;
 
   _gameMode = ss.str();
-
+  _nbScreen = s.nb_screen;
   _lP[0] = 0.0f; _lP[1] = 0.0f; _lP[2] = 0.0f;  _lP[3] = 1.0f; 
   _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; 
   _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f;
@@ -185,6 +185,9 @@ Session::displayHeader()
  				
     int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
     int window_width = glutGet(GLUT_WINDOW_WIDTH);
+    std::cout << "height =>" << window_height << endl;
+    std::cout << "width => " << window_width << endl;
+
     float ratio = 0.0;
 
     if (window_width >= window_height){
@@ -199,19 +202,19 @@ Session::displayHeader()
     glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
     glLightfv(GL_LIGHT0, GL_POSITION, _lP);
-
+ 
     for (int loop=0; loop<2; loop++){
 
       if (loop==0){
 
-	glViewport(0,0,window_width, window_height); 
+	glViewport(0,0,window_width/2, window_height); 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(90, ratio, 1.0f, 2000.0f); 
 	glMatrixMode(GL_MODELVIEW);
       }
       if (loop==1){
-	glViewport(window_width,0,window_width, window_height);
+	glViewport(window_width/2,0,window_width/2, window_height);
 	glMatrixMode(GL_PROJECTION); 
 	glLoadIdentity(); 
 	gluPerspective(90, ratio, 1.0f, 2000.0f); 
@@ -226,7 +229,7 @@ Session::displayHeader()
 	displayFrame();
       }
       if (loop==1){
-	//	displayFrame();
+		displayFrame();
 	/* /2 le nombre de frame + 
 	   ne se place pas correct + 
 	   enlever les intéractions inutiles */
@@ -281,9 +284,9 @@ Session::run(int argc,
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(_gameMode.c_str());
-  //glutEnterGameMode();
-  //glutFullScreen();
-  //glutSetCursor(GLUT_CURSOR_NONE);
+  glutEnterGameMode();
+  glutFullScreen();
+  glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
   glutDisplayFunc (displayRexeno);
   glutKeyboardFunc(processNormalKeys);
