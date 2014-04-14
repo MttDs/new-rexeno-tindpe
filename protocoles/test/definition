@@ -4,6 +4,7 @@ logLevel= 9
 frequency= 60 
 width= 3840
 height= 1080
+nb_screen= 1
 
 | PROTO1 300 0 0.0 0 0 1 1.8 0 0 0
 > Plan Plan 0 0 0 -1 40 80 80

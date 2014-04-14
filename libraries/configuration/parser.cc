@@ -17,7 +17,7 @@
 namespace qi = boost::spirit::qi;
 //namespace ascii = boost::spirit::ascii;
 namespace standard = boost::spirit::standard;
-
+ 
 
 // We need to tell fusion about our struct
 // to make it a first-class fusion citizen. This has to
@@ -54,6 +54,7 @@ BOOST_FUSION_ADAPT_STRUCT(
                           (int, frequency)
 			  (int, width)
 			  (int, height)
+			  (int, nb_screen)
 			  (std::vector<configuration::TrialInfo>, trials)
 			  )
 
@@ -108,6 +109,7 @@ namespace configuration
         >> -("frequency=" >> int_)
         >> -("width=" >> int_)
 	>> -("height=" >> int_)
+	>> -("nb_screen=" >> int_)
 	>> +trial
 	;
 

@@ -202,39 +202,53 @@ Session::displayHeader()
     glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
     glLightfv(GL_LIGHT0, GL_POSITION, _lP);
- 
-    for (int loop=0; loop<2; loop++){
+    if (getNbScreen()==2){
+      for (int loop=0; loop<2; loop++){
 
-      if (loop==0){
+	if (loop==0){
 
-	glViewport(0,0,window_width/2, window_height); 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(90, ratio, 1.0f, 2000.0f); 
-	glMatrixMode(GL_MODELVIEW);
+	  glViewport(0,0,window_width/2, window_height); 
+	  glMatrixMode(GL_PROJECTION);
+	  glLoadIdentity();
+	  gluPerspective(90, ratio, 1.0f, 2000.0f); 
+	  glMatrixMode(GL_MODELVIEW);
+	}
+	if (loop==1){
+	  glViewport(window_width/2,0,window_width/2, window_height);
+	  glMatrixMode(GL_PROJECTION); 
+	  glLoadIdentity(); 
+	  gluPerspective(90, ratio, 1.0f, 2000.0f); 
+	  glMatrixMode(GL_MODELVIEW);
+	}
+
+	glMatrixMode (GL_MODELVIEW);		
+	glLoadIdentity ();							
+	glClear (GL_DEPTH_BUFFER_BIT);	
+
+	if (loop==0){					
+	  displayFrame();
+	}
+	if (loop==1){
+	  //displayFrame();
+	  /* /2 le nombre de frame + 
+	     ne se place pas correct + 
+	     enlever les intéractions inutiles */
+	}
+	glutPostRedisplay();	 
       }
-      if (loop==1){
-	glViewport(window_width/2,0,window_width/2, window_height);
-	glMatrixMode(GL_PROJECTION); 
-	glLoadIdentity(); 
-	gluPerspective(90, ratio, 1.0f, 2000.0f); 
-	glMatrixMode(GL_MODELVIEW);
-      }
-
-      glMatrixMode (GL_MODELVIEW);		
+    }
+    else{
+      glViewport(0,0,window_width, window_height); 
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      gluPerspective(90, ratio, 1.0f, 2000.0f); 
+      glMatrixMode(GL_MODELVIEW);
       glLoadIdentity ();							
-      glClear (GL_DEPTH_BUFFER_BIT);	
-
-      if (loop==0){					
-	displayFrame();
-      }
-      if (loop==1){
-		displayFrame();
-	/* /2 le nombre de frame + 
-	   ne se place pas correct + 
-	   enlever les intéractions inutiles */
-      }
-      glutPostRedisplay();	
+      glClear (GL_DEPTH_BUFFER_BIT);
+      
+      displayFrame();
+      
+      glutPostRedisplay();
     }
   }
   glutSwapBuffers();
@@ -284,7 +298,7 @@ Session::run(int argc,
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(_gameMode.c_str());
-  glutEnterGameMode();
+  // glutEnterGameMode();
   glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);

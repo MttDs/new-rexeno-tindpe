@@ -52,7 +52,7 @@ public:
   void (*beforeTrial)(string&, VariableManager&);
   void setDriver(Driver* d) {_driver = d;}
 
-  Setup* setup;
+  Setup* setup; 
   Recorder* recorder;
   //void (*interFrame)(VariableManager&);
   //void (*ConfigurableWindow)(TrialManager *);
@@ -60,6 +60,7 @@ public:
   int nbInitFrames() {return _nbInitFrames;}
   ms getTime();
   int getFrequency(){return _frequency; }
+  int getNbScreen(){return _nbScreen; }
   bool initialized();
   GLvoid InitGL();
 private:
@@ -82,6 +83,7 @@ private:
   int _frequency;
   int _windowWidth;
   int _windowHeight;
+  int _nbScreen;
   string _gameMode;
   // Background Color :
   GLfloat _RGB[3];

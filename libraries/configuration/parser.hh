@@ -50,9 +50,10 @@ namespace configuration
     std::string y_channel;
     std::string save;
     int frequency;
-    int traceLevel;
+    int traceLevel; 
     int width;
     int height;
+    int nb_screen;
     std::vector<TrialInfo> trials;
   };
 
