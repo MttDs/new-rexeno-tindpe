@@ -1,5 +1,0 @@
-PROTO1 Camera Velo [0x84255f8,0x84252d8,0x8424d10]
-Plan: Width 40 Height 80 Pos [0, 0] Repeat Texture 80
-Sphere2: Radius [0.2] Velocity [0.8, 0, 0] Angle [3.82, 0, 0]
-Sphere3: Radius [0.2] Velocity [0.4, 0, 0] Angle [1.91, 0, 0]
-
