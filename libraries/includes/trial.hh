@@ -60,13 +60,15 @@ public:
   Session* session() {return _session;}
   VariableManager variables;
   void Reset(Driver * d);
-  
+  void setIdScreen(int id){ _idScreen = id;}
+
 private:
   Session* _session;
 
   int _react2status();
   void _sendTtls(Driver* d);
-
+  bool _isSubScreen(); // subject 
+  int _idScreen;
   int _curFrameId;
   int _nbFrames;
   Status _status;

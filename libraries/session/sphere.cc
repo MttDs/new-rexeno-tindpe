@@ -101,8 +101,6 @@ Sphere::React2input(Status& s,
 
   ostringstream ostr;
 
-
-
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
     {

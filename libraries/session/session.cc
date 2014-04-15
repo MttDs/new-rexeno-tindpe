@@ -185,8 +185,6 @@ Session::displayHeader()
  				
     int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
     int window_width = glutGet(GLUT_WINDOW_WIDTH);
-    std::cout << "height =>" << window_height << endl;
-    std::cout << "width => " << window_width << endl;
 
     float ratio = 0.0;
 
@@ -226,13 +224,10 @@ Session::displayHeader()
 	glClear (GL_DEPTH_BUFFER_BIT);	
 
 	if (loop==0){					
-	  displayFrame();
+	  displayFrame(1);
 	}
 	if (loop==1){
-	  //displayFrame();
-	  /* /2 le nombre de frame + 
-	     ne se place pas correct + 
-	     enlever les intéractions inutiles */
+	  displayFrame(2);
 	}
 	glutPostRedisplay();	 
       }
@@ -246,7 +241,7 @@ Session::displayHeader()
       glLoadIdentity ();							
       glClear (GL_DEPTH_BUFFER_BIT);
       
-      displayFrame();
+      displayFrame(1);
       
       glutPostRedisplay();
     }
@@ -298,7 +293,7 @@ Session::run(int argc,
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(_gameMode.c_str());
-  // glutEnterGameMode();
+   glutEnterGameMode();
   glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
@@ -315,12 +310,12 @@ Session::run(int argc,
  * 
  */
 void
-Session::displayFrame()
+Session::displayFrame(int idScreen)
 {
 #ifdef DEBUG
   // PDEBUG("Session::displayFrame ", __debug_FrameNumber << "/" << _trialsOrder.size() << " trials in this session");
 #endif
-
+  
   if (_currentTrial != _trialsOrder.end())
     {
       //  PDEBUG("Session::displayFrame", " trial frame ");
@@ -329,20 +324,25 @@ Session::displayFrame()
 	{
 	  beforeTrial(t->name(), t->variables);
 	};
+      t->setIdScreen(idScreen);
       int b = t->displayFrame(_driver);
-
+   
       if (b != RUNNING)
 	{
 
 	  // PDEBUG("Session::displayFrame", " end of trial : " << t->name() << " (trial number " << *_currentTrial << " )");
+	  if (idScreen==1){
 	  ms displayTime = _driver->GetTime();
 	  recorder->Save("EndTrial " + lexical_cast<string>(displayTime), "events.txt");
+	
 	  if (afterTrial)
 
 	    afterTrial(t->name(), t->variables, b);
 
 	  _currentTrial++;
 	  t->Reset(_driver);
+	  }
+	 
 #ifdef DEBUG
 	  ++__debug_FrameNumber;
 #endif
@@ -354,7 +354,6 @@ Session::displayFrame()
       PDEBUG("Session::displayTime", " regular exit")
 	exit (0);
     }
-
 }
 
 

@@ -107,10 +107,10 @@ Trial::~Trial()
 int
 Trial::displayFrame(Driver* driver)
 {
-
   if (_session == NULL){
     _session = Session::getInstance();
   }
+  int screen = _idScreen;
   int fps = _session->getFrequency();
 
   _eyeX->value = _eyeX->value+(_cameraVeloX->value/fps);
@@ -162,44 +162,54 @@ Trial::displayFrame(Driver* driver)
   }
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
-
+  if (_isSubScreen()){
   _sendTtls(driver);
 
   driver->React2input();
-  driver->AnalogIn(_data);    
+  driver->AnalogIn(_data);
+  }
   ms displayTime = driver->GetTime();
  
   if((_curFrameId == 0) && (_start)){
     string str;
     ostringstream ostr;
+    
     ostr << _name 
 	 << " Camera Velo [" 
 	 << _cameraVeloX->value << "," << _cameraVeloY->value << "," << _cameraVeloZ->value
 	 << "] Camera Eye ["
 	 << _eyeX->value << "," << _eyeY->value << "," << _eyeZ->value
 	 << "]";
-    str = ostr.str();
-    _session->recorder->Save(str,"trials.txt");
 
+    str = ostr.str();
+
+    if (_isSubScreen()){ /*****/
+      _session->recorder->Save(str,"trials.txt");
+    }
     for (it = _shapes.begin(); it != _shapes.end(); ++it)
       {
 	Shape *curShape = *it;
 
 	if ((_curFrameId == 0) && (!_logged))
 	  {
+	    if (_isSubScreen()){ /*****/
 	    _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
+	    }
 	  }
 
       }
     _start = false;
-    _session->recorder->Save("" ,"trials.txt");
+    if (_isSubScreen()){ /*****/
+      _session->recorder->Save("" ,"trials.txt");
+    }
   }
   
   if ((_curFrameId == 0) && (!_logged))
     {
+      if (_isSubScreen()){ /*****/
       _session->recorder->Save("TrialStart_ " + lexical_cast<string>(displayTime), "events.txt");
       _session->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
-
+      }
       _logged = true;
     }
 
@@ -214,9 +224,9 @@ Trial::displayFrame(Driver* driver)
       if ((*aIt)->key()->value == Setup::key){
 	parent = (*aIt)->parent();
 	
-	if (true){
+	//	if (true){
 	  parent->updateVelo((*aIt)->coef()->value);
-	}
+	  //	}
 	submit = true;
       }
     } 
@@ -224,13 +234,14 @@ Trial::displayFrame(Driver* driver)
     if ((submit) && (!_subjectResponse)){
 	
       std::cout << "Reponse => " << Setup::key << endl;
+      if (_isSubScreen()){ /*****/
+	ostringstream ostr;
+        ostr << "Response "
+	     << lexical_cast<string>(displayTime) 
+	     << " : " << Setup::key;
 
-      ostringstream ostr;
-      ostr << "Response "
-	   << lexical_cast<string>(displayTime) 
-	   << " : " << Setup::key;
-
-      _session->recorder->Save(ostr.str(), "events.txt");
+	_session->recorder->Save(ostr.str(), "events.txt");
+      }
       _subjectResponse = true;
       
       _status[CORRECT] = true;
@@ -246,13 +257,14 @@ Trial::displayFrame(Driver* driver)
 
       if ((_curFrameId == 0) && (!_logged))
 	{
-	  _session->recorder->Save(curShape->getAttrsToString() ,"events.txt");
+	  if (_isSubScreen()){/*****/
+	    _session->recorder->Save(curShape->getAttrsToString() ,"events.txt");
+	  }
 	}
 
       //PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
-      if (curShape->Displayable(_curFrameId)){
+      if (curShape->Displayable(_curFrameId) && screen==1){
 	curShape->React2input(_status, _data, _curFrameId, driver->GetTime());
-
       }
     }
 
@@ -260,6 +272,15 @@ Trial::displayFrame(Driver* driver)
   return (_react2status());
 }
 
+bool
+Trial::_isSubScreen(){
+  if (_idScreen==1){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 void
 Trial::_sendTtls(Driver* d)
 {
@@ -276,7 +297,6 @@ Trial::_react2status()
 {
   if (_status[CORRECT] == true)
     {
-
       PDEBUG("Trial::_react2status ", "CORRECT");
       return (CORRECT);
     }
@@ -303,14 +323,20 @@ Trial::_react2status()
 
   if (_status[WAITING_FIXATION] == true)
     {
-      _curFrameId++;
+      if (_isSubScreen()){
+        _curFrameId++;    
+      }
+
       PDEBUG("Trial::_react2status ", "WAITING_FIXATION");
       return (RUNNING);
     }
 
   if (_status[RUNNING] == true)
     {
-      _curFrameId++;
+      if (_isSubScreen()){
+	_curFrameId++;  
+      }
+
       // PDEBUG("Trial::_react2status ", "RUNNING");
       return (RUNNING);
     }

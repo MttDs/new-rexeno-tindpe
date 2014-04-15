@@ -45,7 +45,7 @@ public:
                               Order& o);
   void run(int argc,
            char** argv);
-  void displayFrame();
+  void displayFrame(int screen);
   void displayHeader();
 
   void (*afterTrial)(string&, VariableManager&, int);
