@@ -73,3 +73,8 @@ Plan::getAttrsToString(){
   return ostr.str();
 }
 
+void
+Plan::Reset(){
+  _logged = false;
+  _loggedEnd = false;
+}

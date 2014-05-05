@@ -13,6 +13,7 @@ public:
        Trial* t);
   ~Plan();
   void Display();
+  void Reset();
   string getAttrsToString();
 protected:
   Variable* _repeat; // texture

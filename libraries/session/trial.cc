@@ -183,7 +183,7 @@ Trial::displayFrame(Driver* driver)
 
     str = ostr.str();
 
-    if (_isSubScreen()){ /*****/
+    if (_isSubScreen()){ 
       _session->recorder->Save(str,"trials.txt");
     }
     for (it = _shapes.begin(); it != _shapes.end(); ++it)
@@ -192,27 +192,30 @@ Trial::displayFrame(Driver* driver)
 
 	if ((_curFrameId == 0) && (!_logged))
 	  {
-	    if (_isSubScreen()){ /*****/
+	    if (_isSubScreen()){ 
 	    _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
 	    }
 	  }
 
       }
     _start = false;
-    if (_isSubScreen()){ /*****/
+    if (_isSubScreen()){ 
       _session->recorder->Save("" ,"trials.txt");
     }
   }
   
   if ((_curFrameId == 0) && (!_logged))
     {
-      if (_isSubScreen()){ /*****/
-      _session->recorder->Save("TrialStart_ " + lexical_cast<string>(displayTime), "events.txt");
-      _session->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
+      if (_isSubScreen()){
+      _session->recorder->Save("ProtocoleStart_ " + lexical_cast<string>(displayTime), "events.txt");
       }
       _logged = true;
     }
-
+  if(_curFrameId == 0){
+    if (_isSubScreen()){
+      _session->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
+    }
+  }
   if (canAnswer){
 
     vector<Adapt*>::iterator aIt;
