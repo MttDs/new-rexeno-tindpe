@@ -169,7 +169,7 @@ Trial::displayFrame(Driver* driver)
   driver->AnalogIn(_data);
   }
   ms displayTime = driver->GetTime();
- 
+  vector<Adapt*>::iterator aIt;
   if((_curFrameId == 0) && (_start)){
     string str;
     ostringstream ostr;
@@ -182,7 +182,7 @@ Trial::displayFrame(Driver* driver)
 	 << "]";
 
     str = ostr.str();
-
+  
     if (_isSubScreen()){ 
       _session->recorder->Save(str,"trials.txt");
     }
@@ -194,6 +194,12 @@ Trial::displayFrame(Driver* driver)
 	  {
 	    if (_isSubScreen()){ 
 	    _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
+	    vector<Adapt*> adapts = curShape->getAdapts();
+	    for (aIt = adapts.begin(); aIt != adapts.end(); aIt++){
+	      Adapt* curAdapt = *aIt;
+	      _session->recorder->Save(curAdapt->getAttrsToString() ,"trials.txt");
+	    }
+
 	    }
 	  }
 
@@ -218,8 +224,6 @@ Trial::displayFrame(Driver* driver)
   }
   if (canAnswer){
 
-    vector<Adapt*>::iterator aIt;
-
     Shape* parent  = NULL;
     bool submit = false;
     for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++){
@@ -227,9 +231,7 @@ Trial::displayFrame(Driver* driver)
       if ((*aIt)->key()->value == Setup::key){
 	parent = (*aIt)->parent();
 	
-	//	if (true){
-	  parent->updateVelo((*aIt)->coef()->value);
-	  //	}
+	parent->updateVelo((*aIt)->coef()->value);
 	submit = true;
       }
     } 
@@ -237,7 +239,7 @@ Trial::displayFrame(Driver* driver)
     if ((submit) && (!_subjectResponse)){
 	
       std::cout << "Reponse => " << Setup::key << endl;
-      if (_isSubScreen()){ /*****/
+      if (_isSubScreen()){
 	ostringstream ostr;
         ostr << "Response "
 	     << lexical_cast<string>(displayTime) 
@@ -260,7 +262,7 @@ Trial::displayFrame(Driver* driver)
 
       if ((_curFrameId == 0) && (!_logged))
 	{
-	  if (_isSubScreen()){/*****/
+	  if (_isSubScreen()){
 	    _session->recorder->Save(curShape->getAttrsToString() ,"events.txt");
 	  }
 	}

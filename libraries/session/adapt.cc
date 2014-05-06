@@ -15,3 +15,11 @@ Adapt::Adapt(VariableManager& vm,
 Adapt::~Adapt(){
 
 }
+
+string 
+Adapt::getAttrsToString(){
+   ostringstream ostr;
+   ostr << "Adapt " << _parent->name() << " key " << _key->value << " coef " << _coef->value << " action " << _action->value;
+   
+   return ostr.str();
+}

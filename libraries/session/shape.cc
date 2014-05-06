@@ -155,7 +155,6 @@ Shape::React2input(Status& s,
   Session* session = Session::getInstance();
   ostringstream ostr;
 
-
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
     {

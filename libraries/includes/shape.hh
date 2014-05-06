@@ -71,6 +71,7 @@ public:
   bool IsTextured(){ return _istexured;}
   //  void addAdapt(Adapt *a){_adapts.push_back(a);}
   void setAdapts(vector<Adapt*>*k);
+  vector<Adapt*> getAdapts(){ return _adapts;}
   void updateVelo(double coef);
 protected:
   // Use these functions for opengl's drawing scale. 
