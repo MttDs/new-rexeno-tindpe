@@ -107,10 +107,7 @@ protected:
   Variable* _veloY;
   Variable* _veloZ;
   
-  float _gainX;
-  float _gainY;
-  float _gainZ;
-
+  float _gain;
 
   vector<Adapt*> _adapts;
 };

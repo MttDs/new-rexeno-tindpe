@@ -299,8 +299,7 @@ Shape::setAdapts(vector<Adapt*>*k){
 
 void 
 Shape::updateVelo(double coef){
-   _gainX = _gainX  * (coef);
-   _gainZ = _gainZ  * (coef);  
+   _gain = _gain  * (coef); 
 }
 /**
  * Abstract Constructor : inits some bool values

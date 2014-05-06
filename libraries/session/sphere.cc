@@ -57,9 +57,7 @@ Sphere::Sphere(const ShapeInfo& si,
   _initY = *_y;
   _initZ = *_z;
   
-  _gainX = _veloX->value;
-  _gainY = _veloY->value;
-  _gainZ = _veloZ->value;
+  _gain = 1.0;
 
   _father = father;
 
@@ -86,12 +84,12 @@ Sphere::React2input(Status& s,
   }
   int fps = _session->getFrequency();
 
-  float veloV = sqrt((_gainX)*(_gainX)+(_gainZ)*(_gainZ));
+  float veloV = _gain * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
   float moveV = veloV/fps;
 
   _angleV+= moveV/ *_radius*180.0 / M_PI;
 
-  float OrientV=atan2((_gainZ),(_gainX));
+  float OrientV=atan2((*_veloZ),(*_veloX));
   float OrientRot=OrientV-(M_PI/2.0);
   
   RotAxe[0]=cos(OrientRot);
@@ -118,9 +116,9 @@ Sphere::React2input(Status& s,
 	   << " " << angleX
 	   << " " << angleZ
 	   << " " << _angleV
-	   << " " << _gainX
-	   << " " << _gainZ
-	   << " " << veloV ;
+	   << " " << *_veloX
+	   << " " << *_veloZ
+	   << " " << _gain ;
   
       _session->recorder->Save(ostr.str(), "events.txt");
     }
