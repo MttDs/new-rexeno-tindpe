@@ -8,7 +8,7 @@ Adapt::Adapt(VariableManager& vm,
 
   vm.addVariable(_key = new Variable(key));
   vm.addVariable(_coef = new Variable(coef));
-  vm.addVariable(_action = new Variable(gain));
+  _action = gain;
   _parent = father;
 }
 
@@ -19,7 +19,7 @@ Adapt::~Adapt(){
 string 
 Adapt::getAttrsToString(){
    ostringstream ostr;
-   ostr << "Adapt " << _parent->name() << " key " << _key->value << " coef " << _coef->value << " action " << _action->value;
+   ostr << "Adapt " << _parent->name() << " key " << _key->value << " coef " << _coef->value << " action " << _action;
    
    return ostr.str();
 }

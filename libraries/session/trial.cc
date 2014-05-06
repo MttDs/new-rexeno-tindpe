@@ -230,9 +230,10 @@ Trial::displayFrame(Driver* driver)
 
       if ((*aIt)->key()->value == Setup::key){
 	parent = (*aIt)->parent();
-	
-	parent->updateVelo((*aIt)->coef()->value);
-	submit = true;
+	if ((*aIt)->action()=="g"){
+	  parent->updateVelo((*aIt)->coef()->value);
+	  submit = true;
+	}
       }
     } 
 

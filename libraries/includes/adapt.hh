@@ -23,7 +23,7 @@ public:
   ~Adapt();
   Variable* key(){return _key;}
   Variable* coef(){return _coef;}
-  Variable* action(){return _action;}
+  string action(){return _action;}
   Shape* parent(){return _parent;}
   string getAttrsToString();
 private:
@@ -31,7 +31,7 @@ private:
   Variable* _parentName;
   Variable* _key;
   Variable* _coef;
-  Variable* _action;
+  string _action;
 };
 
 
