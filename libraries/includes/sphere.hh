@@ -22,6 +22,7 @@ public:
   void DisplayMonitor();
   void Reset();
   void RandomPosXZ();
+  void CompParam(bool init=false);
   double z() { return _z->value; }
   string getAttrsToString();
   
@@ -35,7 +36,9 @@ protected:
   float _initY;
   float _initZ;
 
-  float _angleV; 
+  float _angleV;
+  float _moveV;
+  float _orientV;
   float RotAxe[2];
   
   Variable* _randomX;

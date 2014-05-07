@@ -53,6 +53,9 @@ Sphere::Sphere(const ShapeInfo& si,
   _angleY = 0.0f;
   _angleZ = 0.0f;
 
+  _moveV = 0.0f;
+  _orientV = 0.0f;
+
   _initX = *_x;
   _initY = *_y;
   _initZ = *_z;
@@ -65,12 +68,37 @@ Sphere::Sphere(const ShapeInfo& si,
   _shadow = s;
 
   RandomPosXZ();
+  CompParam(1);
 }
 
 Sphere::~Sphere()
 {
   gluDeleteQuadric(_params);
   delete _shadow;
+}
+
+void Sphere::CompParam(bool init)
+{
+  if (_session == NULL){
+    _session = _father->session();
+  }
+
+  if (init==0)
+    {
+      int fps = _session->getFrequency();
+
+      float veloV = _gain * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
+      _moveV = veloV/fps;
+
+      _angleV+= _moveV/ *_radius*180.0 / M_PI;
+    }
+
+  _orientV=atan2((*_veloZ),(*_veloX));
+
+  float OrientRot=_orientV-(M_PI/2.0);
+
+  RotAxe[0]=cos(OrientRot);
+  RotAxe[1]=sin(OrientRot);
 }
 
 void
@@ -82,18 +110,7 @@ Sphere::React2input(Status& s,
   if (_session == NULL){
     _session = _father->session();
   }
-  int fps = _session->getFrequency();
-
-  float veloV = _gain * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
-  float moveV = veloV/fps;
-
-  _angleV+= moveV/ *_radius*180.0 / M_PI;
-
-  float OrientV=atan2((*_veloZ),(*_veloX));
-  float OrientRot=OrientV-(M_PI/2.0);
-  
-  RotAxe[0]=cos(OrientRot);
-  RotAxe[1]=sin(OrientRot);
+  int fps = _session->getFrequency(); 
 
   //  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
@@ -101,7 +118,7 @@ Sphere::React2input(Status& s,
 
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
-    {
+  {
       float move = *_veloX/fps;
       float angleX = (move / *_radius*180.0 / M_PI);
       move = *_veloZ/fps;
@@ -115,10 +132,10 @@ Sphere::React2input(Status& s,
 	   << " " << _z->value 
 	   << " " << angleX
 	   << " " << angleZ
-	   << " " << _angleV
+	   << " " << RoundNdecimal(2,_angleV)
 	   << " " << *_veloX
 	   << " " << *_veloZ
-	   << " " << _gain ;
+	   << " " << _gain;
   
       _session->recorder->Save(ostr.str(), "events.txt");
     }
@@ -130,7 +147,8 @@ Sphere::React2input(Status& s,
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
 	   << " " << RoundNdecimal(2,_x->value) 
-	   << " " << RoundNdecimal(2,_z->value);
+	   << " " << RoundNdecimal(2,_z->value)
+	   << " " << RoundNdecimal(2,_angleV);
 
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
@@ -143,9 +161,11 @@ Sphere::React2input(Status& s,
     s[RUNNING] = true;
 
   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
- 
-  *_x = *_x+(moveV*cos(OrientV));
-  *_z = *_z+(moveV*sin(OrientV));
+
+  CompParam(0);
+
+  *_x = *_x+(_moveV*cos(_orientV));
+  *_z = *_z+(_moveV*sin(_orientV));
 }
 
 
@@ -263,4 +283,5 @@ Sphere::RandomPosXZ(){
   if (_randomZ->value != 0){
     _z->value = _getRandomNumber(_initZ, _randomZ->value);
   }
+  _angleV = ((float) rand()/RAND_MAX)*360.0;
 }

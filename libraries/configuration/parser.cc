@@ -78,6 +78,7 @@ namespace configuration
       using boost::fusion::vector;
       using qi::eol;
 
+      
       word %= lexeme[ +(char_ - ' ' - "|" - "+" - ">" -  ";" - "\n")];
       
       listener %= "+" 
@@ -112,6 +113,7 @@ namespace configuration
 	>> -("nb_screen=" >> int_)
 	>> +trial
 	;
+
 
     }
 
