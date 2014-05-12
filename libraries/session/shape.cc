@@ -241,12 +241,14 @@ Shape::Reset(){
   _loggedEnd = false;
 
   _frameStart->value = _initFrameStart;
-  int value = (_initFrameEnd * _gainD);
+  int value = ((float)(_initFrameEnd) * _gainD);
+
   _frameEnd->value = lexical_cast<int>(value);
 
   int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
 				 lexical_cast<int>(_maxStart->value)); 
   _adaptFrame(frameAdapt);
+
 
 }
 
@@ -288,10 +290,11 @@ Shape::random2params(int min, int max){
   */
   int seed = (int) (std::time(0)); //(std::time(0)+sum);
   srand(seed);
-
+  
   if (max-min>0){
     return rand()%((max+1) - min) + min;
   }
+  
   return 0;
 }
 

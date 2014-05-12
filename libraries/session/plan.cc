@@ -28,9 +28,9 @@ Plan::Plan(const ShapeInfo& si,
   _initFrameStart = _frameStart->value;
   _initFrameEnd = _frameEnd->value;
 
-  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
-  _adaptFrame(frameAdapt);
+  _gainD = 1.0;
+  _gainV = 1.0;
+
 }
 Plan::~Plan(){
 

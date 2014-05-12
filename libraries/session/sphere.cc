@@ -41,10 +41,6 @@ Sphere::Sphere(const ShapeInfo& si,
   _initFrameStart = _frameStart->value;
   _initFrameEnd = _frameEnd->value;
 
-  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
-  _adaptFrame(frameAdapt);
-
   Adapt* adapt;
   for (unsigned int it = 0; it< si.listeners.size();it++){
     adapt = new Adapt(vm,
@@ -242,17 +238,6 @@ Sphere::Reset(){
   *_z = _initZ;
 
   RandomPosXZ();
-
-  _logged = false;
-  _loggedEnd = false;
-
-  _frameStart->value = _initFrameStart;
-  int value = (_initFrameEnd * _gainD);
-  _frameEnd->value = lexical_cast<int>(value);
-
-  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
-  _adaptFrame(frameAdapt);
 
   Shape::Reset();
 }
