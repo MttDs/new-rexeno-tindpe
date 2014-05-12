@@ -332,19 +332,19 @@ Shape::setAdapts(vector<Adapt*>*k){
 
 void 
 Shape::updateVelo(double coef){
-   _gain = _gain  * (coef); 
+   _gainV = _gainV  * (coef); 
 }
-/*
+
 void
 Shape::updateDuration(double coef){
   _gainD = _gainD * (coef);
-  }*/
+  printf("coucou\n");
+}
 
 void
 Shape::_adaptFrame(int frame){
   _frameStart->value = lexical_cast<int>(_frameStart->value)+frame;
   _frameEnd->value = lexical_cast<int>(_frameEnd->value)+frame;
-  std::cout << "frame start => " << _frameStart->value << " frame end => " << _frameEnd->value << endl;
 }
 
 /**

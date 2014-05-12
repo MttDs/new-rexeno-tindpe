@@ -68,7 +68,8 @@ Sphere::Sphere(const ShapeInfo& si,
   _initY = *_y;
   _initZ = *_z;
   
-  _gain = 1.0;
+  _gainV = 1.0;
+  _gainD = 1.0;
 
   _father = father;
 
@@ -95,7 +96,7 @@ void Sphere::CompParam(bool init)
     {
       int fps = _session->getFrequency();
 
-      float veloV = _gain * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
+      float veloV = _gainV * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
       _moveV = veloV/fps;
 
       _angleV+= _moveV/ *_radius*180.0 / M_PI;
@@ -133,7 +134,7 @@ Sphere::React2input(Status& s,
       float angleZ = (move / *_radius*180.0 / M_PI);
 
       _logged = true;
-      // start time frameStart x z angleX angleZ angleV veloX veloZ veloV 
+      // name 'start' time frameStart x z angleX angleZ angleV veloX veloZ gainV gainD 
 
       ostr << _name 
 	   << " start " << lexical_cast<string>(displayTime) 
@@ -145,7 +146,8 @@ Sphere::React2input(Status& s,
 	   << " " << RoundNdecimal(2,_angleV)
 	   << " " << *_veloX
 	   << " " << *_veloZ
-	   << " " << _gain;
+	   << " " << _gainV
+	   << " " << _gainD;
   
       _session->recorder->Save(ostr.str(), "events.txt");
     }
@@ -170,7 +172,7 @@ Sphere::React2input(Status& s,
  
  if (frameId > frameEnd())
     s[RUNNING] |= false;
-  else
+ else
     s[RUNNING] = true;
 
   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
@@ -245,7 +247,8 @@ Sphere::Reset(){
   _loggedEnd = false;
 
   _frameStart->value = _initFrameStart;
-  _frameEnd->value = _initFrameEnd;
+  _frameEnd->value = (int) (_initFrameEnd*_gainD);
+  std::cout << "frameEnd " << _frameEnd->value << std::endl;
 
   int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
 				 lexical_cast<int>(_maxStart->value)); 

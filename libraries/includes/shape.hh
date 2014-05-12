@@ -69,10 +69,11 @@ public:
   virtual string getAttrsToString();
   double RoundNdecimal(int n, float nb);
   bool IsTextured(){ return _istexured;}
-  //  void addAdapt(Adapt *a){_adapts.push_back(a);}
+
   void setAdapts(vector<Adapt*>*k);
   vector<Adapt*> getAdapts(){ return _adapts;}
   void updateVelo(double coef);
+  void updateDuration(double coef);
   int random2params(int min, int max);
   bool start(){return _start;}
   void setStart(bool b){_start=b;}
@@ -120,9 +121,8 @@ protected:
   Variable* _veloY;
   Variable* _veloZ;
   
-  /*float _gainV;
-    float _gainD;*/
-  float _gain;
+  float _gainV;
+  float _gainD;
 
   Variable* _minStart;
   Variable* _maxStart;
