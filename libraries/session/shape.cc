@@ -236,9 +236,18 @@ Shape::initTexture(int sizeX, int sizeY, char * data){
 
 void
 Shape::Reset(){
+ 
+  _logged = false;
+  _loggedEnd = false;
 
-  //	_logged = false;
-  //	_loggedEnd = false;
+  _frameStart->value = _initFrameStart;
+  int value = (_initFrameEnd * _gainD);
+  _frameEnd->value = lexical_cast<int>(value);
+
+  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
+				 lexical_cast<int>(_maxStart->value)); 
+  _adaptFrame(frameAdapt);
+
 }
 
 
@@ -301,13 +310,13 @@ Shape::_getRandomNumber(float pos, float nb){
   float newPos = 0.0;
 
   if (max<min){
-	tmp = max;
-	max = min;
-	min = tmp;
+    tmp = max;
+    max = min;
+    min = tmp;
   }
 
   for(i=0; i < strlen(chars); i++){
-	sum += (int) chars[i]*2;
+    sum += (int) chars[i]*2;
   }
 
   seed = (int)(std::time(0)+sum);
@@ -332,13 +341,12 @@ Shape::setAdapts(vector<Adapt*>*k){
 
 void 
 Shape::updateVelo(double coef){
-   _gainV = _gainV  * (coef); 
+  _gainV = _gainV * (coef); 
 }
 
 void
 Shape::updateDuration(double coef){
   _gainD = _gainD * (coef);
-  printf("coucou\n");
 }
 
 void

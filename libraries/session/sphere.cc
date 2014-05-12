@@ -247,12 +247,14 @@ Sphere::Reset(){
   _loggedEnd = false;
 
   _frameStart->value = _initFrameStart;
-  _frameEnd->value = (int) (_initFrameEnd*_gainD);
-  std::cout << "frameEnd " << _frameEnd->value << std::endl;
+  int value = (_initFrameEnd * _gainD);
+  _frameEnd->value = lexical_cast<int>(value);
 
   int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
 				 lexical_cast<int>(_maxStart->value)); 
   _adaptFrame(frameAdapt);
+
+  Shape::Reset();
 }
 
 void

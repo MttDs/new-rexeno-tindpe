@@ -85,14 +85,5 @@ Plan::getAttrsToString(){
 
 void
 Plan::Reset(){
-  _logged = false;
-  _loggedEnd = false;
-
-  _frameStart->value = _initFrameStart;
-  _frameEnd->value = _initFrameEnd;
-
-  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
-  _adaptFrame(frameAdapt);
-
+  Shape::Reset();
 }
