@@ -10,7 +10,7 @@ class Sphere : public Shape
 public:
    Sphere(const ShapeInfo& si,
          VariableManager& vm,
-         Trial* father);
+	  Trial* father);
   ~Sphere();
 
   void React2input(Status&,

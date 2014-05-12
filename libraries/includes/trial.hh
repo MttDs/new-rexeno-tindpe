@@ -67,7 +67,9 @@ private:
 
   int _react2status();
   void _sendTtls(Driver* d);
-  bool _isSubScreen(); // subject 
+  bool _isSubScreen(); // subject's window
+  int _random2params(int min, int max);
+
   int _idScreen;
   int _curFrameId;
   int _nbFrames;
@@ -95,10 +97,6 @@ private:
   Variable*  _cameraVeloX;
   Variable*  _cameraVeloY;
   Variable*  _cameraVeloZ;
-  
-  Sphere* _sphereLead;
-
-  Variable* _time;
 
   vector<float> _initCamera;
 };

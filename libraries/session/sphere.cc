@@ -15,28 +15,36 @@ Sphere::Sphere(const ShapeInfo& si,
 	       VariableManager& vm,
 	       Trial* father)
 {  
-  assert(si.attributes.size() == 14);
+  assert(si.attributes.size() == 16);
 
   _name = si.attributes[0];
   _id = 7;
-
-  vm.addVariable(_x = new Variable(si.attributes[1]));
-  vm.addVariable(_y = new Variable(si.attributes[2]));
-  vm.addVariable(_z = new Variable(si.attributes[3]));
-  vm.addVariable(_randomX = new Variable(si.attributes[4]));
-  vm.addVariable(_randomZ = new Variable(si.attributes[5])); 
-  vm.addVariable(_frameStart = new Variable(si.attributes[6]));
-  vm.addVariable(_frameEnd = new Variable(si.attributes[7]));
+  vm.addVariable(_minStart = new Variable(si.attributes[1]));
+  vm.addVariable(_maxStart = new Variable(si.attributes[2]));
+  vm.addVariable(_x = new Variable(si.attributes[3]));
+  vm.addVariable(_y = new Variable(si.attributes[4]));
+  vm.addVariable(_z = new Variable(si.attributes[5]));
+  vm.addVariable(_randomX = new Variable(si.attributes[6]));
+  vm.addVariable(_randomZ = new Variable(si.attributes[7])); 
+  vm.addVariable(_frameStart = new Variable(si.attributes[8]));
+  vm.addVariable(_frameEnd = new Variable(si.attributes[9]));
   vm.addVariable(_R = new Variable(255));
   vm.addVariable(_G = new Variable(255));
   vm.addVariable(_B = new Variable(255));
-  vm.addVariable(_stacks = new Variable(si.attributes[8]));
-  vm.addVariable(_slices = new Variable(si.attributes[9]));
-  vm.addVariable(_radius = new Variable(si.attributes[10]));
-  vm.addVariable(_veloX = new Variable(si.attributes[11]));
-  vm.addVariable(_veloY = new Variable(si.attributes[12]));
-  vm.addVariable(_veloZ = new Variable(si.attributes[13]));
-  
+  vm.addVariable(_stacks = new Variable(si.attributes[10]));
+  vm.addVariable(_slices = new Variable(si.attributes[11]));
+  vm.addVariable(_radius = new Variable(si.attributes[12]));
+  vm.addVariable(_veloX = new Variable(si.attributes[13]));
+  vm.addVariable(_veloY = new Variable(si.attributes[14]));
+  vm.addVariable(_veloZ = new Variable(si.attributes[15]));
+
+  _initFrameStart = _frameStart->value;
+  _initFrameEnd = _frameEnd->value;
+
+  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
+				 lexical_cast<int>(_maxStart->value)); 
+  _adaptFrame(frameAdapt);
+
   Adapt* adapt;
   for (unsigned int it = 0; it< si.listeners.size();it++){
     adapt = new Adapt(vm,
@@ -125,9 +133,11 @@ Sphere::React2input(Status& s,
       float angleZ = (move / *_radius*180.0 / M_PI);
 
       _logged = true;
-      // start time x z angleX angleZ angleV veloX veloZ veloV 
+      // start time frameStart x z angleX angleZ angleV veloX veloZ veloV 
+
       ostr << _name 
 	   << " start " << lexical_cast<string>(displayTime) 
+	   << " " << _frameStart->value
 	   << " " << _x->value
 	   << " " << _z->value 
 	   << " " << angleX
@@ -143,9 +153,11 @@ Sphere::React2input(Status& s,
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
-      // end name time x z
+      // end name time frameEnd x z
+ 
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
+	   << " " << _frameEnd->value
 	   << " " << RoundNdecimal(2,_x->value) 
 	   << " " << RoundNdecimal(2,_z->value)
 	   << " " << RoundNdecimal(2,_angleV);
@@ -153,9 +165,10 @@ Sphere::React2input(Status& s,
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
     }
-  _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
 
-  if (frameId > frameEnd())
+  _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
+ 
+ if (frameId > frameEnd())
     s[RUNNING] |= false;
   else
     s[RUNNING] = true;
@@ -231,6 +244,12 @@ Sphere::Reset(){
   _logged = false;
   _loggedEnd = false;
 
+  _frameStart->value = _initFrameStart;
+  _frameEnd->value = _initFrameEnd;
+
+  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
+				 lexical_cast<int>(_maxStart->value)); 
+  _adaptFrame(frameAdapt);
 }
 
 void

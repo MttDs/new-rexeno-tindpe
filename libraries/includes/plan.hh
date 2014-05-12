@@ -2,9 +2,9 @@
 # define PLAN_HH_
 
 # include <GL/glut.h>
-
+# include <boost/lexical_cast.hpp>
 # include "rectangle.hh"
-
+using namespace boost;
 class Plan : public Rectangle
 {
 public:

@@ -293,8 +293,8 @@ Session::run(int argc,
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(_gameMode.c_str());
-   glutEnterGameMode();
-  glutFullScreen();
+  //glutEnterGameMode();
+  //glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
   glutDisplayFunc (displayRexeno);

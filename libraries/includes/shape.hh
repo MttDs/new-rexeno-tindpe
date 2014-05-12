@@ -73,6 +73,10 @@ public:
   void setAdapts(vector<Adapt*>*k);
   vector<Adapt*> getAdapts(){ return _adapts;}
   void updateVelo(double coef);
+  int random2params(int min, int max);
+  bool start(){return _start;}
+  void setStart(bool b){_start=b;}
+
 protected:
   // Use these functions for opengl's drawing scale. 
   double _demiVertical(); // inside sub square-screen
@@ -80,6 +84,7 @@ protected:
   double _xGL(); // inside sub square-screen
   double _yGL(); // inside sub square-screen
   float _getRandomNumber(float pos, float nb);
+  void _adaptFrame(int frame);
  
   int _id;
 
@@ -87,8 +92,13 @@ protected:
   GLUquadric* _params;
 
   string _name;
+
   Variable* _frameStart;
   Variable* _frameEnd;
+
+  int _initFrameStart;
+  int _initFrameEnd;
+
   Variable* _x;
   Variable* _y;
   Variable* _width;
@@ -96,9 +106,11 @@ protected:
   Variable* _R;
   Variable* _G;
   Variable* _B;
+
   uint _ttl;
   Trial* _father;
   Session* _session;
+
   bool _logged;
   bool _loggedEnd;
   bool _subjectVisible;
@@ -108,7 +120,15 @@ protected:
   Variable* _veloY;
   Variable* _veloZ;
   
+  /*float _gainV;
+    float _gainD;*/
   float _gain;
+
+  Variable* _minStart;
+  Variable* _maxStart;
+  // int _frameAdapt;
+  
+  bool _start;
 
   vector<Adapt*> _adapts;
 };

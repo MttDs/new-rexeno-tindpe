@@ -13,19 +13,17 @@ Trial::Trial(TrialInfo& ti)
     _subjectResponse(false)
 {
   _session = NULL;
+  assert(ti.attributes.size() == 9);
 
-  assert(ti.attributes.size() == 10);
-
-  variables.addVariable(_time = new Variable(ti.attributes[0]));
-  variables.addVariable(_cameraVeloX = new Variable(ti.attributes[1]));
-  variables.addVariable(_cameraVeloY = new Variable(ti.attributes[2]));
-  variables.addVariable(_cameraVeloZ = new Variable(ti.attributes[3]));
-  variables.addVariable(_eyeX = new Variable(ti.attributes[4]));
-  variables.addVariable(_eyeY = new Variable(ti.attributes[5]));
-  variables.addVariable(_eyeZ = new Variable(ti.attributes[6]));
-  variables.addVariable(_centerX = new Variable(ti.attributes[7]));
-  variables.addVariable(_centerY = new Variable(ti.attributes[8]));
-  variables.addVariable(_centerZ = new Variable(ti.attributes[9]));
+  variables.addVariable(_cameraVeloX = new Variable(ti.attributes[0]));
+  variables.addVariable(_cameraVeloY = new Variable(ti.attributes[1]));
+  variables.addVariable(_cameraVeloZ = new Variable(ti.attributes[2]));
+  variables.addVariable(_eyeX = new Variable(ti.attributes[3]));
+  variables.addVariable(_eyeY = new Variable(ti.attributes[4]));
+  variables.addVariable(_eyeZ = new Variable(ti.attributes[5]));
+  variables.addVariable(_centerX = new Variable(ti.attributes[6]));
+  variables.addVariable(_centerY = new Variable(ti.attributes[7]));
+  variables.addVariable(_centerZ = new Variable(ti.attributes[8]));
 
   _initCamera.push_back(_eyeX->value);
   _initCamera.push_back(_eyeY->value);
@@ -43,7 +41,7 @@ Trial::Trial(TrialInfo& ti)
     }
   
   vector<ShapeInfo>::iterator it;
-
+ 
   for (it = ti.shapes.begin(); it != ti.shapes.end(); ++it)
     {
       Shape *newShape = NULL;
@@ -110,6 +108,8 @@ Trial::displayFrame(Driver* driver)
   if (_session == NULL){
     _session = Session::getInstance();
   }
+  _status[RUNNING] = true;
+ 
   int screen = _idScreen;
   int fps = _session->getFrequency();
 
@@ -143,7 +143,7 @@ Trial::displayFrame(Driver* driver)
 
       if (curShape->id()==7){
 	nbSphere++;
-	if (!curShape->Displayable(_curFrameId)){
+	if (!curShape->Displayable(_curFrameId) && curShape->start()){
 	  nbSphereEnd++;
 	}
       }
@@ -152,6 +152,7 @@ Trial::displayFrame(Driver* driver)
  
       if (curShape->Displayable(_curFrameId)){
     	curShape->Display();
+	curShape->setStart(true);
       }
 
       glPopMatrix();
@@ -230,6 +231,7 @@ Trial::displayFrame(Driver* driver)
 
       if ((*aIt)->key()->value == Setup::key){
 	parent = (*aIt)->parent();
+
 	if ((*aIt)->action()=="g"){
 	  parent->updateVelo((*aIt)->coef()->value);
 	  submit = true;
@@ -249,7 +251,7 @@ Trial::displayFrame(Driver* driver)
 	_session->recorder->Save(ostr.str(), "events.txt");
       }
       _subjectResponse = true;
-      
+
       _status[CORRECT] = true;
     }
   }
@@ -273,8 +275,7 @@ Trial::displayFrame(Driver* driver)
 	curShape->React2input(_status, _data, _curFrameId, driver->GetTime());
       }
     }
-
-  //  Setup::reset();
+  
   return (_react2status());
 }
 
@@ -393,6 +394,7 @@ Trial::Reset(Driver *d)
   for (shapesIterator = _shapes.begin(); shapesIterator != _shapes.end(); ++shapesIterator)
     {
       (*shapesIterator)->Reset();
+      (*shapesIterator)->setStart(false);
     }
   
   _eyeX->value = _initCamera.at(0);
