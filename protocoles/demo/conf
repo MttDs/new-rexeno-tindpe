@@ -1,0 +1,33 @@
+session name= TEST
+comment= test
+polar= 0
+screens=43x55 | 843290x123|
+
+| 300 STOP_TARGET1
+> Square Target 0.97 0 End_Fixation End_Target 0 255 0 0.03 0
+> Square Stop 0 0 Start_Stop End_Target 0 255 0 0.03 0
+> WrongWindow Window_Wrong 0 0 End_Fixation End_Target 255 255 0 2 2 0 
+> Cross Eye 0 0 0 5000 200 0 0 0.1 
+> FixationWindow Fixation 0 0 0 End_Fixation 255 255 0 0.24 0.32 Fixation_Duration 
+> CorrectWindow Window_Correct 0 0 Start_Correct End_Target 255 255 0 0.32 0.32 0 
+> NeutralWindow Window_Neutral 0 0 0 End_Target 200 200 0 0.24 0.32 
+> Square Fixation 0 0 0 End_Fixation 0 255 0 0.03 0
+> Time 300 
+> RedoWindow Redo 0 0 6 End_Fixation 200 0 0 2 2 0 
+> Variable STOP_TARGET1 1
+;
+
+
+|  STOP_TARGET2
+> Square Target 0.97 0 End_Fixation End_Target 0 255 0 0.03 0
+> Square Stop 0 0 Start_Stop End_Target 0 255 0 0.03 0
+> WrongWindow Window_Wrong 0 0 End_Fixation End_Target 255 255 0 2 2 0 
+> Cross Eye 0 0 0 5000 200 0 0 0.1 
+> FixationWindow Fixation 0 0 0 End_Fixation 255 255 0 0.24 0.32 Fixation_Duration 
+> CorrectWindow Window_Correct 0 0 Start_Correct End_Target 255 255 0 0.32 0.32 0 
+> NeutralWindow Window_Neutral 0 0 0 End_Target 200 200 0 0.24 0.32 
+> Square Fixation 0 0 0 End_Fixation 0 255 0 0.03 0
+> Time 300 
+> RedoWindow Redo 0 0 6 End_Fixation 200 0 0 2 2 0 
+> Variable STOP_TARGET1 1
+;
