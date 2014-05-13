@@ -4,5 +4,4 @@
 /build
 /build_xenomai
 **/datas
-/protocoles/test/datas/
-/protocoles/test/display
+/protocoles/

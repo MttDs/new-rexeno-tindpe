@@ -15,7 +15,7 @@ Sphere::Sphere(const ShapeInfo& si,
 	       VariableManager& vm,
 	       Trial* father)
 {  
-  assert(si.attributes.size() == 16);
+  assert(si.attributes.size() == 15);
 
   _name = si.attributes[0];
   _id = 7;
@@ -35,8 +35,9 @@ Sphere::Sphere(const ShapeInfo& si,
   vm.addVariable(_slices = new Variable(si.attributes[11]));
   vm.addVariable(_radius = new Variable(si.attributes[12]));
   vm.addVariable(_veloX = new Variable(si.attributes[13]));
-  vm.addVariable(_veloY = new Variable(si.attributes[14]));
-  vm.addVariable(_veloZ = new Variable(si.attributes[15]));
+  vm.addVariable(_veloZ = new Variable(si.attributes[14]));
+  
+  vm.addVariable(_veloY = new Variable(0));
 
   _initFrameStart = _frameStart->value;
   _initFrameEnd = _frameEnd->value;

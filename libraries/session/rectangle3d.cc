@@ -35,10 +35,6 @@ Rectangle3d::Rectangle3d(const ShapeInfo& si,
   _initFrameStart = _frameStart->value;
   _initFrameEnd = _frameEnd->value;
 
-  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
-  _adaptFrame(frameAdapt);
-
   _ttl = lexical_cast<int>(si.attributes[7]);
 
   _father = father;
