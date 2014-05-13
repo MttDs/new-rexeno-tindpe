@@ -62,8 +62,12 @@ int	main(int argc,
   configuration::SessionInfo conf;
 
   bool r = configuration::CreateConfiguration("../testFiles/session/definition", conf);
+
   string t(string("../testFiles/session/order"));
-  Order o = Order(t);
+
+  Order o(t, conf);
+  o.parse();
+
   assert(r);
   Setup* setup = new Setup("~/.rexeno");
   Session* session = Session::getInstance(conf, o);

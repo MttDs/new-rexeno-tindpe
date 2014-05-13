@@ -15,6 +15,7 @@ Sphere::Sphere(const ShapeInfo& si,
 	       VariableManager& vm,
 	       Trial* father)
 {  
+
   assert(si.attributes.size() == 15);
 
   _name = si.attributes[0];

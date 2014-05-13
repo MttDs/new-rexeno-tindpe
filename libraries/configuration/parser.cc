@@ -19,6 +19,7 @@ namespace qi = boost::spirit::qi;
 namespace standard = boost::spirit::standard;
  
 
+
 // We need to tell fusion about our struct
 // to make it a first-class fusion citizen. This has to
 // be in global scope according to official Boost Spirit tutorial.
@@ -54,7 +55,9 @@ BOOST_FUSION_ADAPT_STRUCT(
                           (int, frequency)
 			  (int, width)
 			  (int, height)
-			  (int, nb_screen)
+			  (int, nb_screens)
+			  (int, nb_trials)
+			  (int, shuffle)
 			  (std::vector<configuration::TrialInfo>, trials)
 			  )
 
@@ -78,7 +81,6 @@ namespace configuration
       using boost::fusion::vector;
       using qi::eol;
 
-      
       word %= lexeme[ +(char_ - ' ' - "|" - "+" - ">" -  ";" - "\n")];
       
       listener %= "+" 
@@ -110,10 +112,11 @@ namespace configuration
         >> -("frequency=" >> int_)
         >> -("width=" >> int_)
 	>> -("height=" >> int_)
-	>> -("nb_screen=" >> int_)
+	>> -("nb_screens=" >> int_)
+	>> -("nb_trials=" >> int_)
+	>> -("shuffle=" >> int_)
 	>> +trial
 	;
-
 
     }
 
@@ -133,11 +136,11 @@ namespace configuration
   {
     std::ifstream in(filename, std::ios_base::in);
     if (!in)
-	{
+      {
 	std::cerr << "Error: Could not open input file: "
-	  << filename << std::endl;
+		  << filename << std::endl;
 	return false;
-	}
+      }
     in.unsetf(std::ios::skipws); // No white space skipping!
     std::string storage; // We will read the contents here.
     std::copy(
@@ -160,7 +163,7 @@ namespace configuration
     if (!r)
     {
       std::cout << "parsing failed, your definition file is not valid" << std::endl;
-      throw ;
+      throw;
     }
 
     return (r);

@@ -10,7 +10,7 @@
 #include <fstream>
 #include <string>
 
-
+#define FUSION_MAX_VECTOR_SIZE 12 
 
 namespace configuration
 {
@@ -53,7 +53,9 @@ namespace configuration
     int traceLevel; 
     int width;
     int height;
-    int nb_screen;
+    int nb_screens;
+    int nb_trials;
+    int shuffle;
     std::vector<TrialInfo> trials;
   };
 

@@ -66,7 +66,7 @@ Session::Session(configuration::SessionInfo& s,
      << s.frequency;
 
   _gameMode = ss.str();
-  _nbScreen = s.nb_screen;
+  _nbScreen = s.nb_screens;
   _lP[0] = 0.0f; _lP[1] = 0.0f; _lP[2] = 0.0f;  _lP[3] = 1.0f; 
   _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; 
   _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f;
