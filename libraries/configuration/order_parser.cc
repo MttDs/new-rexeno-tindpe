@@ -31,6 +31,8 @@ Order::Order(std::string filename, configuration::SessionInfo& s)
   case 3:
     _oneAfterTheOther();
     break;
+  default:
+    break;
   }
 }
 
@@ -70,7 +72,9 @@ Order::parse(){
 void 
 Order::_random(){
   int seed = 0,  min = 0,  max = _nbTrials-1;
+  std::string val = "";
   Recorder* _order = new Recorder();
+
   _order->AddFile("order");
 
   for (int ii=0; ii<_nbSessions; ii++){
@@ -85,15 +89,32 @@ Order::_random(){
 void
 Order::_pile(){
   int nb =  _nbSessions/_nbTrials;
-  std::cout << nb << std::endl;
- 
+  int ii=0, jj=0, kk=0;
+  bool end = false;
+  std::string val = "";
   Recorder* _order = new Recorder();
+
   _order->AddFile("order");
 
-  for (int ii=0;ii<_nbTrials;ii++){
-    for (int jj=0;jj<nb;jj++){
-      std::string val = lexical_cast<string>(ii);
+  while(ii<_nbSessions){
+    while (jj<nb && end == false){
+
+      val = lexical_cast<string>(kk);
        _order->Save(val, "order");
+
+      jj++;
+      ii++;
+
+      if (ii>=_nbSessions){
+	end = true;
+      }
+    }
+  
+    kk++;
+    jj=0;
+    
+    if(kk>= _nbTrials){
+      kk=0;
     }
   }
 }
@@ -102,16 +123,16 @@ void
 Order::_oneAfterTheOther(){
 
   int jj=0, ii=0;
-
+  bool end = false;
   Recorder* _order = new Recorder();
+  std::string val = "";
   _order->AddFile("order");
 
-  bool end = false;
-  while (jj<_nbSessions && end==false){
+  while (jj<_nbSessions){
     ii=0;
     while (ii<_nbTrials && end==false){
 
-      std::string val = lexical_cast<string>(ii);
+      val = lexical_cast<string>(ii);
       _order->Save(val, "order");
 
       jj++;
@@ -120,7 +141,6 @@ Order::_oneAfterTheOther(){
       if (jj==_nbSessions){
 	end = true;
       }
- 
     }
   }
 }
