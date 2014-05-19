@@ -1,29 +1,18 @@
 name= TEST
+save= 
 logLevel= 9
+frequency=  
+width= 
+height= 
+nb_screens= 
+nb_trials= 
+shuffle= 
 
-| 300 STOP_TARGET1
-> Square Target -0.5 0 Start_Stop End_Target 0 255 0 0.1 0
-> Square Stop 0 0 Start_Stop End_Target 0 255 0 0.03 0
-> Cross Eye 0 0 0 -1 200 0 0 0.1 
-> FixationWindow Fixation 0 0 0 End_Fixation 0.48 0.32 Fixation_Duration 0
-> CorrectWindow Window_Correct -0.25 0 50 -1 0.12 0.12 0 0
-> NeutralWindow Window_Neutral 0 0 0 -1 0.24 0.32 0
-> Square Fixation 0 0 0 End_Fixation 0 255 0 0.03 0
-> Time 300 
-> RedoWindow Redo 0 0 6 End_Fixation 200 0 0 2 2 0 0
-> Variable STOP_TARGET1 1
+| SESSION_1 0 0 0 0 1 1.8 0 0 0
+> Plan     Plan     0 0 0  0  0  -1  40  80  80
+> Sphere   Sphere1  0 120 -0.3  0 -5   0  0   0  60  20  20  0.2  0.2 0
++ 98	   1.03	    d
 ;
 
 
-| 300 STOP_TARGET2
-> Square Target 0.5 0 Start_Stop End_Target 0 255 0 0.03 0
-> Square Stop 0 0 Start_Stop End_Target 0 255 0 0.03 0
-> Cross Eye 0 0 0 -1 200 0 0 0.1 
-> FixationWindow Fixation 0 0 0 End_Fixation 0.24 0.32 Fixation_Duration 0
-> CorrectWindow Window_Correct 0.25 0 50 -1 0.12 0.12 0 0
-> NeutralWindow Window_Neutral 0 0 0 -1 0.24 0.32 0
-> Square Fixation 0 0 0 End_Fixation 0 255 0 0.03 0
-> Time 300 
-> RedoWindow Redo 0 0 6 End_Fixation 200 0 0 2 2 0 
-> Variable STOP_TARGET1 1
-;
+
