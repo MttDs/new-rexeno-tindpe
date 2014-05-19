@@ -16,27 +16,27 @@ Sphere::Sphere(const ShapeInfo& si,
 	       Trial* father)
 {  
 
-  assert(si.attributes.size() == 15);
+  assert(si.attributes.size() == 14);
 
   _name = si.attributes[0];
   _id = 7;
   vm.addVariable(_minStart = new Variable(si.attributes[1]));
   vm.addVariable(_maxStart = new Variable(si.attributes[2]));
   vm.addVariable(_x = new Variable(si.attributes[3]));
-  vm.addVariable(_y = new Variable(si.attributes[4]));
-  vm.addVariable(_z = new Variable(si.attributes[5]));
-  vm.addVariable(_randomX = new Variable(si.attributes[6]));
-  vm.addVariable(_randomZ = new Variable(si.attributes[7])); 
-  vm.addVariable(_frameStart = new Variable(si.attributes[8]));
-  vm.addVariable(_frameEnd = new Variable(si.attributes[9]));
+  vm.addVariable(_y = new Variable(0));
+  vm.addVariable(_z = new Variable(si.attributes[4]));
+  vm.addVariable(_randomX = new Variable(si.attributes[5]));
+  vm.addVariable(_randomZ = new Variable(si.attributes[6])); 
+  vm.addVariable(_frameStart = new Variable(si.attributes[7]));
+  vm.addVariable(_frameEnd = new Variable(si.attributes[8]));
   vm.addVariable(_R = new Variable(255));
   vm.addVariable(_G = new Variable(255));
   vm.addVariable(_B = new Variable(255));
-  vm.addVariable(_stacks = new Variable(si.attributes[10]));
-  vm.addVariable(_slices = new Variable(si.attributes[11]));
-  vm.addVariable(_radius = new Variable(si.attributes[12]));
-  vm.addVariable(_veloX = new Variable(si.attributes[13]));
-  vm.addVariable(_veloZ = new Variable(si.attributes[14]));
+  vm.addVariable(_stacks = new Variable(si.attributes[9]));
+  vm.addVariable(_slices = new Variable(si.attributes[10]));
+  vm.addVariable(_radius = new Variable(si.attributes[11]));
+  vm.addVariable(_veloX = new Variable(si.attributes[12]));
+  vm.addVariable(_veloZ = new Variable(si.attributes[13]));
   
   vm.addVariable(_veloY = new Variable(0));
 
