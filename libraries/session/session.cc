@@ -67,7 +67,7 @@ Session::Session(configuration::SessionInfo& s,
 
   _gameMode = ss.str();
   _nbScreen = s.nb_screens;
-  _lP[0] = 0.0f; _lP[1] = 0.0f; _lP[2] = 0.0f;  _lP[3] = 1.0f; 
+  _lP[0] = 0.0f; _lP[1] = 1.0f; _lP[2] = 0.4f;  _lP[3] = 0.0f; 
   _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; 
   _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f;
   _RGB[0] = 0.0f; _RGB[1] = 0.51; _RGB[2] = 0.73;
@@ -197,9 +197,9 @@ Session::displayHeader()
 
     glClear (GL_COLOR_BUFFER_BIT);
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
-    glLightfv(GL_LIGHT0, GL_POSITION, _lP);
+        glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
+        glLightfv(GL_LIGHT0, GL_POSITION, _lP);
     if (getNbScreen()==2){
       for (int loop=0; loop<2; loop++){
 
