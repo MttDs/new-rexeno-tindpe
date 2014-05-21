@@ -280,7 +280,12 @@ Sphere::getAttrsToString(){
        << " Frame start "
        << _frameStart->value
        << " Frame end " 
-       << _frameEnd->value;
+       << _frameEnd->value
+       << " Random apparition ["
+       << _minStart->value
+       << ", "
+       << _maxStart->value
+       << "]";
   
   return  ostr.str();
 }
