@@ -1,5 +1,11 @@
 #include "recorder.hh"
-
+#include <iostream>
+#include <sys/stat.h>
+#include <string>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+#include <assert.h>
 Recorder::Recorder()
 {
   fichiers = new vector<pair<string, ofstream*> >();
@@ -8,7 +14,12 @@ Recorder::Recorder()
 Recorder::Recorder(std::string	folder,
                    int traceLevel)
 {
-  _folder = folder;
+  _folder = folder+_getCurrentDateTime()+"/";
+
+  if (mkdir(_folder.c_str(), 0777)!=0){
+    cerr << "bad path file no such file or directory (save=)\n" << endl;
+    assert(1==0);
+  }
   _traceLevel = traceLevel;
   fichiers = new vector<pair<string, ofstream*> >();
 }
@@ -161,4 +172,16 @@ void	demo_save(void	*arg)
   *((*i).second) << (data).first << " " << (data).second << std::endl; // TROP LENT MEME AVEC RAMDISK
 }
 
+// Get current date/time, format is YYYY-MM-DD.HH:mm:ss
+std::string
+Recorder::_getCurrentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
 
+    return buf;
+}

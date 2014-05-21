@@ -41,6 +41,8 @@ public:
 private:
   std::string _folder;
   int _traceLevel;
+
+  std::string _getCurrentDateTime();
 };
 
 
