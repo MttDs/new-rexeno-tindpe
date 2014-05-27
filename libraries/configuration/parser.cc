@@ -18,8 +18,6 @@ namespace qi = boost::spirit::qi;
 //namespace ascii = boost::spirit::ascii;
 namespace standard = boost::spirit::standard;
  
-
-
 // We need to tell fusion about our struct
 // to make it a first-class fusion citizen. This has to
 // be in global scope according to official Boost Spirit tutorial.
@@ -104,17 +102,17 @@ namespace configuration
 	;
 
       session %=
-	"name="	>> word
+	-("name=">> word)
         >> -("x_channel=" >> word)
         >> -("y_channel=" >> word)
 	>> -("save=" >> word) 
         >> -("logLevel=" >> int_)
-        >> -("frequency=" >> int_)
-        >> -("width=" >> int_)
-	>> -("height=" >> int_)
-	>> -("nb_screens=" >> int_)
-	>> -("nb_trials=" >> int_)
-	>> -("shuffle=" >> int_)
+        >> ("frequency=" >> int_)
+        >> ("width=" >> int_)
+	>> ("height=" >> int_)
+	>> ("nb_screens=" >> int_)
+	>> ("nb_trials=" >> int_)
+	>> ("shuffle=" >> int_)
 	>> +trial
 	;
 
