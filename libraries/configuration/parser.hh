@@ -44,11 +44,12 @@ namespace configuration
   {
     SessionInfo() {}
     ~SessionInfo() {}
-
+    
     std::string name;
     std::string x_channel;
     std::string y_channel;
     std::string save;
+    int block;
     int frequency;
     int traceLevel; 
     int width;

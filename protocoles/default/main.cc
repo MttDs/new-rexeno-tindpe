@@ -66,11 +66,20 @@ int	main(int argc,
   bool r = configuration::CreateConfiguration("definition", conf);
   Order o("order", conf);
   o.parse();
+  
+  std::string name = "";
+  int block = 0;
 
-  //assert(r);
+  std::cout << "Subject's name => ";
+  cin >> name;
+  std::cout << "Block number => ";
+  cin >> block;
+
+  conf.name = name;
+  conf.block = block;
+  
   Setup* setup = new Setup("~/.rexeno");
   Session* session = Session::getInstance(conf, o);
-  // Driver* d = new DummyDriver();
 
   session->setup = setup;
   session->beforeTrial = &InterTrial_CTM;
