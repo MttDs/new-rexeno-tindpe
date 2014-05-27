@@ -19,16 +19,21 @@ Order::Order(std::string filename, configuration::SessionInfo& s)
   _nbTrials = s.trials.size();
   _nbSessions = s.nb_trials;
 
+  if (!_isValid()){
+    std::cout << "( numbers of sessions % numbers of trials ) != 0 !" << std::endl;
+    throw;
+  }
+
   switch (s.shuffle){
   case 0:
     break;
-  case 1:
-    _random();
-    break;
   case 2:
-    _pile();
+    _simpleRandom();
     break;
   case 3:
+    _pile();
+    break;
+  case 4:
     _oneAfterTheOther();
     break;
   default:
@@ -51,7 +56,7 @@ void
 Order::parse(){
   ifstream infile;
   string sLine;
-
+  
   try
   {
     infile.open(_filename.c_str());
@@ -69,8 +74,20 @@ Order::parse(){
   infile.close();
 }
 
-void 
+bool 
+Order::_isValid(){
+  if((_nbSessions%_nbTrials)==0){
+    return true;
+  }
+  return false;
+}
+void
 Order::_random(){
+
+}
+
+void 
+Order::_simpleRandom(){
   int seed = 0,  min = 0,  max = _nbTrials-1;
   std::string val = "";
   Recorder* _order = new Recorder();

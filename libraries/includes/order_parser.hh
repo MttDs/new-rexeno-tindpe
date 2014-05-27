@@ -22,14 +22,18 @@ public:
   ~Order();
   std::vector<int>& getOrder();
   void parse();
-  void _random();
-  void _pile();
-  void _oneAfterTheOther();
+
 private:
   std::string _filename;
   std::vector<int> _trialsOrder;
   int _nbTrials;
   int _nbSessions;
+
+  void _random();
+  void _simpleRandom();
+  void _pile();
+  void _oneAfterTheOther();
+  bool _isValid();
 };
 
 #endif
