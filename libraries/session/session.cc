@@ -186,14 +186,7 @@ Session::displayHeader()
     int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
     int window_width = glutGet(GLUT_WINDOW_WIDTH);
 
-    float ratio = 0.0;
-
-    if (window_width >= window_height){
-      ratio = float (window_width/window_height);
-    }
-    else{
-      ratio = float (window_height/window_width);
-    }
+    float ratio = _getRatio();
 
     glClear (GL_COLOR_BUFFER_BIT);
 
@@ -293,8 +286,8 @@ Session::run(int argc,
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(_gameMode.c_str());
-  //glutEnterGameMode();
-  //glutFullScreen();
+  glutEnterGameMode();
+  glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
   glutDisplayFunc (displayRexeno);
@@ -397,4 +390,25 @@ bool
 Session::initialized()
 {
   return (_initialized);
+}
+
+float
+Session::_getRatio()
+{
+  int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
+  int window_width = glutGet(GLUT_WINDOW_WIDTH);
+  float ratio = 0.0;
+
+  if (getNbScreen()==2){
+    window_width = window_width/2;
+  }
+
+  if (window_width >= window_height){
+    ratio = float (window_width/window_height);
+  }
+  else{
+    ratio = float (window_height/window_width);
+  }
+
+  return ratio;
 }

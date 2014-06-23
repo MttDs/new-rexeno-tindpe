@@ -67,7 +67,7 @@ private:
   Session(configuration::SessionInfo& s,
           Order& o);
   void _fillData();
-
+  float _getRatio();
   Driver* _driver;
   vector<Trial*> _trialsDefinitions;
   vector<int>& _trialsOrder;
