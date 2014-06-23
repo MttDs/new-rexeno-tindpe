@@ -127,7 +127,7 @@ displayRexeno()
  * @param x : horizontal position of the mouse
  * @param y : vertical position of the mouse
  */
-void processNormalKeys(unsigned char key, int x, int y)
+void keyPressed(unsigned char key, int x, int y)
 {
   Setup::keys[key] = true;
   Setup::key = key;
@@ -137,6 +137,9 @@ void processNormalKeys(unsigned char key, int x, int y)
     }
 }
 
+void keyUp(unsigned char key, int x, int y){
+  Setup::keys[key] = false;
+}
 /**
  * Reshape the window's size
  */
@@ -290,12 +293,13 @@ Session::run(int argc,
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(_gameMode.c_str());
-  glutEnterGameMode();
-  glutFullScreen();
+  //  glutEnterGameMode();
+  // glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
   glutDisplayFunc (displayRexeno);
-  glutKeyboardFunc(processNormalKeys);
+  glutKeyboardFunc(keyPressed);
+  glutKeyboardUpFunc(keyUp);
   InitGL();
 
   glutMainLoop();

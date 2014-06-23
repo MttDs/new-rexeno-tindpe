@@ -85,6 +85,7 @@ private:
   bool _logged;
   bool _start;
   bool _subjectResponse;
+  bool _shapeUpdate;
 
   Variable* _eyeX;
   Variable* _eyeY;
@@ -99,6 +100,9 @@ private:
   Variable*  _cameraVeloZ;
 
   vector<float> _initCamera;
+
+  ms _timePress;
+  ms _timeUp;
 };
 
 

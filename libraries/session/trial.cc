@@ -88,7 +88,10 @@ Trial::Trial(TrialInfo& ti)
   _ttl->push_back( new TtlEvent() );
   _ttl->push_back( new TtlEvent() );
   _ttl->push_back( new TtlEvent() );
-
+  
+  _timePress = 0.0;
+  _timeUp = 0.0;
+  _shapeUpdate = false;
 }
 
 Trial::~Trial()
@@ -164,10 +167,10 @@ Trial::displayFrame(Driver* driver)
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
   if (_isSubScreen()){
-  _sendTtls(driver);
+    _sendTtls(driver);
 
-  driver->React2input();
-  driver->AnalogIn(_data);
+    driver->React2input();
+    driver->AnalogIn(_data);
   }
   ms displayTime = driver->GetTime();
   vector<Adapt*>::iterator aIt;
@@ -194,12 +197,12 @@ Trial::displayFrame(Driver* driver)
 	if ((_curFrameId == 0) && (!_logged))
 	  {
 	    if (_isSubScreen()){ 
-	    _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
-	    vector<Adapt*> adapts = curShape->getAdapts();
-	    for (aIt = adapts.begin(); aIt != adapts.end(); aIt++){
-	      Adapt* curAdapt = *aIt;
-	      _session->recorder->Save(curAdapt->getAttrsToString() ,"trials.txt");
-	    }
+	      _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
+	      vector<Adapt*> adapts = curShape->getAdapts();
+	      for (aIt = adapts.begin(); aIt != adapts.end(); aIt++){
+		Adapt* curAdapt = *aIt;
+		_session->recorder->Save(curAdapt->getAttrsToString() ,"trials.txt");
+	      }
 
 	    }
 	  }
@@ -210,7 +213,6 @@ Trial::displayFrame(Driver* driver)
       _session->recorder->Save("" ,"trials.txt");
     }
   }
-  
   if ((_curFrameId == 0) && (!_logged))
     {
       if (_isSubScreen()){
@@ -226,34 +228,63 @@ Trial::displayFrame(Driver* driver)
       _session->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
     }
   }
+ 
   if (canAnswer){
 
-    Shape* parent  = NULL;
-    bool submit = false;
-    for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++){
+    if (!_shapeUpdate){
 
-      if ((*aIt)->key()->value == Setup::key){
-	parent = (*aIt)->parent();
+      Shape* parent  = NULL;
+    
+      for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++){
 
-	if ((*aIt)->action()=="v"){
-	  parent->updateVelo((*aIt)->coef()->value);
-	  submit = true;
-	}
-	if ((*aIt)->action()=="d"){
-	  parent->updateDuration((*aIt)->coef()->value);
-	  submit = true;
+	if ((*aIt)->key()->value == Setup::key){
+	  parent = (*aIt)->parent();
+
+	  if ((*aIt)->action()=="v"){
+
+	    parent->updateVelo((*aIt)->coef()->value);
+	    _shapeUpdate = true;
+
+	    std::cout << Setup::key << " => " << Setup::keys[Setup::key] << std::endl;
+
+	    if (_timePress == 0.0){
+	      _timePress = driver->GetTime();
+	    }
+
+	    // submit = true;	
+	  }
+	  if ((*aIt)->action()=="d"){
+	    parent->updateDuration((*aIt)->coef()->value);
+	    _shapeUpdate = true;
+	    // submit = true;
+	  }
 	}
       }
-    } 
+    }
+
+    bool submit = false;
+    if (!Setup::keys[Setup::key] && _shapeUpdate){
+      if (_timeUp == 0.0){
+	_timeUp = driver->GetTime();
+      }
+      std::cout << "PressStart => " << _timePress << "PressEnd => " << _timeUp << "Time press => " << (_timeUp-_timePress) << std::endl;
+      submit = true;
+    }
+    else{
+      std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
+      submit = false;
+    }
 
     if ((submit) && (!_subjectResponse)){
 	
       std::cout << "Reponse => " << Setup::key << endl;
       if (_isSubScreen()){
 	ostringstream ostr;
-        ostr << "Response "
-	     << lexical_cast<string>(displayTime) 
-	     << " : " << Setup::key;
+	ostr << "Response "
+	     << lexical_cast<string>(displayTime)
+	     << " : "
+	     << lexical_cast<string>(_timeUp-_timePress)
+	     << " " << Setup::key;
 
 	_session->recorder->Save(ostr.str(), "events.txt");
       }
@@ -387,8 +418,8 @@ Trial::atStart()
 void
 Trial::Reset(Driver *d)
 {
-  //  PDEBUG("Trial::Reset ", "start")
-  _curFrameId = 0;
+  PDEBUG("Trial::Reset ", "start")
+    _curFrameId = 0;
   _logged = false;
   _subjectResponse = false;
   Status::iterator it;
@@ -412,6 +443,10 @@ Trial::Reset(Driver *d)
   _centerY->value = _initCamera.at(4);
   _centerZ->value = _initCamera.at(5);
   
+  _timePress = 0.0;
+  _timeUp = 0.0;
+  _shapeUpdate = false;
+
   Setup::reset();
 }
 

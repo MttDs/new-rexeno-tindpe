@@ -158,9 +158,9 @@ Sphere::React2input(Status& s,
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
 	   << " " << _frameEnd->value
-	   << " " << RoundNdecimal(2,_x->value) 
-	   << " " << RoundNdecimal(2,_z->value)
-	   << " " << RoundNdecimal(2,_angleV);
+	   << " " << _x->value
+	   << " " << _z->value
+	   << " " << _angleV;
 
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
