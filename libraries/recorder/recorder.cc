@@ -15,8 +15,8 @@ Recorder::Recorder(std::string	folder,
                    int traceLevel)
 {
   _folder = folder+_getCurrentDateTime()+"/";
-
-  if (mkdir(_folder.c_str(), 0777)!=0){
+  int temp = umask(0);
+  if ( (temp = mkdir(_folder.c_str(),  (S_IRWXU | S_IRWXG | S_IRWXO))!=0) ){
     cerr << "bad path file no such directory (save=)\n" << endl;
     assert(1==0);
   }
