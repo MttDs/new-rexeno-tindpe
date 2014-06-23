@@ -68,7 +68,7 @@ int	main(int argc,
   o.parse();
   
   std::string name = "";
-  int block = 0;
+  std::string block = "";
 
   std::cout << "Subject's name => ";
   cin >> name;
