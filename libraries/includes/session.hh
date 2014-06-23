@@ -61,6 +61,8 @@ public:
   ms getTime();
   int getFrequency(){return _frequency; }
   int getNbScreen(){return _nbScreen; }
+  string getNbBlock(){return _nbBlock;}
+  string getSubjectName(){return _subjectName;}
   bool initialized();
   GLvoid InitGL();
 private:
@@ -93,7 +95,8 @@ private:
   GLfloat _lA[4];
   // Light Diffuse :
   GLfloat _lD[4];
-
+  string _subjectName;
+  string _nbBlock;
 #ifdef DEBUG
   int __debug_FrameNumber;
 #endif

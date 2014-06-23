@@ -214,7 +214,10 @@ Trial::displayFrame(Driver* driver)
   if ((_curFrameId == 0) && (!_logged))
     {
       if (_isSubScreen()){
-      _session->recorder->Save("ProtocoleStart_ " + lexical_cast<string>(displayTime), "events.txt");
+	_session->recorder->Save(lexical_cast<string>(_session->getSubjectName()) 
+				 + " " + 
+				 lexical_cast<string>(_session->getNbBlock()), "events.txt");
+	_session->recorder->Save("ProtocoleStart_ " + lexical_cast<string>(displayTime), "events.txt");
       }
       _logged = true;
     }

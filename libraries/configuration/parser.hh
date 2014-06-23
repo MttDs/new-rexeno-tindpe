@@ -49,7 +49,7 @@ namespace configuration
     std::string x_channel;
     std::string y_channel;
     std::string save;
-    int block;
+    std::string block;
     int frequency;
     int traceLevel; 
     int width;

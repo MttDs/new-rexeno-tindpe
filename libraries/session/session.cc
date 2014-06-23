@@ -65,8 +65,12 @@ Session::Session(configuration::SessionInfo& s,
      << ":32@" 
      << s.frequency;
 
+  _nbBlock = s.block;
+  _subjectName = s.name;
+
   _gameMode = ss.str();
   _nbScreen = s.nb_screens;
+
   _lP[0] = 0.0f; _lP[1] = 1.0f; _lP[2] = 0.4f;  _lP[3] = 0.0f; 
   _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; 
   _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f;
