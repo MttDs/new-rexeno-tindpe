@@ -200,6 +200,7 @@ XenoDriver::_launch()
   return(0);
 }
 
+
 XenoDriver::XenoDriver()
 {
   _calibration = new KeyboardCalibration();
@@ -209,12 +210,26 @@ XenoDriver::XenoDriver()
   _start = rt_timer_read();
 }
 
+/**
+   return nanosecond
+**/
 ms
 XenoDriver::GetTime()
 {
   RTIME current = rt_timer_read();
+  return (current - _start); 
+}
 
-  return (current - _start);
+/**
+   return milliseconds
+**/
+ms
+XenoDriver::GetTimeMilliseconds()
+{
+  RTIME current = rt_timer_read();
+  int pow = std::pow(10,6);
+ 
+  return floor(static_cast<float>(current - _start)/pow+0.5); //milliseconds plz
 }
 
 void

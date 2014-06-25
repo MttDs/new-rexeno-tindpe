@@ -6,12 +6,13 @@
 
 Trial::Trial(TrialInfo& ti)
   : _curFrameId(0),
-    _nbFrames(1),
+    _nbFrames(400),
     _name(ti.name),
     _logged(false),
     _start(true),
     _subjectResponse(false)
 {
+
   _session = NULL;
   assert(ti.attributes.size() == 9);
 
@@ -88,10 +89,14 @@ Trial::Trial(TrialInfo& ti)
   _ttl->push_back( new TtlEvent() );
   _ttl->push_back( new TtlEvent() );
   _ttl->push_back( new TtlEvent() );
-  
+
+  _curFrameId = 0;
   _timePress = 0.0;
   _timeUp = 0.0;
   _shapeUpdate = false;
+  
+
+  Setup::reset();
 }
 
 Trial::~Trial()
@@ -111,8 +116,9 @@ Trial::displayFrame(Driver* driver)
   if (_session == NULL){
     _session = Session::getInstance();
   }
+
   _status[RUNNING] = true;
- 
+
   int screen = _idScreen;
   int fps = _session->getFrequency();
 
@@ -134,26 +140,31 @@ Trial::displayFrame(Driver* driver)
   vector<Shape*>::iterator it;
   vector<Sphere*> spheres;
 
-  bool canAnswer = false;
+  bool isValid = false;
   int nbSphereEnd = 0, nbSphere = 0;
-
   vector<Adapt*> adapts;
   vector<Adapt*>*pAdapts = &adapts;
+  
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
     {
       Shape *curShape = *it;
       glPushMatrix();
 
       if (curShape->id()==7){
+	/*	if (curShape->frameStart()==_curFrameId){
+	  std::cout << "frame id =>" << _curFrameId << std::endl;
+	  curShape->Reset();
+	  }*/
 	nbSphere++;
 	if (!curShape->Displayable(_curFrameId) && curShape->start()){
 	  nbSphereEnd++;
 	}
       }
-
+      
       curShape->setAdapts(pAdapts);
  
       if (curShape->Displayable(_curFrameId)){
+
     	curShape->Display();
 	curShape->setStart(true);
       }
@@ -162,7 +173,7 @@ Trial::displayFrame(Driver* driver)
     }
  
   if (nbSphere==nbSphereEnd){
-    canAnswer = true;
+    isValid = true;
   }
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
@@ -172,7 +183,7 @@ Trial::displayFrame(Driver* driver)
     driver->React2input();
     driver->AnalogIn(_data);
   }
-  ms displayTime = driver->GetTime();
+  
   vector<Adapt*>::iterator aIt;
   if((_curFrameId == 0) && (_start)){
     string str;
@@ -213,27 +224,29 @@ Trial::displayFrame(Driver* driver)
       _session->recorder->Save("" ,"trials.txt");
     }
   }
+  // ms displayTime = driver->GetTime();
   if ((_curFrameId == 0) && (!_logged))
     {
       if (_isSubScreen()){
 	_session->recorder->Save(lexical_cast<string>(_session->getSubjectName()) 
 				 + " " + 
 				 lexical_cast<string>(_session->getNbBlock()), "events.txt");
-	_session->recorder->Save("ProtocoleStart_ " + lexical_cast<string>(displayTime), "events.txt");
+	_session->recorder->Save("ProtocoleStart_ " + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
       }
-      _logged = true;
+
     }
+
   if(_curFrameId == 0){
     if (_isSubScreen()){
-      _session->recorder->Save(_name + ' ' + lexical_cast<string>(displayTime), "events.txt");
+      _session->recorder->Save(_name + ' ' + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
     }
   }
  
-  if (canAnswer){
+  if (isValid){
 
     if (!_shapeUpdate){
 
-      Shape* parent  = NULL;
+      Shape* parent = NULL;
     
       for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++){
 
@@ -245,43 +258,45 @@ Trial::displayFrame(Driver* driver)
 	    parent->updateVelo((*aIt)->coef()->value);
 	    _shapeUpdate = true;
 
-	    std::cout << Setup::key << " => " << Setup::keys[Setup::key] << std::endl;
-
 	    if (_timePress == 0.0){
-	      _timePress = driver->GetTime();
+	      _timePress = driver->GetTimeMilliseconds();
 	    }
-
-	    // submit = true;	
 	  }
 	  if ((*aIt)->action()=="d"){
+
 	    parent->updateDuration((*aIt)->coef()->value);
 	    _shapeUpdate = true;
-	    // submit = true;
+
+	    if (_timePress == 0.0){
+	      _timePress = driver->GetTimeMilliseconds();
+	    }
 	  }
 	}
       }
     }
 
     bool submit = false;
+   
     if (!Setup::keys[Setup::key] && _shapeUpdate){
+    
       if (_timeUp == 0.0){
-	_timeUp = driver->GetTime();
+	_timeUp = driver->GetTimeMilliseconds();
       }
-      std::cout << "PressStart => " << _timePress << "PressEnd => " << _timeUp << "Time press => " << (_timeUp-_timePress) << std::endl;
+      //    std::cout << "Time press => " << (_timeUp-_timePress) << std::endl;
       submit = true;
     }
     else{
-      std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
-      submit = false;
+      //  std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
+      //  submit = false;
     }
 
     if ((submit) && (!_subjectResponse)){
-	
-      std::cout << "Reponse => " << Setup::key << endl;
+
+      //   std::cout << "Reponse => " << Setup::key << endl;
       if (_isSubScreen()){
 	ostringstream ostr;
 	ostr << "Response "
-	     << lexical_cast<string>(displayTime)
+	     << lexical_cast<string>(driver->GetTimeMilliseconds())
 	     << " : "
 	     << lexical_cast<string>(_timeUp-_timePress)
 	     << " " << Setup::key;
@@ -301,19 +316,16 @@ Trial::displayFrame(Driver* driver)
     {
       Shape *curShape = *it;
 
-      if ((_curFrameId == 0) && (!_logged))
-	{
-	  if (_isSubScreen()){
-	    _session->recorder->Save(curShape->getAttrsToString() ,"events.txt");
-	  }
-	}
-
       //PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
       if (curShape->Displayable(_curFrameId) && screen==1){
-	curShape->React2input(_status, _data, _curFrameId, driver->GetTime());
+
+	curShape->React2input(_status, _data, _curFrameId, driver->GetTimeMilliseconds());
       }
+
     }
-  
+ 
+  _logged = true; 
+
   return (_react2status());
 }
 
@@ -332,8 +344,9 @@ Trial::_sendTtls(Driver* d)
   vector<TtlEvent*>::iterator it;
   for (it = _ttl->begin(); it != _ttl->end(); ++it)
     {
-      if ((*it)->value != 0)
+      if ((*it)->value != 0){
 	d->TtlPulse((*it)->value, (*it)->delay);
+      }
     }
 }
 
@@ -420,7 +433,7 @@ Trial::Reset(Driver *d)
 {
   PDEBUG("Trial::Reset ", "start")
     _curFrameId = 0;
-  _logged = false;
+  //  _logged = false;
   _subjectResponse = false;
   Status::iterator it;
   for (it = _status.begin(); it != _status.end(); ++it)
@@ -448,6 +461,7 @@ Trial::Reset(Driver *d)
   _shapeUpdate = false;
 
   Setup::reset();
+
 }
 
 bool

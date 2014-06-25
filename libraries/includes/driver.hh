@@ -32,6 +32,7 @@ public:
   virtual ~Driver() {}
 
   virtual ms GetTime() = 0;
+  ms GetTimeMilliseconds() {return GetTime();}
   virtual void AnalogIn(datas& data) = 0;
   virtual void TtlPulse(uint value,
                         ms delay = 0,
@@ -61,6 +62,7 @@ public:
   ~DummyDriver() {}
 
   ms GetTime();
+  ms GetTimeMilliseconds() {return GetTime();}
   void React2input();
   void AnalogIn(datas&);
 
@@ -75,8 +77,10 @@ public:
   ~FileDriver();
 
   ms GetTime();
+  ms GetTimeMilliseconds() {return GetTime();}
   void React2input();
   void AnalogIn(datas&);
+
 private:
   ifstream _infile;
 };
@@ -93,6 +97,8 @@ public:
   ~XenoDriver() {}
 
   ms GetTime();
+  ms GetTimeMilliseconds();
+
   void React2input();
   void AnalogIn(datas&);
 private:
