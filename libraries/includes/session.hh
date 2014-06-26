@@ -54,13 +54,10 @@ public:
 
   Setup* setup; 
   Recorder* recorder;
-  //void (*interFrame)(VariableManager&);
-  //void (*ConfigurableWindow)(TrialManager *);
   int nbFrame4init() {return _nbFrame4init;}
   int nbInitFrames() {return _nbInitFrames;}
   ms getTime();
-  int getFrequency(){return _frequency; }
-  int getNbScreen(){return _nbScreen; }
+
   string getNbBlock(){return _nbBlock;}
   string getSubjectName(){return _subjectName;}
   bool initialized();
@@ -69,7 +66,6 @@ private:
   Session(configuration::SessionInfo& s,
           Order& o);
   void _fillData();
-  float _getRatio();
   Driver* _driver;
   vector<Trial*> _trialsDefinitions;
   vector<int>& _trialsOrder;
@@ -82,11 +78,7 @@ private:
   int _nbFrame4init;
   int _nbInitFrames;
   double _offsetVsync; // offset between 0 and 16.666 (if 60Hz)
-  int _frequency;
-  int _windowWidth;
-  int _windowHeight;
-  int _nbScreen;
-  string _gameMode;
+
   // Background Color :
   GLfloat _RGB[3];
   // Light Position : 

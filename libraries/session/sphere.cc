@@ -92,7 +92,7 @@ void Sphere::CompParam(bool init)
 
   if (init==0)
     {
-      int fps = _session->getFrequency();
+      int fps = (_session->setup)->refreshRate();
 
       float veloV = _gainV * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
       _moveV = veloV/fps;
@@ -117,7 +117,7 @@ Sphere::React2input(Status& s,
   if (_session == NULL){
     _session = _father->session();
   }
-  int fps = _session->getFrequency(); 
+  int fps = (_session->setup)->refreshRate();
 
   //  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
@@ -134,6 +134,7 @@ Sphere::React2input(Status& s,
       _logged = true;
       // name 'start' time frameStart x z angleX angleZ angleV veloX veloZ gainV gainD 
 
+      //  std::cout << "time start " <<  lexical_cast<string>(displayTime) << std::endl;
       ostr << _name 
 	   << " start " << lexical_cast<string>(displayTime) 
 	   << " " << _frameStart->value
@@ -154,7 +155,8 @@ Sphere::React2input(Status& s,
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
       // end name time frameEnd x z
- 
+
+      //   std::cout << "time end " <<  lexical_cast<string>(displayTime) << std::endl;
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
 	   << " " << _frameEnd->value
@@ -255,9 +257,8 @@ Sphere::getAttrsToString(){
   if (_session == NULL){
     _session = _father->session();
   }
-
   
-  int fps = _session->getFrequency();
+  int fps = (_session->setup)->refreshRate();
   float move = *_veloX/fps;
   float angleX = (move / *_radius*180.0 / M_PI);
   move = *_veloZ/fps;

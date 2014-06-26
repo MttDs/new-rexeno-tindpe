@@ -4,10 +4,12 @@
 #include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
-using namespace std;
 
-bool* Setup::keys = new bool[256];
-int Setup::key = -1;
+using namespace std;
+using namespace configuration;
+
+bool* Setup::keys = new bool[256]; // Keysboard
+int Setup::key = -1; // key pressed
 
 Setup::Setup(string confFile)
 {
@@ -34,18 +36,57 @@ Setup::Setup(string confFile)
   _screenWidth = width;
 }
 
-double
-Setup::xRatio()
+Setup::Setup(configuration::SessionInfo& si)
 {
-  return (_screenHeight / _screenWidth);
+  _screenHeight = si.height;
+  _screenWidth = si.width;
+  _refreshRate = si.frequency;
+  _nbScreen = si.nb_screens;
+  _ratio = -1.0;
+
+  stringstream gms;
+  
+  gms << _screenWidth 
+     << "x" 
+     << _screenHeight 
+     << ":32@" 
+     << _refreshRate;
+  _gameModeString = gms.str();
+}
+
+void
+Setup::prepareRatio()
+{
+  int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
+  int window_width = glutGet(GLUT_WINDOW_WIDTH);
+
+  if (nbScreen()==2){
+    window_width = window_width/2;
+  }
+
+  if (window_width >= window_height){
+    _ratio = (double) (window_width/window_height);
+  }
+  else{
+    _ratio = (double) (window_height/window_width);
+  }
+}
+
+double
+Setup::ratio()
+{
+  if (_ratio==(-1.0)){
+    prepareRatio();
+  } 
+  return _ratio;
 }
 
 void
 Setup::reset()
 {
-  /*int i = 0;
-  for (; i < 256; ++i)
-    Setup::keys[i] = false;
-  */
+  int ii = 0;
+  for (; ii < 256; ++ii)
+    Setup::keys[ii] = false;
+  
   Setup::key= -1;
 }

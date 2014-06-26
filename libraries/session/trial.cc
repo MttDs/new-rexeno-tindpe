@@ -120,7 +120,7 @@ Trial::displayFrame(Driver* driver)
   _status[RUNNING] = true;
 
   int screen = _idScreen;
-  int fps = _session->getFrequency();
+  int fps = _session->setup->refreshRate();
 
   _eyeX->value = _eyeX->value+(_cameraVeloX->value/fps);
   _centerX->value = _centerX->value+(_cameraVeloX->value/fps);

@@ -30,9 +30,10 @@ Session::Session(configuration::SessionInfo& s,
   for (it = s.trials.begin(); it != s.trials.end(); ++it)
     {
       t = new Trial(*it);
+      //if (it==s.trials.begin())
+	t->Reset(_driver);
       _trialsDefinitions.push_back(t);
     }
-  _frequency = s.frequency;
   _currentTrial = _trialsOrder.begin();
   beforeTrial = NULL;
   afterTrial = NULL;
@@ -54,22 +55,8 @@ Session::Session(configuration::SessionInfo& s,
   _nbFrame4init = 120;
   _nbInitFrames = 0;
   
-  _windowWidth = s.width;
-  _windowHeight = s.height;
-
-  stringstream ss;
-  
-  ss << _windowWidth 
-     << "x" 
-     << _windowHeight 
-     << ":32@" 
-     << s.frequency;
-
   _nbBlock = s.block;
   _subjectName = s.name;
-
-  _gameMode = ss.str();
-  _nbScreen = s.nb_screens;
 
   _lP[0] = 0.0f; _lP[1] = 1.0f; _lP[2] = 0.4f;  _lP[3] = 0.0f; 
   _lA[0] = 0.5f; _lA[1] = 0.5f; _lA[2] = 0.5f;  _lA[3] = 2.0f; 
@@ -80,14 +67,17 @@ Session::Session(configuration::SessionInfo& s,
   __debug_FrameNumber = 0;
 #endif
 
-  recorder->Save(s.name, "general.txt");
-  recorder->Save(s.traceLevel, "general.txt");
 
 #ifdef XENO
   _driver = new XenoDriver();
+
 #else
   _driver = new DummyDriver();
 #endif
+
+  recorder->Save(s.name, "general.txt");
+  recorder->Save(s.traceLevel, "general.txt");
+
 }
 
 /** 
@@ -127,7 +117,8 @@ displayRexeno()
  * @param x : horizontal position of the mouse
  * @param y : vertical position of the mouse
  */
-void keyPressed(unsigned char key, int x, int y)
+void 
+keyPressed(unsigned char key, int x, int y)
 {
   Setup::keys[key] = true;
   Setup::key = key;
@@ -136,10 +127,12 @@ void keyPressed(unsigned char key, int x, int y)
       exit(0);
     }
 }
-
-void keyUp(unsigned char key, int x, int y){
+void 
+keyUp(unsigned char key, int x, int y){
   Setup::keys[key] = false;
 }
+
+
 /**
  * Reshape the window's size
  */
@@ -148,13 +141,9 @@ reshape(int width, int height){
   if (height==0){
     height=1;
   }
-  float ratio = 0.0;
-  if (width >= height){
-    ratio = float (width/height);
-  }
-  else{
-    ratio = float (height/width);
-  }
+  (Session::getInstance()->setup)->setScreenWidth(width);
+  (Session::getInstance()->setup)->setScreenHeight(height);
+  (Session::getInstance()->setup)->prepareRatio();
 }
 
 /** 
@@ -190,17 +179,18 @@ Session::displayHeader()
     }   
   else{
  				
-    int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
-    int window_width = glutGet(GLUT_WINDOW_WIDTH);
-
-    float ratio = _getRatio();
+    int window_height =  setup->screenHeight();
+    int window_width = setup->screenWidth();
+    
+    float ratio = setup->ratio();
 
     glClear (GL_COLOR_BUFFER_BIT);
 
-        glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
-        glLightfv(GL_LIGHT0, GL_POSITION, _lP);
-    if (getNbScreen()==2){
+    glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
+    glLightfv(GL_LIGHT0, GL_POSITION, _lP);
+
+    if (setup->nbScreen()==2){
       for (int loop=0; loop<2; loop++){
 
 	if (loop==0){
@@ -219,8 +209,8 @@ Session::displayHeader()
 	  glMatrixMode(GL_MODELVIEW);
 	}
 
-	glMatrixMode (GL_MODELVIEW);		
-	glLoadIdentity ();							
+	glMatrixMode(GL_MODELVIEW);		
+	glLoadIdentity();							
 	glClear (GL_DEPTH_BUFFER_BIT);	
 
 	if (loop==0){					
@@ -239,7 +229,7 @@ Session::displayHeader()
       gluPerspective(90, ratio, 1.0f, 2000.0f); 
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity ();							
-      glClear (GL_DEPTH_BUFFER_BIT);
+      glClear(GL_DEPTH_BUFFER_BIT);
       
       displayFrame(1);
       
@@ -288,18 +278,18 @@ Session::run(int argc,
   
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-  glutInitWindowSize(_windowWidth,_windowHeight);
+  glutInitWindowSize(setup->screenWidth(),setup->screenHeight());
   glutInitWindowPosition(0, 0);
   mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
 
-  glutGameModeString(_gameMode.c_str());
-  //  glutEnterGameMode();
-  // glutFullScreen();
+  glutGameModeString(setup->gameModeString().c_str());
+  glutEnterGameMode();
+  glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutReshapeFunc(&reshape);
-  glutDisplayFunc (displayRexeno);
-  glutKeyboardFunc(keyPressed);
-  glutKeyboardUpFunc(keyUp);
+  glutDisplayFunc (&displayRexeno);
+  glutKeyboardFunc(&keyPressed);
+  glutKeyboardUpFunc(&keyUp);
   InitGL();
 
   glutMainLoop();
@@ -319,6 +309,7 @@ Session::displayFrame(int idScreen)
   
   if (_currentTrial != _trialsOrder.end())
     {
+      
       //  PDEBUG("Session::displayFrame", " trial frame ");
       Trial* t = _trialsDefinitions[*_currentTrial];
       if (t->atStart() && beforeTrial)
@@ -333,15 +324,15 @@ Session::displayFrame(int idScreen)
 
 	  // PDEBUG("Session::displayFrame", " end of trial : " << t->name() << " (trial number " << *_currentTrial << " )");
 	  if (idScreen==1){
-	  ms displayTime = _driver->GetTime();
-	  recorder->Save("EndTrial " + lexical_cast<string>(displayTime), "events.txt");
+	    ms displayTime = _driver->GetTime();
+	    recorder->Save("EndTrial " + lexical_cast<string>(displayTime), "events.txt");
 	
-	  if (afterTrial)
+	    if (afterTrial)
 
-	    afterTrial(t->name(), t->variables, b);
+	      afterTrial(t->name(), t->variables, b);
 
-	  _currentTrial++;
-	  t->Reset(_driver);
+	    _currentTrial++;
+	    t->Reset(_driver);
 	  }
 	 
 #ifdef DEBUG
@@ -398,25 +389,4 @@ bool
 Session::initialized()
 {
   return (_initialized);
-}
-
-float
-Session::_getRatio()
-{
-  int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
-  int window_width = glutGet(GLUT_WINDOW_WIDTH);
-  float ratio = 0.0;
-
-  if (getNbScreen()==2){
-    window_width = window_width/2;
-  }
-
-  if (window_width >= window_height){
-    ratio = float (window_width/window_height);
-  }
-  else{
-    ratio = float (window_height/window_width);
-  }
-
-  return ratio;
 }
