@@ -1,3 +1,7 @@
+# NOTE:
+# -> resourdre = cannot open shared object file: No such file or directory
+# $ sudo /sbin/ldconfig -v
+
 cmake_minimum_required (VERSION 2.6)
 project (Rexeno)
 
@@ -46,6 +50,7 @@ link_directories(${DIR3PARTY}/x11/lib)
 include_directories ("${PROJECT_SOURCE_DIR}/session")
 include_directories ("${PROJECT_SOURCE_DIR}/includes")
 include_directories ("${PROJECT_SOURCE_DIR}/recorder")
+include_directories ("${PROJECT_SOURCE_DIR}/textures")
 
 link_libraries (glut libX11.a libX11-xcb.a dl xcb xcb-glx )
 
@@ -53,6 +58,8 @@ add_subdirectory (configuration)
 add_subdirectory (session)
 add_subdirectory (driver)
 add_subdirectory (recorder)
+add_subdirectory (textures)
+
 # add_subdirectory (unitTest)
 
 if (GUI)
@@ -65,6 +72,7 @@ target_link_libraries (Rexeno configuration)
 target_link_libraries (Rexeno session)
 target_link_libraries (Rexeno driver)
 target_link_libraries (Rexeno recorder)
+target_link_libraries (Rexeno textures)
 
 # link_directories(${DIR3PARTY}/lib)
 # include_directories(${DIR3PARTY}/include/xenomai)
