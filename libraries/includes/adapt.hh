@@ -1,14 +1,16 @@
 #ifndef ADAPT_HH_
 # define ADAPT_HH_
 
+
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include <string>
 # include <string.h>
 # include "parser.hh"
 # include "variable.hh"
 # include "trial.hh"
 # include "adapt.hh"
-# include <GL/glut.h>
-
 using namespace std;
 using namespace configuration;
 

@@ -10,8 +10,6 @@ using namespace configuration;
 
 Session* Session::_instance = NULL;
 
-int mainWindow;
-
 /** 
  * Constructor :
  * Inits all the fields automatically
@@ -67,10 +65,8 @@ Session::Session(configuration::SessionInfo& s,
   __debug_FrameNumber = 0;
 #endif
 
-
 #ifdef XENO
   _driver = new XenoDriver();
-
 #else
   _driver = new DummyDriver();
 #endif
@@ -82,11 +78,10 @@ Session::Session(configuration::SessionInfo& s,
 
 /** 
  * Destructor : cleans everything up
- * TODO : this destructor is stupid and
- * probably not even called (program exited before)
  */
 Session::~Session()
 {
+  
   vector<Trial*>::iterator it;
   for (it = _trialsDefinitions.begin(); it != _trialsDefinitions.end(); ++it)
     {
@@ -94,10 +89,11 @@ Session::~Session()
     }
   delete recorder;
   recorder = NULL;
-  delete _instance;
-  _instance = NULL;
   delete setup;
   setup = NULL;
+  delete _driver;
+  _driver = NULL;
+  
 }
 
 /** 
@@ -124,7 +120,7 @@ keyPressed(unsigned char key, int x, int y)
   Setup::key = key;
   if (key == 27)
     {
-      exit(0);
+      glutLeaveMainLoop();
     }
 }
 void 
@@ -154,8 +150,17 @@ reshape(int width, int height){
 void
 Session::displayHeader()
 {
+  ms start = 0;
+  ms end = 0;
+
+  if (initialized()){
+    start = _driver->GetTimeMilliseconds();
+  }
   if (!initialized())
-    {
+    {				
+      glClear (GL_DEPTH_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT);
+
       glBegin(GL_QUADS);
       glColor3ub(255, 155, 255);    
       glVertex2d(-0.1, -0.1);
@@ -164,9 +169,8 @@ Session::displayHeader()
       glVertex2d(0.1, 0.1);
       glEnd();
 
-      glutSwapBuffers();
       glutPostRedisplay();
-      glClear(GL_COLOR_BUFFER_BIT);
+      glutSwapBuffers();
 
       if (nbInitFrames() < nbFrame4init())
 	{
@@ -184,17 +188,16 @@ Session::displayHeader()
     
     float ratio = setup->ratio();
 
-    glClear (GL_COLOR_BUFFER_BIT);
-
+    glClear (GL_COLOR_BUFFER_BIT);						
+    glClear (GL_DEPTH_BUFFER_BIT);
+	
     glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
     glLightfv(GL_LIGHT0, GL_POSITION, _lP);
 
     if (setup->nbScreen()==2){
       for (int loop=0; loop<2; loop++){
-
 	if (loop==0){
-
 	  glViewport(0,0,window_width/2, window_height); 
 	  glMatrixMode(GL_PROJECTION);
 	  glLoadIdentity();
@@ -210,8 +213,7 @@ Session::displayHeader()
 	}
 
 	glMatrixMode(GL_MODELVIEW);		
-	glLoadIdentity();							
-	glClear (GL_DEPTH_BUFFER_BIT);	
+	glLoadIdentity();			
 
 	if (loop==0){					
 	  displayFrame(1);
@@ -228,8 +230,7 @@ Session::displayHeader()
       glLoadIdentity();
       gluPerspective(90, ratio, 1.0f, 2000.0f); 
       glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity ();							
-      glClear(GL_DEPTH_BUFFER_BIT);
+      glLoadIdentity ();	
       
       displayFrame(1);
       
@@ -237,6 +238,15 @@ Session::displayHeader()
     }
   }
   glutSwapBuffers();
+  if (initialized()){
+    end = _driver->GetTimeMilliseconds();
+    std::cout << "frame time => " << end-start << std::endl;
+    start = end + start;
+    start = 0;
+    end = 0;
+  }
+  start = 0;
+  end = 0;
 }
 
 
@@ -260,7 +270,7 @@ Session::InitGL(){
   glShadeModel(GL_SMOOTH);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-
+  
 }
 
 /**
@@ -280,12 +290,13 @@ Session::run(int argc,
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
   glutInitWindowSize(setup->screenWidth(),setup->screenHeight());
   glutInitWindowPosition(0, 0);
-  mainWindow = glutCreateWindow((char*)"Time in Dynamic Perspective");
+  glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(setup->gameModeString().c_str());
-  glutEnterGameMode();
-  glutFullScreen();
+  // glutEnterGameMode();
+  // glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
+  glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   glutReshapeFunc(&reshape);
   glutDisplayFunc (&displayRexeno);
   glutKeyboardFunc(&keyPressed);
@@ -293,6 +304,7 @@ Session::run(int argc,
   InitGL();
 
   glutMainLoop();
+
 }
 
 /** 
@@ -314,8 +326,11 @@ Session::displayFrame(int idScreen)
       Trial* t = _trialsDefinitions[*_currentTrial];
       if (t->atStart() && beforeTrial)
 	{
+	  VariableManager& tm = t->variables;
+	  tm.printVariables();
 	  beforeTrial(t->name(), t->variables);
 	};
+
       t->setIdScreen(idScreen);
       int b = t->displayFrame(_driver);
    

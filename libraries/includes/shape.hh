@@ -15,7 +15,8 @@
 #ifndef SHAPE_HH_
 # define SHAPE_HH_
 
-# include <GL/glut.h>
+# include <GL/glew.h>
+# include <GL/freeglut.h>
 
 # include <string>
 # include <iostream>
@@ -60,7 +61,7 @@ public:
   int id() {return _id;}
   const string& name() {return _name;}
   double frameStart() {return _frameStart->value;}
-  double frameEnd() {return _frameEnd->value;}
+  double frameEnd() {return (_frameEnd->value);}
   bool MonitorDisplayable();
   uint ttl() {return _ttl;}
   bool Displayable(int frameId);
@@ -131,6 +132,9 @@ protected:
   bool _start;
 
   vector<Adapt*> _adapts;
+
+
+  ms teeest;
 };
 
 #endif

@@ -1,10 +1,12 @@
 #ifndef SETUP_HH_
 # define SETUP_HH_
 
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include "parser.hh"
-# include "setup.hh"
 # include <string>
-# include <GL/glut.h>
+
 namespace configuration
 {
   class SessionInfo;

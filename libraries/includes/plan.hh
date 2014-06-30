@@ -1,7 +1,9 @@
 #ifndef PLAN_HH_
 # define PLAN_HH_
 
-# include <GL/glut.h>
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include <boost/lexical_cast.hpp>
 # include "rectangle.hh"
 using namespace boost;

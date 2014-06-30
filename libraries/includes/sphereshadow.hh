@@ -8,10 +8,11 @@
 #ifndef SPHERESHADOW_H_
 #define SPHERESHADOW_H_
 
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include <string>
 # include <iostream>
-#include <GL/glut.h>
-
 class SphereShadow{
 public:
   SphereShadow(float rdius, float ps, int stcks, bool actve);

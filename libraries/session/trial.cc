@@ -6,16 +6,16 @@
 
 Trial::Trial(TrialInfo& ti)
   : _curFrameId(0),
-    _nbFrames(400),
+    _nbFrames(1),
     _name(ti.name),
     _logged(false),
     _start(true),
     _subjectResponse(false)
 {
-
-  _session = NULL;
   assert(ti.attributes.size() == 9);
 
+  _session = NULL;
+  
   variables.addVariable(_cameraVeloX = new Variable(ti.attributes[0]));
   variables.addVariable(_cameraVeloY = new Variable(ti.attributes[1]));
   variables.addVariable(_cameraVeloZ = new Variable(ti.attributes[2]));
@@ -63,11 +63,11 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new Sphere(*it, variables, this);
       if (it->name == "Plan")
 	newShape = new Plan(*it, variables, this);
-      if (it->name == "Rectangle3d")
+       if (it->name == "Rectangle3d")
 	newShape = new Rectangle3d(*it, variables, this);
-      if (it->name == "Aircraft")
+       /*if (it->name == "Aircraft")
 	newShape = new Aircraft(*it, variables, this);
-
+       */
       if (newShape)
 	{
 	  _shapes.push_back(newShape);
@@ -116,12 +116,10 @@ Trial::displayFrame(Driver* driver)
   if (_session == NULL){
     _session = Session::getInstance();
   }
-
   _status[RUNNING] = true;
 
-  int screen = _idScreen;
   int fps = _session->setup->refreshRate();
-
+ 
   _eyeX->value = _eyeX->value+(_cameraVeloX->value/fps);
   _centerX->value = _centerX->value+(_cameraVeloX->value/fps);
   _eyeY->value = _eyeY->value+(_cameraVeloY->value/fps);
@@ -136,7 +134,7 @@ Trial::displayFrame(Driver* driver)
 	    _centerY->value,
 	    _centerZ->value, 
 	    0,1,0);
- 
+
   vector<Shape*>::iterator it;
   vector<Sphere*> spheres;
 
@@ -150,23 +148,28 @@ Trial::displayFrame(Driver* driver)
       Shape *curShape = *it;
       glPushMatrix();
 
+      if (curShape->frameStart()==_curFrameId && curShape->id()==7){
+	std::cout << "id " << _curFrameId << " start => " << driver->GetTimeMilliseconds() << std::endl; 
+      }
+
+ 
+      if (curShape->frameEnd()==_curFrameId && curShape->id()==7){
+	std::cout << "id " << _curFrameId << " end => " << driver->GetTimeMilliseconds() << std::endl; 
+      }
       if (curShape->id()==7){
-	/*	if (curShape->frameStart()==_curFrameId){
-	  std::cout << "frame id =>" << _curFrameId << std::endl;
-	  curShape->Reset();
-	  }*/
 	nbSphere++;
 	if (!curShape->Displayable(_curFrameId) && curShape->start()){
 	  nbSphereEnd++;
 	}
       }
-      
+   
       curShape->setAdapts(pAdapts);
  
       if (curShape->Displayable(_curFrameId)){
 
     	curShape->Display();
 	curShape->setStart(true);
+       
       }
 
       glPopMatrix();
@@ -199,7 +202,7 @@ Trial::displayFrame(Driver* driver)
     str = ostr.str();
   
     if (_isSubScreen()){ 
-      _session->recorder->Save(str,"trials.txt");
+      _session->recorder->Save(str, "trials.txt");
     }
     for (it = _shapes.begin(); it != _shapes.end(); ++it)
       {
@@ -317,7 +320,7 @@ Trial::displayFrame(Driver* driver)
       Shape *curShape = *it;
 
       //PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
-      if (curShape->Displayable(_curFrameId) && screen==1){
+      if (curShape->Displayable(_curFrameId) && _isSubScreen()){
 
 	curShape->React2input(_status, _data, _curFrameId, driver->GetTimeMilliseconds());
       }
@@ -325,7 +328,7 @@ Trial::displayFrame(Driver* driver)
     }
  
   _logged = true; 
-
+  // std::cout << "currentframe => " << _curFrameId << " screen => " << screen << std::endl;
   return (_react2status());
 }
 
@@ -384,7 +387,6 @@ Trial::_react2status()
       if (_isSubScreen()){
         _curFrameId++;    
       }
-
       PDEBUG("Trial::_react2status ", "WAITING_FIXATION");
       return (RUNNING);
     }
@@ -432,8 +434,8 @@ void
 Trial::Reset(Driver *d)
 {
   PDEBUG("Trial::Reset ", "start")
-    _curFrameId = 0;
-  //  _logged = false;
+  _curFrameId = 0;
+  
   _subjectResponse = false;
   Status::iterator it;
   for (it = _status.begin(); it != _status.end(); ++it)

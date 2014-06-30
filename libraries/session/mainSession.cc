@@ -1,12 +1,14 @@
-#include <iostream>
-#include <GL/glut.h>
 
-#include "order_parser.hh"
-#include "trial.hh"
-#include "setup.hh"
+# include <GL/glew.h>
+# include <GL/freeglut.h>
 
-#include "session.hh"
-#include "dummyDriver.hh"
+# include <iostream>
+# include "order_parser.hh"
+# include "trial.hh"
+# include "setup.hh"
+
+# include "session.hh"
+# include "dummyDriver.hh"
 
 using namespace std;
 
@@ -77,4 +79,5 @@ int	main(int argc,
   session->beforeTrial = &InterTrial_CTM;
 
   session->run(argc, argv);
+  
 }

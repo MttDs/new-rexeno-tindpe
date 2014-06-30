@@ -1,9 +1,11 @@
 #ifndef SPHERE_HH_
 # define SPHERE_HH_
 
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include "shape.hh"
 # include "sphereshadow.hh"
-# include <GL/glut.h>
 
 class Sphere : public Shape
 {

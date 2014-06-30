@@ -21,7 +21,6 @@ struct Element
 
   double volt;
   ms timing;
-
 };
 
 typedef std::vector<Element> channel;

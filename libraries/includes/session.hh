@@ -13,12 +13,13 @@
 #ifndef SESSION_HH_
 # define SESSION_HH_
 
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include <iostream>
 # include <vector>
 # include <list>
 # include "types.hh"
-#include <GL/glut.h>
-
 class Driver;
 class VariableManager;
 class Variable;

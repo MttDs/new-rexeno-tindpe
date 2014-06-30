@@ -182,7 +182,7 @@ Shape::React2input(Status& s,
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
       ostr << _name << " end " 
-	   << lexical_cast<string>(displayTime) 
+	   << lexical_cast<string>(RoundNdecimal(4, displayTime)) 
 	   << " "
 	   << _x->value 
 	   << " " 

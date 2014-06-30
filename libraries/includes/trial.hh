@@ -1,6 +1,9 @@
 #ifndef	TRIAL_HH_
 # define TRIAL_HH_
 
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 # include <map>
 # include <set>
 # include <string>
@@ -16,8 +19,6 @@
 # include "session.hh"
 # include "window.hh"
 # include "adapt.hh"
-# include <GL/glut.h>
-
 using namespace std;
 using namespace configuration;
 

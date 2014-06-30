@@ -1,9 +1,9 @@
+# include <GL/glew.h>
+# include <GL/freeglut.h>
 
 #include "sphere.hh"
 #include "imageload.hh"
-#include <GL/glut.h>
 #include <trial.hh>
-
 #include "recorder.hh"
 #include "setup.hh"
 
@@ -134,7 +134,7 @@ Sphere::React2input(Status& s,
       _logged = true;
       // name 'start' time frameStart x z angleX angleZ angleV veloX veloZ gainV gainD 
 
-      //  std::cout << "time start " <<  lexical_cast<string>(displayTime) << std::endl;
+        std::cout << "time start " <<  lexical_cast<string>(displayTime) << std::endl;
       ostr << _name 
 	   << " start " << lexical_cast<string>(displayTime) 
 	   << " " << _frameStart->value
@@ -149,6 +149,7 @@ Sphere::React2input(Status& s,
 	   << " " << _gainD;
   
       _session->recorder->Save(ostr.str(), "events.txt");
+   
     }
 
   // Saving of shape disparation
@@ -156,7 +157,7 @@ Sphere::React2input(Status& s,
     {
       // end name time frameEnd x z
 
-      //   std::cout << "time end " <<  lexical_cast<string>(displayTime) << std::endl;
+      std::cout << "time end " <<  lexical_cast<string>(displayTime) << std::endl << std::endl;
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
 	   << " " << _frameEnd->value
@@ -169,12 +170,13 @@ Sphere::React2input(Status& s,
     }
 
   _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
- 
- if (frameId > frameEnd())
+  /*
+  if (frameId > frameEnd()){
     s[RUNNING] |= false;
- else
+  }
+  else{
     s[RUNNING] = true;
-
+  }*/
   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
 
   CompParam(0);
