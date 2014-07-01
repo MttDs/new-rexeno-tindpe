@@ -72,17 +72,20 @@ int	main(int argc,
 
   std::cout << "Subject's name => ";
   cin >> name;
-  std::cout << "Block number => ";
+  std::cout << "Block num1ber => ";
   cin >> block;
 
   conf.name = name;
   conf.block = block;
-  
-  Setup* setup = new Setup("~/.rexeno");
-  Session* session = Session::getInstance(conf, o);
 
+  Setup* setup = new Setup(conf);
+  Session* session = Session::getInstance(conf, o);
   session->setup = setup;
   session->beforeTrial = &InterTrial_CTM;
-
   session->run(argc, argv);
+  
+  delete session;
+  session = NULL;
+
+  exit(EXIT_SUCCESS);
 }

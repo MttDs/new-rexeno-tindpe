@@ -27,7 +27,7 @@ clean:
 	rm -f $(OBJS) $(TARGET) core *~
 
 $(TARGET) : $(OBJS)
-	g++ $(SRCS) -o $(TARGET) /usr/local/lib/libsession.so /usr/local/lib/librecorder.so /usr/local/lib/libdriver.so /usr/local/lib/libconfiguration.so -lGL -lboost_program_options -lglut $(CFLAGS) $(LDFLAGS)
+	g++ $(SRCS) -o $(TARGET) /usr/local/lib/libsession.so /usr/local/lib/librecorder.so /usr/local/lib/libdriver.so /usr/local/lib/libconfiguration.so  /usr/local/lib/libtextures.so -lGL -lGLEW -lGLU -lboost_program_options $(CFLAGS) $(LDFLAGS)
 
 noxeno:
 	g++ $(SRCS) -o $(TARGET) -Wl,-rpath /usr/local/lib -Wl,-rpath /usr/local/lib/libsession.so -lsession -lrecorder -ldriver -lconfiguration

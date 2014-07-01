@@ -1,6 +1,5 @@
-name= DEFAULT
-save= 
-logLevel= 9
+
+
 frequency= 
 width= 
 height= 
@@ -10,9 +9,9 @@ shuffle=
 
 | SESSION_1 0 0 0 0 1 1.8 0 0 0
 > Plan     Plan     0 0 0  0  0  -1  40  80  80
-> Sphere   Sphere1  0 120 -0.3 -5   0  0   0  180  20  20  0.2  0.6 0
-+ 98	   1.03	    d
-+ 98	   0.97	    d
+> Sphere   Sphere1  0 15 -0.3 -5   0  0   0  60  20  20  0.2  0.6 0
++ 97	   1.03	    v
++ 98	   0.97	    v
 ;
 
 
