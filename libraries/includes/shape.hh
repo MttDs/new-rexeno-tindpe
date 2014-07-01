@@ -35,8 +35,6 @@ using namespace std;
 
 typedef map<int, bool> Status;
 
-
-
 class Trial;
 class Adapt;
 
@@ -54,7 +52,8 @@ public:
                            const datas&,
                            int,
                            ms);
-  virtual void initTexture(int sizeX, int sizeY, char * data);
+
+  virtual void initTexture();
   double x() {return _x->value;}
   double y() {return _y->value;}
   virtual double z() { return 0.0; }
@@ -69,7 +68,6 @@ public:
   virtual void Reset();
   virtual string getAttrsToString();
   double RoundNdecimal(int n, float nb);
-  bool IsTextured(){ return _istexured;}
 
   void setAdapts(vector<Adapt*>*k);
   vector<Adapt*> getAdapts(){ return _adapts;}
@@ -94,6 +92,7 @@ protected:
   GLUquadric* _params;
 
   string _name;
+  string _textureName;
 
   Variable* _frameStart;
   Variable* _frameEnd;
@@ -116,7 +115,6 @@ protected:
   bool _logged;
   bool _loggedEnd;
   bool _subjectVisible;
-  bool _istexured;
 
   Variable* _veloX;
   Variable* _veloY;
@@ -133,8 +131,6 @@ protected:
 
   vector<Adapt*> _adapts;
 
-
-  ms teeest;
 };
 
 #endif

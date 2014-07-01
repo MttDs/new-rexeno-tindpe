@@ -1,7 +1,8 @@
 #include "plan.hh"
-#include "imageload.hh"
 
-# include <GL/glut.h>
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
 Plan::Plan(const ShapeInfo& si,
 	   VariableManager& vm,
 	   Trial* father)
@@ -31,27 +32,20 @@ Plan::Plan(const ShapeInfo& si,
   _gainD = 1.0;
   _gainV = 1.0;
 
+  _textureName = "damier.bmp";
+
 }
+
 Plan::~Plan(){
 
 }
 
 void Plan::Display(){
 
-  if (this->IsTextured() == false){
-    ImageLoad iload;
-    iload.setFilename("damier.bmp");
-    if(!(iload.load())){
-      exit(1);
-    }
-    this->initTexture(iload.getSizeY(), iload.getSizeX(), iload.getData());
-  }
-
   glEnable( GL_TEXTURE_2D );
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
   glTranslated(_x->value,(_y->value-0.01),_z->value);
   glBegin(GL_QUADS);
-
 
   glNormal3f(0.0f,0.0f,1.0f);
 

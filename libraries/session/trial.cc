@@ -63,7 +63,7 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new Sphere(*it, variables, this);
       if (it->name == "Plan")
 	newShape = new Plan(*it, variables, this);
-       if (it->name == "Rectangle3d")
+      if (it->name == "Rectangle3d")
 	newShape = new Rectangle3d(*it, variables, this);
        /*if (it->name == "Aircraft")
 	newShape = new Aircraft(*it, variables, this);
@@ -151,8 +151,6 @@ Trial::displayFrame(Driver* driver)
       if (curShape->frameStart()==_curFrameId && curShape->id()==7){
 	std::cout << "id " << _curFrameId << " start => " << driver->GetTimeMilliseconds() << std::endl; 
       }
-
- 
       if (curShape->frameEnd()==_curFrameId && curShape->id()==7){
 	std::cout << "id " << _curFrameId << " end => " << driver->GetTimeMilliseconds() << std::endl; 
       }
@@ -204,19 +202,19 @@ Trial::displayFrame(Driver* driver)
     if (_isSubScreen()){ 
       _session->recorder->Save(str, "trials.txt");
     }
-    for (it = _shapes.begin(); it != _shapes.end(); ++it)
+       for (it = _shapes.begin(); it != _shapes.end(); ++it)
       {
-	Shape *curShape = *it;
+		Shape *curShape = *it;
 
 	if ((_curFrameId == 0) && (!_logged))
 	  {
-	    if (_isSubScreen()){ 
+	        if (_isSubScreen()){ 
 	      _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
 	      vector<Adapt*> adapts = curShape->getAdapts();
 	      for (aIt = adapts.begin(); aIt != adapts.end(); aIt++){
 		Adapt* curAdapt = *aIt;
 		_session->recorder->Save(curAdapt->getAttrsToString() ,"trials.txt");
-	      }
+		}
 
 	    }
 	  }
@@ -326,7 +324,9 @@ Trial::displayFrame(Driver* driver)
       }
 
     }
- 
+    if (_curFrameId>135){
+      _status[CORRECT] = true;
+      }
   _logged = true; 
   // std::cout << "currentframe => " << _curFrameId << " screen => " << screen << std::endl;
   return (_react2status());

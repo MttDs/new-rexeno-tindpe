@@ -58,11 +58,13 @@ public:
   int nbFrame4init() {return _nbFrame4init;}
   int nbInitFrames() {return _nbInitFrames;}
   ms getTime();
-
+  Driver * driver(){return _driver;}
   string getNbBlock(){return _nbBlock;}
   string getSubjectName(){return _subjectName;}
   bool initialized();
   GLvoid InitGL();
+  void initShape();
+
 private:
   Session(configuration::SessionInfo& s,
           Order& o);
@@ -79,7 +81,7 @@ private:
   int _nbFrame4init;
   int _nbInitFrames;
   double _offsetVsync; // offset between 0 and 16.666 (if 60Hz)
-
+  bool _initShape;
   // Background Color :
   GLfloat _RGB[3];
   // Light Position : 

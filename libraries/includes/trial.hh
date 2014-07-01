@@ -54,6 +54,7 @@ public:
   bool finished();
   bool atStart();
   string& name() {return _name;}
+  Shapes* shapes() { return &_shapes;}
   void adjustNbFrames();
   void addTtl();
   bool status(int);

@@ -46,7 +46,7 @@ Rectangle3d::Rectangle3d(const ShapeInfo& si,
   _frameStart->value = _initFrameStart;
   _frameEnd->value = _initFrameEnd;
 
-
+  _textureName = "caisse.bmp";
 }
 
 void
@@ -93,17 +93,7 @@ Rectangle3d::Display(){
   float z = *_width;
 
   glTranslated(_x->value,_y->value+y,_z->value);
-  if (this->IsTextured() == false){
-
-    ImageLoad iload;
-
-    iload.setFilename("caisse.bmp");
-    if(!(iload.load())){
-      exit(1);
-    }
-    this->initTexture(iload.getSizeY(), iload.getSizeX(), iload.getData());
-  }
-
+ 
   glEnable( GL_TEXTURE_2D );
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
 

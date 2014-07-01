@@ -74,6 +74,7 @@ Sphere::Sphere(const ShapeInfo& si,
   SphereShadow* s = new SphereShadow(*_radius, *_z, *_stacks, true);
   _shadow = s;
 
+  _textureName = "sphere.bmp";
   RandomPosXZ();
   CompParam(1);
 }
@@ -185,35 +186,28 @@ Sphere::React2input(Status& s,
   *_z = *_z+(_moveV*sin(_orientV));
 }
 
+void 
+Sphere::initTexture(){
+  
+  Shape::initTexture();
 
+  int spec[4] = {1,1,0,1};
+  int light[4] = {0,0,4,0};
+  
+  glMaterialiv(GL_FRONT_AND_BACK, GL_SPECULAR, spec);
+  glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 2);
+  glLightiv(GL_LIGHT0, GL_POSITION, light);
+
+  _params = gluNewQuadric();
+  gluQuadricDrawStyle(_params,GLU_FILL);
+  gluQuadricTexture(_params ,GL_TRUE);
+}
 void
 Sphere::Display()
 {
-
-  if (this->IsTextured() == false){
-    ImageLoad iload;
-    iload.setFilename("sphere.bmp");
-    if(!(iload.load())){
-      exit(1);
-    }
-
-    this->initTexture(iload.getSizeY(), iload.getSizeX(), iload.getData());
-
-    int spec[4] = {1,1,0,1};
-    int light[4] = {0,0,4,0};
-
-    glMaterialiv(GL_FRONT_AND_BACK, GL_SPECULAR, spec);
-    glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, 2);
-    glLightiv(GL_LIGHT0, GL_POSITION, light);
-
-    _params = gluNewQuadric();
-    gluQuadricDrawStyle(_params,GLU_FILL);
-    gluQuadricTexture(_params ,GL_TRUE);
-  }
-
   glPushMatrix();
 
-  glEnable( GL_TEXTURE_2D );
+  glEnable(GL_TEXTURE_2D);
 
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
   

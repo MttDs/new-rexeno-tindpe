@@ -61,6 +61,8 @@ Session::Session(configuration::SessionInfo& s,
   _lD[0] = 1.0f ;_lD[1] = 1.0f; _lD[2] = 1.0f;  _lD[3] = 1.0f;
   _RGB[0] = 0.0f; _RGB[1] = 0.51; _RGB[2] = 0.73;
 
+  _initShape = false;
+
 #ifdef DEBUG
   __debug_FrameNumber = 0;
 #endif
@@ -142,6 +144,27 @@ reshape(int width, int height){
   (Session::getInstance()->setup)->prepareRatio();
 }
 
+void 
+Session::initShape(){
+
+    vector<Trial*>::iterator itTrial;
+    Shapes::iterator itShape;
+    Trial* t= NULL;
+    Shape* s = NULL;
+
+    for (itTrial = _trialsDefinitions.begin(); itTrial != _trialsDefinitions.end(); ++itTrial)
+      {
+	t = (*itTrial);	      
+	for (itShape =   t->shapes()->begin(); itShape !=  t->shapes()->end(); ++itShape)
+	  {
+	    s = *itShape;
+	    s->initTexture();
+	    s->Display();
+	  }
+      }
+    _initShape = true;
+  
+}
 /** 
  * If session is initialized : show trial
  * else : show dummy GL_QUAD to calculate displaying delay
@@ -150,14 +173,13 @@ reshape(int width, int height){
 void
 Session::displayHeader()
 {
-  ms start = 0;
-  ms end = 0;
-
-  if (initialized()){
-    start = _driver->GetTimeMilliseconds();
-  }
   if (!initialized())
     {				
+
+      if (!_initShape){
+	initShape();
+      }
+
       glClear (GL_DEPTH_BUFFER_BIT);
       glClear(GL_COLOR_BUFFER_BIT);
 
@@ -235,18 +257,10 @@ Session::displayHeader()
       displayFrame(1);
       
       glutPostRedisplay();
+
     }
   }
   glutSwapBuffers();
-  if (initialized()){
-    end = _driver->GetTimeMilliseconds();
-    std::cout << "frame time => " << end-start << std::endl;
-    start = end + start;
-    start = 0;
-    end = 0;
-  }
-  start = 0;
-  end = 0;
 }
 
 
@@ -283,9 +297,7 @@ void
 Session::run(int argc,
              char** argv)
 {
-  // configuration::SessionInfo& s;
-
-  
+ 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
   glutInitWindowSize(setup->screenWidth(),setup->screenHeight());
@@ -293,15 +305,16 @@ Session::run(int argc,
   glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(setup->gameModeString().c_str());
-  // glutEnterGameMode();
-  // glutFullScreen();
+  //glutEnterGameMode();
+  //glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   glutReshapeFunc(&reshape);
+  InitGL();
   glutDisplayFunc (&displayRexeno);
   glutKeyboardFunc(&keyPressed);
   glutKeyboardUpFunc(&keyUp);
-  InitGL();
+
 
   glutMainLoop();
 
@@ -330,10 +343,8 @@ Session::displayFrame(int idScreen)
 	  tm.printVariables();
 	  beforeTrial(t->name(), t->variables);
 	};
-
       t->setIdScreen(idScreen);
       int b = t->displayFrame(_driver);
-   
       if (b != RUNNING)
 	{
 

@@ -1,11 +1,14 @@
-#include "shape.hh"
-#include <GL/glut.h>
-#include <boost/lexical_cast.hpp>
-#include "session.hh"
 
-#include "recorder.hh"
-#include "trial.hh"
-#include "setup.hh"
+# include <GL/glew.h>
+# include <GL/freeglut.h>
+
+# include <boost/lexical_cast.hpp>
+# include "session.hh"
+# include "imageload.hh"
+# include "recorder.hh"
+# include "trial.hh"
+# include "setup.hh"
+# include "shape.hh"
 
 using boost::lexical_cast;
 
@@ -161,8 +164,9 @@ Shape::React2input(Status& s,
                    int frameId,
                    ms displayTime)
 {
-
-  Session* session = Session::getInstance();
+  if (_session==NULL){
+     _session = Session::getInstance();
+  }
   ostringstream ostr;
 
   // Saving of shape apparition
@@ -176,7 +180,7 @@ Shape::React2input(Status& s,
 	   << _x->value 
 	   << " " 
 	   << _y->value;
-      session->recorder->Save(ostr.str(), "events.txt");
+      _session->recorder->Save(ostr.str(), "events.txt");
     }
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
@@ -187,51 +191,54 @@ Shape::React2input(Status& s,
 	   << _x->value 
 	   << " " 
 	   << _y->value;
-      session->recorder->Save(ostr.str(), "events.txt");
+      _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
     }
 
-  session->recorder->Save(_name + "\n" + lexical_cast<string>(this->_x->value) + "\n" + lexical_cast<string>(this->_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
+  _session->recorder->Save(_name + "\n" + lexical_cast<string>(this->_x->value) + "\n" + lexical_cast<string>(this->_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
 
   if (frameId > frameEnd())
     s[RUNNING] |= false;
   else
     s[RUNNING] = true;
 
-  session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
+   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
 }
 
 void
-Shape::initTexture(int sizeX, int sizeY, char * data){
-
-  glGenTextures(1, &this->_texture[0]);// Donne numero de texture
-  glBindTexture(GL_TEXTURE_2D, this->_texture[0]); //Selectionne la texture
+Shape::initTexture(){
+  ImageLoad iload;
+  iload.setFilename(_textureName.c_str());
+  if(!(iload.load())){
+    exit(1);
+  }
+  
+  glGenTextures(1, &_texture[0]); // Donne numero de texture
+  glBindTexture(GL_TEXTURE_2D, _texture[0]); //Selectionne la texture
 
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+  
   glTexImage2D(
 	       GL_TEXTURE_2D,		//Type de texture
-	       0,					//Mipmap : aucun
-	       3,					//Couleurs: 4
-	       sizeY,					//Largeur: 2
-	       sizeX,					//Hauteur: 2
-	       0,					//Largeur des bords: 0
+	       0,			//Mipmap : aucun
+	       3,		        //Couleurs: 4
+	       iload.getSizeY(),	//Largeur: 2
+	       iload.getSizeX(),	//Hauteur: 2
+	       0,			//Largeur des bords: 0
 	       GL_RGB,			//RGBA format
 	       GL_UNSIGNED_BYTE,	//Type des couleurs
-	       data			//Adresse de l'image
+	       iload.getData()	        //Adresse de l'image
 	       );
 
-  if (_texture[0] != 0){
-    _istexured = true;
-  }
-  else{
-    printf("ERROR ! Impossible d'appliquer la texture!");
+   if (_texture[0] == 0){
+    std::cout << "Impossible d'appliquer la texture de la forme " << _name << std::endl;
     exit(0);
-  }
+    }
+
 }
 
 void
@@ -366,7 +373,6 @@ Shape::Shape()
 {
   _id = 0;
   _texture[1] = 0;
-  _istexured = false;
   _logged = false;
   _loggedEnd = false;
   _subjectVisible = true;

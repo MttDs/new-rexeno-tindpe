@@ -24,6 +24,7 @@ public:
   void DisplayMonitor();
   void Reset();
   void RandomPosXZ();
+  void initTexture();
   void CompParam(bool init=false);
   double z() { return _z->value; }
   string getAttrsToString();
