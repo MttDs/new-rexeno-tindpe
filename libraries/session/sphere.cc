@@ -97,10 +97,16 @@ void Sphere::CompParam(bool init)
 
       float veloV = _gainV * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
       _moveV = veloV/fps;
-
-      _angleV+= _moveV/ *_radius*180.0 / M_PI;
+      
+      float temp = _angleV+_moveV/ *_radius*180.0 / M_PI;
+      if (temp>360.0){
+	_angleV = temp - _angleV;
+      }
+      else{
+	_angleV = temp;
+      }
     }
-
+  
   _orientV=atan2((*_veloZ),(*_veloX));
 
   float OrientRot=_orientV-(M_PI/2.0);
