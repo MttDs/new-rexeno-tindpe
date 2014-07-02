@@ -32,7 +32,7 @@ public:
   virtual ~Driver() {}
 
   virtual ms GetTime() = 0;
-  ms GetTimeMilliseconds() {return GetTime();}
+  virtual ms GetTimeMilliseconds() {return GetTime();}
   virtual void AnalogIn(datas& data) = 0;
   virtual void TtlPulse(uint value,
                         ms delay = 0,
