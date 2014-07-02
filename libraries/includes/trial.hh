@@ -59,10 +59,11 @@ public:
   void addTtl();
   bool status(int);
   int frameEnd() {return _nbFrames;}
-  Session* session() {return _session;}
+  Session* session();
   VariableManager variables;
   void Reset(Driver * d);
   void setIdScreen(int id){ _idScreen = id;}
+  string toString();
 
 private:
   Session* _session;

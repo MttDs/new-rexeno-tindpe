@@ -176,7 +176,7 @@ Shape::React2input(Status& s,
       _logged = true;
       ostr << _name << " start "
 	   << lexical_cast<string>(displayTime) 
-	   << " " 
+	   << " " ;
       _session->recorder->Save(ostr.str(), "events.txt");
     }
   // Saving of shape disparation
@@ -184,7 +184,7 @@ Shape::React2input(Status& s,
     {
       ostr << _name << " end " 
 	   << lexical_cast<string>(displayTime) 
-	   << " "
+	   << " ";
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
     }
@@ -253,7 +253,7 @@ Shape::Reset(){
 
 
 string
-Shape::getAttrsToString(){
+Shape::toString(){;
   string s;
   ostringstream ostr;
   ostr << _name << ": Width "<< *_width <<" Height "<<*_height << " Pos ["<< *_x <<", "<< *_y <<"] RGB ["<<*_R<<", "<<*_G<<", "<<*_B<<"]";

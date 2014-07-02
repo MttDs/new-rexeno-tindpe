@@ -66,7 +66,7 @@ public:
   bool Displayable(int frameId);
   bool SubjectVisible(){return _subjectVisible;}
   virtual void Reset();
-  virtual string getAttrsToString();
+  virtual string toString();
   double RoundNdecimal(int n, float nb);
 
   void setAdapts(vector<Adapt*>*k);

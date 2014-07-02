@@ -27,7 +27,7 @@ public:
   void initTexture();
   void CompParam(bool init=false);
   double z() { return _z->value; }
-  string getAttrsToString();
+  string toString();
   
 protected:
 

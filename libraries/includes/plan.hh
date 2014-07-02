@@ -16,7 +16,7 @@ public:
   ~Plan();
   void Display();
   void Reset();
-  string getAttrsToString();
+  string toString();
 protected:
   Variable* _repeat; // texture
   Variable* _z;

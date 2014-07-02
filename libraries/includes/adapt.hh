@@ -27,7 +27,7 @@ public:
   Variable* coef(){return _coef;}
   string action(){return _action;}
   Shape* parent(){return _parent;}
-  string getAttrsToString();
+  string toString();
 private:
   Shape* _parent;
   Variable* _parentName;

@@ -17,7 +17,7 @@ Adapt::~Adapt(){
 }
 
 string 
-Adapt::getAttrsToString(){
+Adapt::toString(){
    ostringstream ostr;
    ostr << "Adapt " << _parent->name() << " key " << _key->value << " coef " << _coef->value << " action " << _action;
    

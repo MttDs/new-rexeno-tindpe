@@ -148,23 +148,39 @@ void
 Session::initShape(){
 
     vector<Trial*>::iterator itTrial;
+    vector<Adapt*>::iterator itAdapt;
     Shapes::iterator itShape;
+
     Trial* t= NULL;
     Shape* s = NULL;
-    
+    Adapt* a = NULL;
+
+    vector<Adapt*> adapts;
+
     recorder->Save(lexical_cast<string>(getSubjectName()) 
 				 + " " + 
 				 lexical_cast<string>(getNbBlock()), "trials.txt");
 
     for (itTrial = _trialsDefinitions.begin(); itTrial != _trialsDefinitions.end(); ++itTrial)
       {
-	t = (*itTrial);	      
-	for (itShape =   t->shapes()->begin(); itShape !=  t->shapes()->end(); ++itShape)
+
+	t = (*itTrial);	   
+	recorder->Save(t->toString(), "trials.txt");
+	for (itShape = t->shapes()->begin(); itShape != t->shapes()->end(); ++itShape)
 	  {
-	    s = *itShape;
+	    s = (*itShape);
 	    s->initTexture();
+
+	    recorder->Save(s->toString() ,"trials.txt");
+
+	    adapts = s->getAdapts();
+
+	    for (itAdapt = adapts.begin(); itAdapt != adapts.end(); ++itAdapt){
+	      a = (*itAdapt);
+	      recorder->Save(a->toString() ,"trials.txt");
+	    }
+
 	    s->Display();
-	    
 	  }
       }
     _initShape = true;
@@ -310,7 +326,7 @@ Session::run(int argc,
   glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(setup->gameModeString().c_str());
-  glutEnterGameMode();
+  // glutEnterGameMode();
   glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
@@ -344,8 +360,6 @@ Session::displayFrame(int idScreen)
       Trial* t = _trialsDefinitions[*_currentTrial];
       if (t->atStart() && beforeTrial)
 	{
-	  VariableManager& tm = t->variables;
-	  tm.printVariables();
 	  beforeTrial(t->name(), t->variables);
 	};
       t->setIdScreen(idScreen);

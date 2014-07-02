@@ -77,6 +77,8 @@ Sphere::Sphere(const ShapeInfo& si,
   _textureName = "sphere.bmp";
   RandomPosXZ();
   CompParam(1);
+
+  _session = NULL;
 }
 
 Sphere::~Sphere()
@@ -141,7 +143,6 @@ Sphere::React2input(Status& s,
       _logged = true;
       // name 'start' time frameStart x z angleX angleZ angleV veloX veloZ gainV gainD 
 
-        std::cout << "time start " <<  lexical_cast<string>(displayTime) << std::endl;
       ostr << _name 
 	   << " start " << lexical_cast<string>(displayTime) 
 	   << " " << _frameStart->value
@@ -164,7 +165,6 @@ Sphere::React2input(Status& s,
     {
       // end name time frameEnd x z
 
-      std::cout << "time end " <<  lexical_cast<string>(displayTime) << std::endl << std::endl;
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
 	   << " " << _frameEnd->value
@@ -177,20 +177,14 @@ Sphere::React2input(Status& s,
     }
 
   _session->recorder->Save(_name + "\n" + lexical_cast<string>(_x->value) + "\n" + lexical_cast<string>(_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
-  /*
-  if (frameId > frameEnd()){
-    s[RUNNING] |= false;
-  }
-  else{
-    s[RUNNING] = true;
-  }*/
+
   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
 
   CompParam(0);
 
   _x->value = _x->value+(_moveV*cos(_orientV));
   _z->value = _z->value+(_moveV*sin(_orientV));
-  std::cout << "X => " << _x->value << " Xa => " << RoundNdecimal(4, _x->value) << std::endl;
+
 }
 
 void 
@@ -256,12 +250,13 @@ Sphere::DisplayMonitor()
 }
 
 string
-Sphere::getAttrsToString(){
+Sphere::toString(){
+
   if (_session == NULL){
     _session = _father->session();
   }
-  
-  int fps = (_session->setup)->refreshRate();
+
+  double fps = (_session->setup)->refreshRate();
   float move = *_veloX/fps;
   float angleX = (move / *_radius*180.0 / M_PI);
   move = *_veloZ/fps;
@@ -290,7 +285,7 @@ Sphere::getAttrsToString(){
        << ", "
        << _maxStart->value
        << "]";
-  
+
   return  ostr.str();
 }
 

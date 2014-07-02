@@ -60,8 +60,7 @@ void Plan::Display(){
 
 }
 string
-Plan::getAttrsToString(){
-
+Plan::toString(){
   ostringstream ostr;
   ostr << _name 
        << ": Width "
@@ -73,7 +72,6 @@ Plan::getAttrsToString(){
        << _y->value 
        << "] Repeat Texture "
        << _repeat->value;
-
   return ostr.str();
 }
 

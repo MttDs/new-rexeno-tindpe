@@ -116,15 +116,12 @@ Trial::displayFrame(Driver* driver)
   if (_session == NULL){
     _session = Session::getInstance();
   }
+
   _status[RUNNING] = true;
 
-
-  /* if (!_logged && _isSubScreen()){
-	_session->recorder->Save(lexical_cast<string>(_session->getSubjectName()) 
-				 + " " + 
-				 lexical_cast<string>(_session->getNbBlock()), "trials.txt");
-				 }*/
-
+  if(_curFrameId == 0 && _isSubScreen()){
+      _session->recorder->Save("StartTrial " + _name + " " + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
+  }
 
   int fps = _session->setup->refreshRate();
  
@@ -178,6 +175,7 @@ Trial::displayFrame(Driver* driver)
   }
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
+
   if (_isSubScreen()){
     _sendTtls(driver);
 
@@ -186,49 +184,6 @@ Trial::displayFrame(Driver* driver)
   }
   
   vector<Adapt*>::iterator aIt;
-  if((_curFrameId == 0) && (_start)){
-    string str;
-    ostringstream ostr;
-    
-    ostr << _name 
-	 << " Camera Velo [" 
-	 << _cameraVeloX->value << "," << _cameraVeloY->value << "," << _cameraVeloZ->value
-	 << "] Camera Eye ["
-	 << _eyeX->value << "," << _eyeY->value << "," << _eyeZ->value
-	 << "]";
-
-    str = ostr.str();
-  
-    if (_isSubScreen()){ 
-      _session->recorder->Save(str, "trials.txt");
-    }
-       for (it = _shapes.begin(); it != _shapes.end(); ++it)
-      {
-	Shape *curShape = *it;
-
-	if ((_curFrameId == 0) && (!_logged))
-	  {
-	        if (_isSubScreen()){ 
-	      _session->recorder->Save(curShape->getAttrsToString() ,"trials.txt");
-	      vector<Adapt*> adapts = curShape->getAdapts();
-	      for (aIt = adapts.begin(); aIt != adapts.end(); aIt++){
-		Adapt* curAdapt = *aIt;
-		_session->recorder->Save(curAdapt->getAttrsToString() ,"trials.txt");
-		}
-
-	    }
-	  }
-
-      }
-    _start = false;
-    if (_isSubScreen()){ 
-      _session->recorder->Save("" ,"trials.txt");
-    }
-  }
-
-  if(_curFrameId == 0 && _isSubScreen()){
-      _session->recorder->Save("StartTrial " + _name + " " + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
-  }
  
   if (isValid){
 
@@ -273,10 +228,9 @@ Trial::displayFrame(Driver* driver)
       //    std::cout << "Time press => " << (_timeUp-_timePress) << std::endl;
       submit = true;
     }
-    else{
-.      //  std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
-      //  submit = false;
-    }
+    /* else{
+        std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
+    }*/
 
     if ((submit) && (!_subjectResponse)){
 
@@ -311,9 +265,9 @@ Trial::displayFrame(Driver* driver)
       }
 
     }
-  /*  if (_curFrameId>135){
+    if (_curFrameId>135){
       _status[CORRECT] = true;
-      }*/
+      }
   _logged = true; 
 
   return (_react2status());
@@ -453,8 +407,34 @@ Trial::Reset(Driver *d)
 
 }
 
+string
+Trial::toString(){
+  string str;
+  ostringstream ostr;
+    
+  ostr << _name 
+       << " Camera Velo [" 
+       << _cameraVeloX->value << "," << _cameraVeloY->value << "," << _cameraVeloZ->value
+       << "] Camera Eye ["
+       << _eyeX->value << "," << _eyeY->value << "," << _eyeZ->value
+       << "]";
+
+  str = ostr.str();
+
+  return str;
+}
 bool
 Trial::status(int key)
 {
   return _status[key];
+}
+
+Session*
+Trial::session()
+{
+  if (!_session)
+    {
+      _session = _session->getInstance();
+    }
+  return _session;
 }
