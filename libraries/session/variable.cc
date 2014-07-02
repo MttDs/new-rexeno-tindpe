@@ -52,7 +52,6 @@ void
 VariableManager::printVariables()
 {
   set<Variable*>::iterator i;
-  
   i = variables->begin();
   for (; i != variables->end(); ++i)
     {

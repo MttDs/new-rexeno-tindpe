@@ -151,6 +151,10 @@ Session::initShape(){
     Shapes::iterator itShape;
     Trial* t= NULL;
     Shape* s = NULL;
+    
+    recorder->Save(lexical_cast<string>(getSubjectName()) 
+				 + " " + 
+				 lexical_cast<string>(getNbBlock()), "trials.txt");
 
     for (itTrial = _trialsDefinitions.begin(); itTrial != _trialsDefinitions.end(); ++itTrial)
       {
@@ -160,6 +164,7 @@ Session::initShape(){
 	    s = *itShape;
 	    s->initTexture();
 	    s->Display();
+	    
 	  }
       }
     _initShape = true;
@@ -305,8 +310,8 @@ Session::run(int argc,
   glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(setup->gameModeString().c_str());
-  //glutEnterGameMode();
-  //glutFullScreen();
+  glutEnterGameMode();
+  glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   glutReshapeFunc(&reshape);
@@ -350,7 +355,7 @@ Session::displayFrame(int idScreen)
 
 	  // PDEBUG("Session::displayFrame", " end of trial : " << t->name() << " (trial number " << *_currentTrial << " )");
 	  if (idScreen==1){
-	    ms displayTime = _driver->GetTime();
+	    ms displayTime = _driver->GetTimeMilliseconds();
 	    recorder->Save("EndTrial " + lexical_cast<string>(displayTime), "events.txt");
 	
 	    if (afterTrial)

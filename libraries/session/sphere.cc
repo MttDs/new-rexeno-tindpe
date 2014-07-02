@@ -145,8 +145,8 @@ Sphere::React2input(Status& s,
       ostr << _name 
 	   << " start " << lexical_cast<string>(displayTime) 
 	   << " " << _frameStart->value
-	   << " " << _x->value
-	   << " " << _z->value 
+	   << " " << RoundNdecimal(4, _x->value)
+	   << " " << RoundNdecimal(4, _z->value)
 	   << " " << angleX
 	   << " " << angleZ
 	   << " " << RoundNdecimal(2,_angleV)
@@ -168,8 +168,8 @@ Sphere::React2input(Status& s,
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
 	   << " " << _frameEnd->value
-	   << " " << _x->value
-	   << " " << _z->value
+	   << " " << RoundNdecimal(4, _x->value)
+	   << " " << RoundNdecimal(4, _z->value)
 	   << " " << _angleV;
 
       _session->recorder->Save(ostr.str(), "events.txt");
@@ -188,8 +188,9 @@ Sphere::React2input(Status& s,
 
   CompParam(0);
 
-  *_x = *_x+(_moveV*cos(_orientV));
-  *_z = *_z+(_moveV*sin(_orientV));
+  _x->value = _x->value+(_moveV*cos(_orientV));
+  _z->value = _z->value+(_moveV*sin(_orientV));
+  std::cout << "X => " << _x->value << " Xa => " << RoundNdecimal(4, _x->value) << std::endl;
 }
 
 void 

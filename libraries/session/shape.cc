@@ -177,25 +177,17 @@ Shape::React2input(Status& s,
       ostr << _name << " start "
 	   << lexical_cast<string>(displayTime) 
 	   << " " 
-	   << _x->value 
-	   << " " 
-	   << _y->value;
       _session->recorder->Save(ostr.str(), "events.txt");
     }
   // Saving of shape disparation
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
       ostr << _name << " end " 
-	   << lexical_cast<string>(RoundNdecimal(4, displayTime)) 
+	   << lexical_cast<string>(displayTime) 
 	   << " "
-	   << _x->value 
-	   << " " 
-	   << _y->value;
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
     }
-
-  _session->recorder->Save(_name + "\n" + lexical_cast<string>(this->_x->value) + "\n" + lexical_cast<string>(this->_y->value) + "\n" + lexical_cast<string>(displayTime), "square_targets.txt");
 
   if (frameId > frameEnd())
     s[RUNNING] |= false;
@@ -277,7 +269,7 @@ Shape::RoundNdecimal(int n, float nb){
     res *= 10;
   }
 
-  return floor((nb*res+0.5)/res*100)/100;
+  return floor((nb*res)+0.5)/res;
 }
 
 

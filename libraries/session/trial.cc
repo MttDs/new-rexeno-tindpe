@@ -118,6 +118,14 @@ Trial::displayFrame(Driver* driver)
   }
   _status[RUNNING] = true;
 
+
+  /* if (!_logged && _isSubScreen()){
+	_session->recorder->Save(lexical_cast<string>(_session->getSubjectName()) 
+				 + " " + 
+				 lexical_cast<string>(_session->getNbBlock()), "trials.txt");
+				 }*/
+
+
   int fps = _session->setup->refreshRate();
  
   _eyeX->value = _eyeX->value+(_cameraVeloX->value/fps);
@@ -148,12 +156,6 @@ Trial::displayFrame(Driver* driver)
       Shape *curShape = *it;
       glPushMatrix();
 
-      if (curShape->frameStart()==_curFrameId && curShape->id()==7){
-	std::cout << "id " << _curFrameId << " start => " << driver->GetTimeMilliseconds() << std::endl; 
-      }
-      if (curShape->frameEnd()==_curFrameId && curShape->id()==7){
-	std::cout << "id " << _curFrameId << " end => " << driver->GetTimeMilliseconds() << std::endl; 
-      }
       if (curShape->id()==7){
 	nbSphere++;
 	if (!curShape->Displayable(_curFrameId) && curShape->start()){
@@ -164,10 +166,8 @@ Trial::displayFrame(Driver* driver)
       curShape->setAdapts(pAdapts);
  
       if (curShape->Displayable(_curFrameId)){
-
     	curShape->Display();
 	curShape->setStart(true);
-       
       }
 
       glPopMatrix();
@@ -204,7 +204,7 @@ Trial::displayFrame(Driver* driver)
     }
        for (it = _shapes.begin(); it != _shapes.end(); ++it)
       {
-		Shape *curShape = *it;
+	Shape *curShape = *it;
 
 	if ((_curFrameId == 0) && (!_logged))
 	  {
@@ -225,22 +225,9 @@ Trial::displayFrame(Driver* driver)
       _session->recorder->Save("" ,"trials.txt");
     }
   }
-  // ms displayTime = driver->GetTime();
-  if ((_curFrameId == 0) && (!_logged))
-    {
-      if (_isSubScreen()){
-	_session->recorder->Save(lexical_cast<string>(_session->getSubjectName()) 
-				 + " " + 
-				 lexical_cast<string>(_session->getNbBlock()), "events.txt");
-	_session->recorder->Save("ProtocoleStart_ " + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
-      }
 
-    }
-
-  if(_curFrameId == 0){
-    if (_isSubScreen()){
-      _session->recorder->Save(_name + ' ' + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
-    }
+  if(_curFrameId == 0 && _isSubScreen()){
+      _session->recorder->Save("StartTrial " + _name + " " + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
   }
  
   if (isValid){
@@ -287,7 +274,7 @@ Trial::displayFrame(Driver* driver)
       submit = true;
     }
     else{
-      //  std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
+.      //  std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
       //  submit = false;
     }
 
@@ -298,7 +285,7 @@ Trial::displayFrame(Driver* driver)
 	ostringstream ostr;
 	ostr << "Response "
 	     << lexical_cast<string>(driver->GetTimeMilliseconds())
-	     << " : "
+	     << " "
 	     << lexical_cast<string>(_timeUp-_timePress)
 	     << " " << Setup::key;
 
@@ -324,11 +311,11 @@ Trial::displayFrame(Driver* driver)
       }
 
     }
-    if (_curFrameId>135){
+  /*  if (_curFrameId>135){
       _status[CORRECT] = true;
-      }
+      }*/
   _logged = true; 
-  // std::cout << "currentframe => " << _curFrameId << " screen => " << screen << std::endl;
+
   return (_react2status());
 }
 
@@ -435,7 +422,7 @@ Trial::Reset(Driver *d)
 {
   PDEBUG("Trial::Reset ", "start")
   _curFrameId = 0;
-  
+  _logged = false;
   _subjectResponse = false;
   Status::iterator it;
   for (it = _status.begin(); it != _status.end(); ++it)
