@@ -265,9 +265,7 @@ Trial::displayFrame(Driver* driver)
       }
 
     }
-    if (_curFrameId>135){
-      _status[CORRECT] = true;
-      }
+
   _logged = true; 
 
   return (_react2status());
