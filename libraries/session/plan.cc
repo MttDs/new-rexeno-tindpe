@@ -34,6 +34,7 @@ Plan::Plan(const ShapeInfo& si,
 
   _textureName = "damier.bmp";
 
+  _session = NULL;
 }
 
 Plan::~Plan(){

@@ -28,11 +28,11 @@ Session::Session(configuration::SessionInfo& s,
   for (it = s.trials.begin(); it != s.trials.end(); ++it)
     {
       t = new Trial(*it);
-      //if (it==s.trials.begin())
-	t->Reset(_driver);
       _trialsDefinitions.push_back(t);
     }
+  std::cout << _trialsDefinitions.size() << std::endl;
   _currentTrial = _trialsOrder.begin();
+  //  std::cout << _trialsDefinitions.at(_trialsOrder.at(2))->name() << std::endl;
   beforeTrial = NULL;
   afterTrial = NULL;
   _inputData.resize(8);
@@ -326,7 +326,7 @@ Session::run(int argc,
   glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(setup->gameModeString().c_str());
-  glutEnterGameMode();
+  //  glutEnterGameMode();
   glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
@@ -358,6 +358,7 @@ Session::displayFrame(int idScreen)
       
       //  PDEBUG("Session::displayFrame", " trial frame ");
       Trial* t = _trialsDefinitions[*_currentTrial];
+      std::cout << *_currentTrial << std::endl;
       if (t->atStart() && beforeTrial)
 	{
 	  beforeTrial(t->name(), t->variables);
