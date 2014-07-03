@@ -67,6 +67,7 @@ public:
   bool SubjectVisible(){return _subjectVisible;}
   virtual void Reset();
   virtual string toString();
+  virtual void initPos(){};
   double RoundNdecimal(int n, float nb);
 
   void setAdapts(vector<Adapt*>*k);

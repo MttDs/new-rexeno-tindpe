@@ -16,6 +16,8 @@ Sphere::Sphere(const ShapeInfo& si,
 	       Trial* father)
 {  
 
+  _session = NULL;
+
   assert(si.attributes.size() == 14);
 
   _name = si.attributes[0];
@@ -52,7 +54,6 @@ Sphere::Sphere(const ShapeInfo& si,
 		      si.listeners[it].gain);
     _adapts.push_back(adapt);
   }
-  _session = NULL;
 
   _angleX = 0.0f;
   _angleV = 0.0f;
@@ -75,10 +76,8 @@ Sphere::Sphere(const ShapeInfo& si,
   _shadow = s;
 
   _textureName = "sphere.bmp";
-  RandomPosXZ();
-  CompParam(1);
 
-  _session = NULL;
+  CompParam(1);
 }
 
 Sphere::~Sphere()
@@ -238,7 +237,7 @@ Sphere::Reset(){
   *_y = _initY;
   *_z = _initZ;
 
-  RandomPosXZ();
+  initPos();
 
   Shape::Reset();
 }
@@ -291,12 +290,53 @@ Sphere::toString(){
 
 
 void 
-Sphere::RandomPosXZ(){
-   if (_randomX->value != 0){
-   _x->value =  _getRandomNumber(_initX, _randomX->value);
+Sphere::initPos(){
+
+
+  if (_session == NULL){
+    _session = _father->session();
+  }
+ 
+  double hz =  (_session->setup)->refreshRate();
+
+  float secs = ((int) (_initFrameEnd * _gainD) - _frameStart->value)/hz;
+  // std::cout << secs << std::endl;
+  float veloV = _gainV * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
+
+
+  float distance = veloV*secs;
+  // std::cout << veloV << std::endl;
+  // std::cout << distance << std::endl;
+  
+  float randomPos = 0.0;
+
+  if (_veloX->value!=0){
+    randomPos = _getRandomNumber(_initX, _randomX->value);
+    if (_veloX->value>0){
+      _x->value = randomPos -(distance/2);
+    }
+    else{
+      _x->value = randomPos +(distance/2);
+    }
+  }
+  
+  if (_veloZ->value!=0){
+    randomPos =  _getRandomNumber(_initZ, _randomZ->value);
+    if (_veloZ->value>0){
+      _z->value = randomPos-(distance/2);
+    }
+    else{ 
+      _z->value = randomPos+(distance/2); 
+    }
+  }
+  // std::cout << randomPos << std::endl;
+
+  if (_randomX->value != 0){
+    //    _x->value =  /*_getRandomNumber(_initX, _randomX->value)-*/(distance/2);
   }
   if (_randomZ->value != 0){
-    _z->value = _getRandomNumber(_initZ, _randomZ->value);
+    //    _z->value = _getRandomNumber(_initZ, _randomZ->value);
   }
+
   _angleV = ((float) rand()/RAND_MAX)*360.0;
 }

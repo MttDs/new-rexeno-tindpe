@@ -165,14 +165,13 @@ Shape::React2input(Status& s,
                    ms displayTime)
 {
   if (_session==NULL){
-     _session = Session::getInstance();
+     _session = _father->session();
   }
   ostringstream ostr;
-
+ 
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
-    {
-      // name time x y
+    {      // name time x y
       _logged = true;
       ostr << _name << " start "
 	   << lexical_cast<string>(displayTime) 
@@ -180,6 +179,7 @@ Shape::React2input(Status& s,
       _session->recorder->Save(ostr.str(), "events.txt");
     }
   // Saving of shape disparation
+
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
       ostr << _name << " end " 
@@ -327,7 +327,7 @@ Shape::_getRandomNumber(float pos, float nb){
   newPos = (rand() * (max - min) / RAND_MAX) + min;
   newPos = newPos;
 
-  return RoundNdecimal(2,newPos);
+  return RoundNdecimal(3,newPos);
 }
 
 /*

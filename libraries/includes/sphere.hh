@@ -23,7 +23,7 @@ public:
   void Display();
   void DisplayMonitor();
   void Reset();
-  void RandomPosXZ();
+  void initPos();
   void initTexture();
   void CompParam(bool init=false);
   double z() { return _z->value; }

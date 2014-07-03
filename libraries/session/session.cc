@@ -169,7 +169,6 @@ Session::initShape(){
 	for (itShape = t->shapes()->begin(); itShape != t->shapes()->end(); ++itShape)
 	  {
 	    s = (*itShape);
-	    s->initTexture();
 
 	    recorder->Save(s->toString() ,"trials.txt");
 
@@ -180,7 +179,9 @@ Session::initShape(){
 	      recorder->Save(a->toString() ,"trials.txt");
 	    }
 
-	    s->Display();
+	    s->initTexture();
+	    s->initPos();
+	    s->Display(); // Load textures.
 	  }
       }
     _initShape = true;
@@ -358,13 +359,15 @@ Session::displayFrame(int idScreen)
       
       //  PDEBUG("Session::displayFrame", " trial frame ");
       Trial* t = _trialsDefinitions[*_currentTrial];
-      std::cout << *_currentTrial << std::endl;
       if (t->atStart() && beforeTrial)
 	{
 	  beforeTrial(t->name(), t->variables);
 	};
+
       t->setIdScreen(idScreen);
+
       int b = t->displayFrame(_driver);
+
       if (b != RUNNING)
 	{
 

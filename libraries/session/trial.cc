@@ -257,14 +257,11 @@ Trial::displayFrame(Driver* driver)
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
     {
       Shape *curShape = *it;
-  printf("1\n");
       //PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
       if (curShape->Displayable(_curFrameId) && _isSubScreen()){
 
 	curShape->React2input(_status, _data, _curFrameId, driver->GetTimeMilliseconds());
       } 
- printf("2\n");
-
     }
 
   _logged = true; 
