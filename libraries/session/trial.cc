@@ -5,12 +5,12 @@
 #include <boost/foreach.hpp>
 
 Trial::Trial(TrialInfo& ti)
-  : _curFrameId(0),
-    _nbFrames(1),
-    _name(ti.name),
-    _logged(false),
+  : _logged(false),
     _start(true),
-    _subjectResponse(false)
+    _subjectResponse(false),
+    _curFrameId(0),
+    _nbFrames(1),
+    _name(ti.name)
 {
   assert(ti.attributes.size() == 9);
 
@@ -65,9 +65,9 @@ Trial::Trial(TrialInfo& ti)
 	newShape = new Plan(*it, variables, this);
       if (it->name == "Rectangle3d")
 	newShape = new Rectangle3d(*it, variables, this);
-       /*if (it->name == "Aircraft")
+      /*if (it->name == "Aircraft")
 	newShape = new Aircraft(*it, variables, this);
-       */
+      */
       if (newShape)
 	{
 	  _shapes.push_back(newShape);
@@ -113,15 +113,17 @@ Trial::~Trial()
 int
 Trial::displayFrame(Driver* driver)
 {
-  if (_session == NULL){
-    _session = Session::getInstance();
-  }
+  if (_session == NULL)
+    {
+      _session = Session::getInstance();
+    }
 
   _status[RUNNING] = true;
 
-  if(_curFrameId == 0 && _isSubScreen()){
+  if(_curFrameId == 0 && _isSubScreen())
+    {
       _session->recorder->Save("StartTrial " + _name + " " + lexical_cast<string>(driver->GetTimeMilliseconds()), "events.txt");
-  }
+    }
 
   int fps = _session->setup->refreshRate();
  
@@ -153,103 +155,109 @@ Trial::displayFrame(Driver* driver)
       Shape *curShape = *it;
       glPushMatrix();
 
-      if (curShape->id()==7){
-	nbSphere++;
-	if (!curShape->Displayable(_curFrameId) && curShape->start()){
-	  nbSphereEnd++;
+      if (curShape->id()==7)
+	{
+	  nbSphere++;
+	  if (!curShape->Displayable(_curFrameId) && curShape->start())
+	    {
+	      nbSphereEnd++;
+	    }
 	}
-      }
    
       curShape->setAdapts(pAdapts);
  
-      if (curShape->Displayable(_curFrameId)){
-    	curShape->Display();
-	curShape->setStart(true);
-      }
+      if (curShape->Displayable(_curFrameId))
+	{
+	  curShape->Display();
+	  curShape->setStart(true);
+	}
 
       glPopMatrix();
     }
  
-  if (nbSphere==nbSphereEnd){
-    isValid = true;
-  }
+  if (nbSphere==nbSphereEnd)
+    {
+      isValid = true;
+    }
 
   // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
 
-  if (_isSubScreen()){
-    _sendTtls(driver);
+  if (_isSubScreen())
+    {
+      _sendTtls(driver);
 
-    driver->React2input();
-    driver->AnalogIn(_data);
-  }
+      driver->React2input();
+      driver->AnalogIn(_data);
+    }
   
   vector<Adapt*>::iterator aIt;
  
-  if (isValid){
+  if (isValid)
+    {
 
-    if (!_shapeUpdate){
+      if (!_shapeUpdate)
+	{
 
-      Shape* parent = NULL;
+	  Shape* parent = NULL;
     
-      for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++){
+	  for (aIt = (*pAdapts).begin(); aIt != (*pAdapts).end(); aIt++)
+	    {
 
-	if ((*aIt)->key()->value == Setup::key){
-	  parent = (*aIt)->parent();
+	      if ((*aIt)->key()->value == Setup::key)
+		{
+		  parent = (*aIt)->parent();
 
-	  if ((*aIt)->action()=="v"){
+		  if ((*aIt)->action()=="v")
+		    {
 
-	    parent->updateVelo((*aIt)->coef()->value);
-	    _shapeUpdate = true;
+		      parent->updateVelo((*aIt)->coef()->value);
+		      _shapeUpdate = true;
 
-	    if (_timePress == 0.0){
-	      _timePress = driver->GetTimeMilliseconds();
+		      if (_timePress == 0.0){
+			_timePress = driver->GetTimeMilliseconds();
+		      }
+		    }
+		  if ((*aIt)->action()=="d"){
+
+		    parent->updateDuration((*aIt)->coef()->value);
+		    _shapeUpdate = true;
+
+		    if (_timePress == 0.0){
+		      _timePress = driver->GetTimeMilliseconds();
+		    }
+		  }
+		}
 	    }
-	  }
-	  if ((*aIt)->action()=="d"){
-
-	    parent->updateDuration((*aIt)->coef()->value);
-	    _shapeUpdate = true;
-
-	    if (_timePress == 0.0){
-	      _timePress = driver->GetTimeMilliseconds();
-	    }
-	  }
 	}
-      }
-    }
 
-    bool submit = false;
+      bool submit = false;
    
-    if (!Setup::keys[Setup::key] && _shapeUpdate){
-    
-      if (_timeUp == 0.0){
-	_timeUp = driver->GetTimeMilliseconds();
-      }
-      //    std::cout << "Time press => " << (_timeUp-_timePress) << std::endl;
-      submit = true;
+      if (!Setup::keys[Setup::key] && _shapeUpdate)
+	{
+    	  if (_timeUp == 0.0){
+	    _timeUp = driver->GetTimeMilliseconds();
+	  }
+	  submit = true;
+	}
+
+      if ((submit) && (!_subjectResponse))
+	{
+
+	  if (_isSubScreen()){
+	    ostringstream ostr;
+	    ostr << "Response "
+		 << lexical_cast<string>(driver->GetTimeMilliseconds())
+		 << " "
+		 << lexical_cast<string>(_timeUp-_timePress)
+		 << " " << Setup::key;
+
+	    _session->recorder->Save(ostr.str(), "events.txt");
+	  }
+	  _subjectResponse = true;
+
+	  _status[CORRECT] = true;
+	}
     }
-    /* else{
-        std::cout << Setup::keys[Setup::key] << " " <<  _shapeUpdate << " " << Setup::key << std::endl;
-    }*/
-
-    if ((submit) && (!_subjectResponse)){
-
-      //   std::cout << "Reponse => " << Setup::key << endl;
-      if (_isSubScreen()){
-	ostringstream ostr;
-	ostr << "Response "
-	     << lexical_cast<string>(driver->GetTimeMilliseconds())
-	     << " "
-	     << lexical_cast<string>(_timeUp-_timePress)
-	     << " " << Setup::key;
-
-	_session->recorder->Save(ostr.str(), "events.txt");
-      }
-      _subjectResponse = true;
-
-      _status[CORRECT] = true;
-    }
-  }
   else{
     Setup::key = -1;
   }
@@ -257,11 +265,14 @@ Trial::displayFrame(Driver* driver)
   for (it = _shapes.begin(); it != _shapes.end(); ++it)
     {
       Shape *curShape = *it;
-      //PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
-      if (curShape->Displayable(_curFrameId) && _isSubScreen()){
+      
+      PDEBUG("Trial::displayFrame ", curShape->name() << " f " << curShape->frameStart() << " t " << curShape->frameEnd() << " d " << curShape->Displayable(_curFrameId));
+      
+if (curShape->Displayable(_curFrameId) && _isSubScreen())
+	{
 
-	curShape->React2input(_status, _data, _curFrameId, driver->GetTimeMilliseconds());
-      } 
+	  curShape->React2input(_status, _data, _curFrameId, driver->GetTimeMilliseconds());
+	} 
     }
 
   _logged = true; 
@@ -270,13 +281,16 @@ Trial::displayFrame(Driver* driver)
 }
 
 bool
-Trial::_isSubScreen(){
-  if (_idScreen==1){
-    return true;
-  }
-  else{
-    return false;
-  }
+Trial::_isSubScreen()
+{
+  if (_idScreen==1)
+    {
+      return true;
+    }
+  else
+    {
+      return false;
+    }
 }
 void
 Trial::_sendTtls(Driver* d)
@@ -334,7 +348,7 @@ Trial::_react2status()
 	_curFrameId++;  
       }
 
-      // PDEBUG("Trial::_react2status ", "RUNNING");
+      PDEBUG("Trial::_react2status ", "RUNNING");
       return (RUNNING);
     }
   PDEBUG("Trial::_react2status ", "bug here");
@@ -370,10 +384,11 @@ Trial::atStart()
 void
 Trial::Reset(Driver *d)
 {
-  PDEBUG("Trial::Reset ", "start")
+  PDEBUG("Trial::Reset ", "start");
   _curFrameId = 0;
   _logged = false;
   _subjectResponse = false;
+
   Status::iterator it;
   for (it = _status.begin(); it != _status.end(); ++it)
     {
@@ -404,7 +419,8 @@ Trial::Reset(Driver *d)
 }
 
 string
-Trial::toString(){
+Trial::toString()
+{
   string str;
   ostringstream ostr;
     

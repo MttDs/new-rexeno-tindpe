@@ -46,7 +46,8 @@ Sphere::Sphere(const ShapeInfo& si,
   _initFrameEnd = _frameEnd->value;
 
   Adapt* adapt;
-  for (unsigned int it = 0; it< si.listeners.size();it++){
+  for (unsigned int it = 0; it< si.listeners.size();it++)
+    {
     adapt = new Adapt(vm,
 		      this,
 		      si.listeners[it].key, 
@@ -126,7 +127,6 @@ Sphere::React2input(Status& s,
     _session = _father->session();
   }
   int fps = (_session->setup)->refreshRate();
-
   //  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
   ostringstream ostr;
@@ -187,7 +187,8 @@ Sphere::React2input(Status& s,
 }
 
 void 
-Sphere::initTexture(){
+Sphere::initTexture()
+{
   
   Shape::initTexture();
 
@@ -207,7 +208,7 @@ Sphere::Display()
 {
   glPushMatrix();
 
-  glEnable(GL_TEXTURE_2D);
+  //glEnable(GL_TEXTURE_2D);
 
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
   
@@ -218,7 +219,7 @@ Sphere::Display()
   gluSphere(_params, *_radius, *_stacks, *_slices);
 
   glBindTexture(GL_TEXTURE_2D, 0);
-  glDisable( GL_TEXTURE_2D );
+  // glDisable( GL_TEXTURE_2D );
 
   glPopMatrix();
 
@@ -227,7 +228,8 @@ Sphere::Display()
 }
 
 void
-Sphere::Reset(){
+Sphere::Reset()
+{
 
   _angleX = 0.0;
   _angleY = 0.0;
@@ -249,7 +251,8 @@ Sphere::DisplayMonitor()
 }
 
 string
-Sphere::toString(){
+Sphere::toString()
+{
 
   if (_session == NULL){
     _session = _father->session();
@@ -262,7 +265,7 @@ Sphere::toString(){
   float angleZ = (move / *_radius*180.0 / M_PI);
 
   ostringstream ostr;
-
+ 
   ostr <<  _name << ": "
        << "Pos["
        << _x->value << ", "
@@ -290,7 +293,8 @@ Sphere::toString(){
 
 
 void 
-Sphere::initPos(){
+Sphere::initPos()
+{
 
 
   if (_session == NULL){
@@ -319,7 +323,6 @@ Sphere::initPos(){
       _x->value = randomPos +(distance/2);
     }
   }
-  
   if (_veloZ->value!=0){
     randomPos =  _getRandomNumber(_initZ, _randomZ->value);
     if (_veloZ->value>0){
@@ -331,12 +334,6 @@ Sphere::initPos(){
   }
   // std::cout << randomPos << std::endl;
 
-  if (_randomX->value != 0){
-    //    _x->value =  /*_getRandomNumber(_initX, _randomX->value)-*/(distance/2);
-  }
-  if (_randomZ->value != 0){
-    //    _z->value = _getRandomNumber(_initZ, _randomZ->value);
-  }
 
   _angleV = ((float) rand()/RAND_MAX)*360.0;
 }

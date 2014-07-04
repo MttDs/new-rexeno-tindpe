@@ -60,15 +60,15 @@ Shape::Displayable(int frameId)
   res &= (frameId >= frameStart()) || (frameStart() == -1);
   res &= (frameId <= frameEnd()) || (frameEnd() == -1);
   /*   std::cout << "shape "
-	    << name() 
-	    << " is displayable: " 
-	    << res << " start " 
-	    << frameStart() 
-	    << " end " 
-	    << frameEnd() 
-	    << " frameId "
-	    << frameId
-	    << std::endl;*/
+       << name() 
+       << " is displayable: " 
+       << res << " start " 
+       << frameStart() 
+       << " end " 
+       << frameEnd() 
+       << " frameId "
+       << frameId
+       << std::endl;*/
 
   return res;
 }
@@ -165,7 +165,7 @@ Shape::React2input(Status& s,
                    ms displayTime)
 {
   if (_session==NULL){
-     _session = _father->session();
+    _session = _father->session();
   }
   ostringstream ostr;
  
@@ -199,16 +199,18 @@ Shape::React2input(Status& s,
   else
     s[RUNNING] = true;
 
-   _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
+  _session->recorder->Save(_name + " " + lexical_cast<string>(displayTime) + " display", "logger.txt");
 }
 
 void
-Shape::initTexture(){
+Shape::initTexture()
+{
   ImageLoad iload;
   iload.setFilename(_textureName.c_str());
-  if(!(iload.load())){
-    exit(1);
-  }
+  if(!(iload.load()))
+    {
+      exit(1);
+    }
   
   glGenTextures(1, &_texture[0]); // Donne numero de texture
   glBindTexture(GL_TEXTURE_2D, _texture[0]); //Selectionne la texture
@@ -231,15 +233,17 @@ Shape::initTexture(){
 	       iload.getData()	        //Adresse de l'image
 	       );
 
-   if (_texture[0] == 0){
-    std::cout << "Impossible d'appliquer la texture de la forme " << _name << std::endl;
-    exit(0);
+  if (_texture[0] == 0)
+    {
+      std::cout << "Impossible d'appliquer la texture de la forme " << _name << std::endl;
+      exit(0);
     }
 
 }
 
 void
-Shape::Reset(){
+Shape::Reset()
+{
  
   _logged = false;
   _loggedEnd = false;
@@ -252,7 +256,6 @@ Shape::Reset(){
   int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
 				 lexical_cast<int>(_maxStart->value)); 
   _adaptFrame(frameAdapt);
-
 
 }
 
@@ -280,30 +283,21 @@ Shape::RoundNdecimal(int n, float nb){
 
 int
 Shape::random2params(int min, int max){
-  /* 
-  std::ostringstream oss;
 
-  oss << rand();
-  unsigned int sum, ii;
-  std::string result = oss.str();
-  const char* chars = result.c_str();
-
-  for(ii=0; ii < strlen(chars); ii++){
-	sum += (int) chars[ii]*2;
-  }
-  */
-  int seed = (int) (std::time(0)); //(std::time(0)+sum);
+  int seed = (int) (std::time(0)); 
   srand(seed);
   
-  if (max-min>0){
-    return rand()%((max+1) - min) + min;
-  }
+  if (max-min>0)
+    {
+      return rand()%((max+1) - min) + min;
+    }
   
   return 0;
 }
 
 float 
-Shape::_getRandomNumber(float pos, float nb){
+Shape::_getRandomNumber(float pos, float nb)
+{
   std::ostringstream oss;
 
   oss << rand();
@@ -316,15 +310,17 @@ Shape::_getRandomNumber(float pos, float nb){
   float max = (float) (pos+(nb));
   float newPos = 0.0;
 
-  if (max<min){
-    tmp = max;
-    max = min;
-    min = tmp;
-  }
+  if (max<min)
+    {
+      tmp = max;
+      max = min;
+      min = tmp;
+    }
 
-  for(i=0; i < strlen(chars); i++){
-    sum += (int) chars[i]*2;
-  }
+  for(i=0; i < strlen(chars); i++)
+    {
+      sum += (int) chars[i]*2;
+    }
 
   seed = (int)(std::time(0)+sum);
   srand(seed);
@@ -336,10 +332,11 @@ Shape::_getRandomNumber(float pos, float nb){
 }
 
 /*
-Add adapts in "k" (k = pAdapts (Trial::DisplayFrame))
- */
+  Add adapts in "k" (k = pAdapts (Trial::DisplayFrame))
+*/
 void
-Shape::setAdapts(vector<Adapt*>*k){
+Shape::setAdapts(vector<Adapt*>*k)
+{
   vector<Adapt*>::iterator it;
   for (it = _adapts.begin(); it!= _adapts.end(); it++){
     (*k).push_back(*it);
@@ -347,17 +344,20 @@ Shape::setAdapts(vector<Adapt*>*k){
 }
 
 void 
-Shape::updateVelo(double coef){
+Shape::updateVelo(double coef)
+{
   _gainV = _gainV * (coef); 
 }
 
 void
-Shape::updateDuration(double coef){
+Shape::updateDuration(double coef)
+{
   _gainD = _gainD * (coef);
 }
 
 void
-Shape::_adaptFrame(int frame){
+Shape::_adaptFrame(int frame)
+{
   _frameStart->value = lexical_cast<int>(_frameStart->value)+frame;
   _frameEnd->value = lexical_cast<int>(_frameEnd->value)+frame;
 }

@@ -37,13 +37,14 @@ Plan::Plan(const ShapeInfo& si,
   _session = NULL;
 }
 
-Plan::~Plan(){
+Plan::~Plan()
+{
 
 }
 
-void Plan::Display(){
+void Plan::Display()
+{
 
-  glEnable( GL_TEXTURE_2D );
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
   glTranslated(_x->value,(_y->value-0.01),_z->value);
   glBegin(GL_QUADS);
@@ -57,11 +58,11 @@ void Plan::Display(){
   glEnd();
 
   glBindTexture(GL_TEXTURE_2D, 0);
-  glDisable( GL_TEXTURE_2D );
 
 }
 string
-Plan::toString(){
+Plan::toString()
+{
   ostringstream ostr;
   ostr << _name 
        << ": Width "
@@ -77,6 +78,7 @@ Plan::toString(){
 }
 
 void
-Plan::Reset(){
+Plan::Reset()
+{
   Shape::Reset();
 }

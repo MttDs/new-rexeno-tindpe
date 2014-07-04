@@ -28,12 +28,13 @@ public:
   string action(){return _action;}
   Shape* parent(){return _parent;}
   string toString();
+
 private:
+  string _action;
   Shape* _parent;
   Variable* _parentName;
   Variable* _key;
   Variable* _coef;
-  string _action;
 };
 
 

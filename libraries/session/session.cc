@@ -20,7 +20,8 @@ Session* Session::_instance = NULL;
  */
 Session::Session(configuration::SessionInfo& s,
                  Order& o)
-  : _trialsOrder(o.getOrder()){
+  : _trialsOrder(o.getOrder())
+{
 
   Trial* t = NULL;
   vector<TrialInfo>::iterator it;
@@ -30,17 +31,17 @@ Session::Session(configuration::SessionInfo& s,
       t = new Trial(*it);
       _trialsDefinitions.push_back(t);
     }
-  std::cout << _trialsDefinitions.size() << std::endl;
+
   _currentTrial = _trialsOrder.begin();
-  //  std::cout << _trialsDefinitions.at(_trialsOrder.at(2))->name() << std::endl;
+
   beforeTrial = NULL;
   afterTrial = NULL;
   _inputData.resize(8);
 
   recorder = new Recorder(s.save, s.traceLevel);
+
   recorder->AddFile("results.txt");
-  recorder->AddFile("trials.txt");
-  
+  recorder->AddFile("protocole.txt");
   recorder->AddFile("events.txt");
   recorder->AddFile("X.txt");
   recorder->AddFile("id_trials.txt");
@@ -89,6 +90,7 @@ Session::~Session()
     {
       delete (*it);
     }
+
   delete recorder;
   recorder = NULL;
   delete setup;
@@ -122,11 +124,14 @@ keyPressed(unsigned char key, int x, int y)
   Setup::key = key;
   if (key == 27)
     {
+      glutLeaveGameMode();
       glutLeaveMainLoop();
     }
 }
+
 void 
-keyUp(unsigned char key, int x, int y){
+keyUp(unsigned char key, int x, int y)
+{
   Setup::keys[key] = false;
 }
 
@@ -135,7 +140,8 @@ keyUp(unsigned char key, int x, int y){
  * Reshape the window's size
  */
 void
-reshape(int width, int height){
+reshape(int width, int height)
+{
   if (height==0){
     height=1;
   }
@@ -145,46 +151,49 @@ reshape(int width, int height){
 }
 
 void 
-Session::initShape(){
+Session::initShape()
+{
 
-    vector<Trial*>::iterator itTrial;
-    vector<Adapt*>::iterator itAdapt;
-    Shapes::iterator itShape;
+  vector<Trial*>::iterator itTrial;
+  vector<Adapt*>::iterator itAdapt;
+  Shapes::iterator itShape;
 
-    Trial* t= NULL;
-    Shape* s = NULL;
-    Adapt* a = NULL;
+  Trial* t= NULL;
+  Shape* s = NULL;
+  Adapt* a = NULL;
 
-    vector<Adapt*> adapts;
+  vector<Adapt*> adapts;
 
-    recorder->Save(lexical_cast<string>(getSubjectName()) 
-				 + " " + 
-				 lexical_cast<string>(getNbBlock()), "trials.txt");
+  recorder->Save(lexical_cast<string>(getSubjectName()) 
+		 + " " + 
+		 lexical_cast<string>(getNbBlock()), "protocole.txt");
 
-    for (itTrial = _trialsDefinitions.begin(); itTrial != _trialsDefinitions.end(); ++itTrial)
-      {
+  for (itTrial = _trialsDefinitions.begin(); itTrial != _trialsDefinitions.end(); ++itTrial)
+    {
 
-	t = (*itTrial);	   
-	recorder->Save(t->toString(), "trials.txt");
-	for (itShape = t->shapes()->begin(); itShape != t->shapes()->end(); ++itShape)
-	  {
-	    s = (*itShape);
+      t = (*itTrial);	   
+      recorder->Save(t->toString(), "protocole.txt");
 
-	    recorder->Save(s->toString() ,"trials.txt");
+      for (itShape = t->shapes()->begin(); itShape != t->shapes()->end(); ++itShape)
+	{
+	  s = (*itShape);
 
-	    adapts = s->getAdapts();
+	  recorder->Save(s->toString() ,"protocole.txt");
 
-	    for (itAdapt = adapts.begin(); itAdapt != adapts.end(); ++itAdapt){
+	  adapts = s->getAdapts();
+
+	  for (itAdapt = adapts.begin(); itAdapt != adapts.end(); ++itAdapt)
+	    {
 	      a = (*itAdapt);
-	      recorder->Save(a->toString() ,"trials.txt");
+	      recorder->Save(a->toString() ,"protocole.txt");
 	    }
 
-	    s->initTexture();
-	    s->initPos();
-	    s->Display(); // Load textures.
-	  }
-      }
-    _initShape = true;
+	  s->initTexture();
+	  s->initPos();
+	  s->Display(); // Load textures.
+	}
+    }
+  _initShape = true;
   
 }
 /** 
@@ -198,13 +207,15 @@ Session::displayHeader()
   if (!initialized())
     {				
 
-      if (!_initShape){
-	initShape();
-      }
+      if (!_initShape)
+	{
+	  initShape();
+	}
 
       glClear (GL_DEPTH_BUFFER_BIT);
       glClear(GL_COLOR_BUFFER_BIT);
-
+      glDisable (GL_LIGHTING);
+      
       glBegin(GL_QUADS);
       glColor3ub(255, 155, 255);    
       glVertex2d(-0.1, -0.1);
@@ -213,6 +224,7 @@ Session::displayHeader()
       glVertex2d(0.1, 0.1);
       glEnd();
 
+      glEnable(GL_LIGHTING);
       glutPostRedisplay();
       glutSwapBuffers();
 
@@ -225,70 +237,72 @@ Session::displayHeader()
 	  _initialized = true;
 	}
     }   
-  else{
+  else
+    {
  				
-    int window_height =  setup->screenHeight();
-    int window_width = setup->screenWidth();
+      int window_height =  setup->screenHeight();
+      int window_width = setup->screenWidth();
     
-    float ratio = setup->ratio();
+      float ratio = setup->ratio();
 
-    glClear (GL_COLOR_BUFFER_BIT);						
-    glClear (GL_DEPTH_BUFFER_BIT);
+      glClear (GL_COLOR_BUFFER_BIT);						
+      glClear (GL_DEPTH_BUFFER_BIT);
 	
-    glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
-    glLightfv(GL_LIGHT0, GL_POSITION, _lP);
+      glLightfv(GL_LIGHT0, GL_AMBIENT, _lA);
+      glLightfv(GL_LIGHT0, GL_DIFFUSE, _lD);
+      glLightfv(GL_LIGHT0, GL_POSITION, _lP);
 
-    if (setup->nbScreen()==2){
-      for (int loop=0; loop<2; loop++){
-	if (loop==0){
-	  glViewport(0,0,window_width/2, window_height); 
+      if (setup->nbScreen()==2)
+	{
+	  for (int loop=1; loop<=2; loop++)
+	    {
+	      if (loop==0){
+		glViewport(0,0,window_width/2, window_height); 
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(90, ratio, 1.0f, 2000.0f); 
+		glMatrixMode(GL_MODELVIEW);
+	      }
+	      if (loop==1)
+		{
+		  glViewport(window_width/2,0,window_width/2, window_height);
+		  glMatrixMode(GL_PROJECTION); 
+		  glLoadIdentity(); 
+		  gluPerspective(90, ratio, 1.0f, 2000.0f); 
+		  glMatrixMode(GL_MODELVIEW);
+		}
+
+	      glMatrixMode(GL_MODELVIEW);		
+	      glLoadIdentity();			
+
+	      displayFrame(loop);
+	    
+	      glutPostRedisplay();	 
+	    }
+	}
+      else
+	{
+	  glViewport(0,0,window_width, window_height); 
 	  glMatrixMode(GL_PROJECTION);
 	  glLoadIdentity();
 	  gluPerspective(90, ratio, 1.0f, 2000.0f); 
 	  glMatrixMode(GL_MODELVIEW);
-	}
-	if (loop==1){
-	  glViewport(window_width/2,0,window_width/2, window_height);
-	  glMatrixMode(GL_PROJECTION); 
-	  glLoadIdentity(); 
-	  gluPerspective(90, ratio, 1.0f, 2000.0f); 
-	  glMatrixMode(GL_MODELVIEW);
-	}
-
-	glMatrixMode(GL_MODELVIEW);		
-	glLoadIdentity();			
-
-	if (loop==0){					
+	  glLoadIdentity ();	
+      
 	  displayFrame(1);
-	}
-	if (loop==1){
-	  displayFrame(2);
-	}
-	glutPostRedisplay();	 
-      }
-    }
-    else{
-      glViewport(0,0,window_width, window_height); 
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      gluPerspective(90, ratio, 1.0f, 2000.0f); 
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity ();	
       
-      displayFrame(1);
-      
-      glutPostRedisplay();
+	  glutPostRedisplay();
 
+	}
     }
-  }
   glutSwapBuffers();
 }
 
 
 
 GLvoid
-Session::InitGL(){
+Session::InitGL()
+{
   glEnable(GL_TEXTURE_2D);
  
   glClearColor(_RGB[0],_RGB[1],_RGB[2], 1.0f);
@@ -332,11 +346,11 @@ Session::run(int argc,
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   glutReshapeFunc(&reshape);
-  InitGL();
   glutDisplayFunc (&displayRexeno);
   glutKeyboardFunc(&keyPressed);
   glutKeyboardUpFunc(&keyUp);
 
+  InitGL();
 
   glutMainLoop();
 
@@ -351,13 +365,13 @@ void
 Session::displayFrame(int idScreen)
 {
 #ifdef DEBUG
-  // PDEBUG("Session::displayFrame ", __debug_FrameNumber << "/" << _trialsOrder.size() << " trials in this session");
+  PDEBUG("Session::displayFrame ", __debug_FrameNumber << "/" << _trialsOrder.size() << " trials in this session");
 #endif
   
   if (_currentTrial != _trialsOrder.end())
     {
       
-      //  PDEBUG("Session::displayFrame", " trial frame ");
+      PDEBUG("Session::displayFrame", " trial frame ");
       Trial* t = _trialsDefinitions[*_currentTrial];
       if (t->atStart() && beforeTrial)
 	{
@@ -371,7 +385,8 @@ Session::displayFrame(int idScreen)
       if (b != RUNNING)
 	{
 
-	  // PDEBUG("Session::displayFrame", " end of trial : " << t->name() << " (trial number " << *_currentTrial << " )");
+	  PDEBUG("Session::displayFrame", " end of trial : " << t->name() << " (trial number " << *_currentTrial << " )");
+
 	  if (idScreen==1){
 	    ms displayTime = _driver->GetTimeMilliseconds();
 	    recorder->Save("EndTrial " + lexical_cast<string>(displayTime), "events.txt");

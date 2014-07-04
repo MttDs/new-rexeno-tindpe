@@ -46,61 +46,76 @@ public:
         Trial* father);
   Shape();
   virtual ~Shape() {}
+
   virtual void Display();
   virtual void DisplayMonitor();
   virtual void React2input(Status&,
                            const datas&,
                            int,
                            ms);
-
-  virtual void initTexture();
-  double x() {return _x->value;}
-  double y() {return _y->value;}
-  virtual double z() { return 0.0; }
-  int id() {return _id;}
-  const string& name() {return _name;}
-  double frameStart() {return _frameStart->value;}
-  double frameEnd() {return (_frameEnd->value);}
-  bool MonitorDisplayable();
-  uint ttl() {return _ttl;}
-  bool Displayable(int frameId);
-  bool SubjectVisible(){return _subjectVisible;}
   virtual void Reset();
-  virtual string toString();
   virtual void initPos(){};
-  double RoundNdecimal(int n, float nb);
+  virtual void initTexture();
 
-  void setAdapts(vector<Adapt*>*k);
-  vector<Adapt*> getAdapts(){ return _adapts;}
+  virtual double z() { return 0.0; }
+
+  virtual string toString();
+
   void updateVelo(double coef);
   void updateDuration(double coef);
-  int random2params(int min, int max);
-  bool start(){return _start;}
+  void setAdapts(vector<Adapt*>*k);
   void setStart(bool b){_start=b;}
 
+  bool MonitorDisplayable();
+  bool Displayable(int frameId);
+  bool start(){return _start;}
+
+  int id() {return _id;}
+  int random2params(int min, int max);
+  uint ttl() {return _ttl;}
+
+  double x() {return _x->value;}
+  double y() {return _y->value;}
+  double frameStart() {return _frameStart->value;}
+  double frameEnd() {return (_frameEnd->value);}
+  double RoundNdecimal(int n, float nb);
+
+  const string& name() {return _name;}
+
+  vector<Adapt*> getAdapts(){ return _adapts;}
+
+
+
 protected:
+ 
+  void _adaptFrame(int frame);
+
+  bool _logged;
+  bool _loggedEnd;
+  bool _subjectVisible;
+  bool _start;
+
+  int _id;
+  int _initFrameStart;
+  int _initFrameEnd;
+  GLuint _texture[1];
+  uint _ttl;
+
+  float _getRandomNumber(float pos, float nb);
+  float _gainV;
+  float _gainD;
+  
   // Use these functions for opengl's drawing scale. 
   double _demiVertical(); // inside sub square-screen
   double _demiHorizontal(); // inside sub square-screen
   double _xGL(); // inside sub square-screen
   double _yGL(); // inside sub square-screen
-  float _getRandomNumber(float pos, float nb);
-  void _adaptFrame(int frame);
- 
-  int _id;
-
-  GLuint _texture[1];
-  GLUquadric* _params;
 
   string _name;
   string _textureName;
 
   Variable* _frameStart;
   Variable* _frameEnd;
-
-  int _initFrameStart;
-  int _initFrameEnd;
-
   Variable* _x;
   Variable* _y;
   Variable* _width;
@@ -108,27 +123,15 @@ protected:
   Variable* _R;
   Variable* _G;
   Variable* _B;
-
-  uint _ttl;
-  Trial* _father;
-  Session* _session;
-
-  bool _logged;
-  bool _loggedEnd;
-  bool _subjectVisible;
-
   Variable* _veloX;
   Variable* _veloY;
   Variable* _veloZ;
-  
-  float _gainV;
-  float _gainD;
-
   Variable* _minStart;
   Variable* _maxStart;
-  // int _frameAdapt;
-  
-  bool _start;
+
+  Trial* _father;
+  Session* _session;
+  GLUquadric* _params;
 
   vector<Adapt*> _adapts;
 

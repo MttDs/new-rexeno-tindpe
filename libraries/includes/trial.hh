@@ -50,60 +50,69 @@ class Trial
 public:
   Trial(TrialInfo& ti);
   ~Trial();
-  int displayFrame(Driver* d);
-  bool finished();
-  bool atStart();
-  string& name() {return _name;}
-  Shapes* shapes() { return &_shapes;}
+
   void adjustNbFrames();
   void addTtl();
-  bool status(int);
-  int frameEnd() {return _nbFrames;}
-  Session* session();
-  VariableManager variables;
   void Reset(Driver * d);
   void setIdScreen(int id){ _idScreen = id;}
+ 
+  bool finished();
+  bool atStart();
+  bool status(int);
+
+  int displayFrame(Driver* d);
+  int frameEnd() {return _nbFrames;}
+
   string toString();
+  string& name() {return _name;}
+ 
+  Shapes* shapes() {return &_shapes;}
+  Session* session();
+
+  VariableManager variables;
+  
 
 private:
-  Session* _session;
+
+  void _sendTtls(Driver* d);
+
+  bool _isSubScreen(); // subject's window
 
   int _react2status();
-  void _sendTtls(Driver* d);
-  bool _isSubScreen(); // subject's window
   int _random2params(int min, int max);
-
-  int _idScreen;
-  int _curFrameId;
-  int _nbFrames;
-  Status _status;
-  Shapes _shapes;
-  string& _name;
-  float _move;
-  int _argc;
-  char **_argv;
-  vector<TtlEvent*>* _ttl;
-  datas _data;
 
   bool _logged;
   bool _start;
   bool _subjectResponse;
   bool _shapeUpdate;
 
+  int _idScreen;
+  int _curFrameId;
+  int _nbFrames;
+
+  float _move;
+
+  string& _name;
+
+  vector<TtlEvent*>* _ttl;
+  datas _data;
+
   Variable* _eyeX;
   Variable* _eyeY;
-  Variable*  _eyeZ;
-
+  Variable* _eyeZ;
   Variable* _centerX;
-  Variable*  _centerY;
+  Variable* _centerY;
   Variable* _centerZ;
-
-  Variable*  _cameraVeloX;
-  Variable*  _cameraVeloY;
-  Variable*  _cameraVeloZ;
+  Variable* _cameraVeloX;
+  Variable* _cameraVeloY;
+  Variable* _cameraVeloZ;
 
   vector<float> _initCamera;
 
+  Session* _session;
+
+  Status _status;
+  Shapes _shapes;
   ms _timePress;
   ms _timeUp;
 

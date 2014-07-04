@@ -23,18 +23,22 @@ public:
   void setStacks(int stcks);
   void setRadius(float rdius);
   void setPos(float x, float y, float z);
-  void setActive(bool yesno);
+  void setActive(bool b);
 
-  bool getActive();
+  bool active();
 private:
+
+  bool _active;
+
+  int _stacks;
+
   float _radius;
   float _pos;
-  int _stacks;
-  bool _active;
 
   double _x;
   double _y;
   double _z;
+
 };
 
 
