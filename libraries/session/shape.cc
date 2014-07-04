@@ -171,10 +171,12 @@ Shape::React2input(Status& s,
  
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
-    {      // name time x y
+    {      // name time frameId
       _logged = true;
       ostr << _name << " start "
-	   << lexical_cast<string>(displayTime) 
+	   << lexical_cast<string>(displayTime)
+	   << " " 
+	   << frameId
 	   << " " ;
       _session->recorder->Save(ostr.str(), "events.txt");
     }
@@ -182,8 +184,11 @@ Shape::React2input(Status& s,
 
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
+      // name time frameId
       ostr << _name << " end " 
 	   << lexical_cast<string>(displayTime) 
+	   << " "
+	   << frameId
 	   << " ";
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
