@@ -180,7 +180,7 @@ Trial::displayFrame(Driver* driver)
       isValid = true;
     }
 
-  // PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
+  PDEBUG("Trial::displayFrame", " displayed frame " << _curFrameId);
 
   if (_isSubScreen())
     {

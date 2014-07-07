@@ -253,9 +253,7 @@ Shape::Reset()
 
   _frameEnd->value = lexical_cast<int>(value);
 
-  int frameAdapt = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
-  _adaptFrame(frameAdapt);
+  _adaptFrame();
 
 }
 
@@ -356,8 +354,12 @@ Shape::updateDuration(double coef)
 }
 
 void
-Shape::_adaptFrame(int frame)
+Shape::_adaptFrame()
 {
+
+  int frame = random2params(lexical_cast<int>(_minStart->value),
+				 lexical_cast<int>(_maxStart->value)); 
+
   _frameStart->value = lexical_cast<int>(_frameStart->value)+frame;
   _frameEnd->value = lexical_cast<int>(_frameEnd->value)+frame;
 }

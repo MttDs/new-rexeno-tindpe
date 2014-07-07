@@ -314,6 +314,8 @@ Sphere::initPos()
   
   float randomPos = 0.0;
 
+  _adaptFrame();
+  
   if (_veloX->value!=0){
     randomPos = _getRandomNumber(_initX, _randomX->value);
     if (_veloX->value>0){

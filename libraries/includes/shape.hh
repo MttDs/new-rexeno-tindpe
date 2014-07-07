@@ -88,7 +88,7 @@ public:
 
 protected:
  
-  void _adaptFrame(int frame);
+  void _adaptFrame();
 
   bool _logged;
   bool _loggedEnd;
