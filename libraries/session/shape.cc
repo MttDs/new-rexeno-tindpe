@@ -282,16 +282,44 @@ Shape::RoundNdecimal(int n, float nb){
 int
 Shape::random2params(int min, int max){
 
-  int seed = (int) (std::time(0)); 
-  srand(seed);
+    std::ostringstream oss;
+    oss << rand();
+
+    unsigned int sum, ii;
+
+    std::string result = oss.str();
+
+    const char* chars = result.c_str();
+
+    for(ii=0; ii < strlen(chars); ii++)
+      {
+	sum += (int) chars[ii]*2;
+      }
+
+    int seed = (int) (std::time(0)+sum);
+    srand(seed);   
+
+    if (max-min>0)
+      {
+	return rand()%((max+1) - min) + min;
+      }
+    if (max-min>0)
+      {
+	return rand()%((max+1) - min) + min;
+      }
+    return 0;
+
+    /*
+      int seed = (int) (std::time(0)); 
+      srand(seed);
   
-  if (max-min>0)
-    {
+      if (max-min>0)
+      {
       return rand()%((max+1) - min) + min;
-    }
-  
-  return 0;
-}
+      }
+    
+      return 0;*/
+  }
 
 float 
 Shape::_getRandomNumber(float pos, float nb)
