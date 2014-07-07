@@ -48,22 +48,26 @@ public:
            char** argv);
   void displayFrame(int screen);
   void displayHeader();
-
   void (*afterTrial)(string&, VariableManager&, int);
   void (*beforeTrial)(string&, VariableManager&);
   void setDriver(Driver* d) {_driver = d;}
+  void initShape();
+  GLvoid InitGL();
 
-  Setup* setup; 
-  Recorder* recorder;
+  bool initialized();
+
   int nbFrame4init() {return _nbFrame4init;}
   int nbInitFrames() {return _nbInitFrames;}
-  ms getTime();
-  Driver * driver(){return _driver;}
+
   string getNbBlock(){return _nbBlock;}
   string getSubjectName(){return _subjectName;}
-  bool initialized();
-  GLvoid InitGL();
-  void initShape();
+ 
+  Setup* setup; 
+  Recorder* recorder;
+  ms getTime();
+  Driver * driver(){return _driver;}
+ 
+
 
 private:
   Session(configuration::SessionInfo& s,

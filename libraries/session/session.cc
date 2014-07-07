@@ -110,6 +110,80 @@ displayRexeno()
   Session* s = Session::getInstance();
   s->displayHeader();
 }
+
+int
+specialKey(int key){
+
+  switch(key){
+  case GLUT_KEY_F1:
+    key = 128;
+    break;
+  case GLUT_KEY_F2:
+    key = 129;
+    break; 
+  case GLUT_KEY_F3:
+    key = 130;
+    break;
+  case GLUT_KEY_F4:
+    key = 131;
+    break;
+  case GLUT_KEY_F5:
+    key = 132;
+    break;
+  case GLUT_KEY_F6:
+    key = 133;
+    break;
+  case GLUT_KEY_F7:
+    key = 134;
+    break; 
+  case GLUT_KEY_F8:
+    key = 135;
+    break; 
+  case GLUT_KEY_F9:
+    key = 136;
+    break;
+  case GLUT_KEY_F10:
+    key = 137;
+    break; 
+  case GLUT_KEY_F11:
+    key = 138;
+    break;
+  case GLUT_KEY_F12:
+    key = 139;
+    break;
+  case GLUT_KEY_LEFT:
+    key = 140;
+    break; 
+  case GLUT_KEY_UP:
+    key = 141;
+    break;
+  case GLUT_KEY_RIGHT:
+    key = 142;
+    break;
+  case GLUT_KEY_DOWN:
+    key = 143;
+    break;
+  case GLUT_KEY_PAGE_UP:
+    key = 144;
+    break;
+  case GLUT_KEY_PAGE_DOWN:
+    key = 145;
+    break;
+  case GLUT_KEY_HOME:
+    key = 146;
+    break;
+  case GLUT_KEY_END:
+    key = 147;
+    break;
+  case GLUT_KEY_INSERT:
+    key = 148;
+    break;
+  }
+
+  return key;
+}
+
+
 /**
  * Opengl's keyboard/mouse processing callback
  *
@@ -120,6 +194,7 @@ displayRexeno()
 void 
 keyPressed(unsigned char key, int x, int y)
 {
+  std::cout << "normal => " << (int)key << std::endl;
   Setup::keys[key] = true;
   Setup::key = key;
   if (key == 27)
@@ -130,10 +205,29 @@ keyPressed(unsigned char key, int x, int y)
 }
 
 void 
+keySpecialPressed(int key, int x, int y)
+{
+  std::cout << "special => " << key << std::endl;
+  key = specialKey(key);
+  std::cout << "special => " << key << std::endl;
+  Setup::keys[key] = true;
+  Setup::key = key;
+}
+
+void 
 keyUp(unsigned char key, int x, int y)
 {
   Setup::keys[key] = false;
 }
+
+void 
+keySpecialUp(int key, int x, int y)
+{
+  key = specialKey(key);
+  Setup::keys[key] = false;
+}
+
+
 
 
 /**
@@ -348,7 +442,9 @@ Session::run(int argc,
   glutReshapeFunc(&reshape);
   glutDisplayFunc (&displayRexeno);
   glutKeyboardFunc(&keyPressed);
+  glutSpecialFunc(&keySpecialPressed);
   glutKeyboardUpFunc(&keyUp);
+  glutSpecialUpFunc(&keySpecialUp);
 
   InitGL();
 
@@ -411,8 +507,6 @@ Session::displayFrame(int idScreen)
 	exit (0);
     }
 }
-
-
 
 /** 
  * Standard SINGLETON member
