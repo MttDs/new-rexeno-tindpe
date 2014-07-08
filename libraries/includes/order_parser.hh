@@ -31,8 +31,10 @@ private:
 
   void _random();
   void _simpleRandom();
+  void _blockRandom();
   void _block();
   void _oneAfterTheOther();
+ 
   bool _isValid();
 
   vector<int> _getBlocks();
