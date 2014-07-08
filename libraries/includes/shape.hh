@@ -57,7 +57,7 @@ public:
   virtual void initPos(){};
   virtual void initTexture();
 
-  virtual double z() { return 0.0; }
+  //  virtual double z() { return 0.0; }
 
   virtual string toString();
 
@@ -117,11 +117,13 @@ protected:
   Variable* _frameEnd;
   Variable* _x;
   Variable* _y;
+  Variable* _z;
   Variable* _width;
   Variable* _height;
   Variable* _R;
   Variable* _G;
   Variable* _B;
+  Variable* _opacity;
   Variable* _veloX;
   Variable* _veloY;
   Variable* _veloZ;

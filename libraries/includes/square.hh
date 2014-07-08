@@ -10,6 +10,7 @@ public:
          VariableManager& vm,
          Trial* t);
   ~Square();
+  void Reset();
 private:
 };
 

@@ -17,7 +17,8 @@ public:
                    int,
                    ms);
 
-private:
+protected:
+
 };
 
 #endif

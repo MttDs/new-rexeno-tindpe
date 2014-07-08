@@ -26,11 +26,11 @@ Shape::Display()
 
   glDisable(GL_LIGHTING);
   glBegin(GL_QUADS);
-  glColor3ub(*_R,*_G,*_B);
-  glVertex3d(xGL-demi_horizontal, yGL-demi_vertical,0.f);
-  glVertex3d(xGL+demi_horizontal, yGL-demi_vertical,0.f);
-  glVertex3d(xGL+demi_horizontal, yGL+demi_vertical,0.f);
-  glVertex3d(xGL-demi_horizontal, yGL+demi_vertical,0.f);
+  glColor4ub(*_R,*_G,*_B, (int)(*_opacity*255));
+  glVertex3d(xGL-demi_horizontal, yGL-demi_vertical, *_z);
+  glVertex3d(xGL+demi_horizontal, yGL-demi_vertical, *_z);
+  glVertex3d(xGL+demi_horizontal, yGL+demi_vertical, *_z);
+  glVertex3d(xGL-demi_horizontal, yGL+demi_vertical, *_z);
   glEnd();
   glEnable(GL_LIGHTING);
 }
@@ -60,17 +60,6 @@ Shape::Displayable(int frameId)
 
   res &= (frameId >= frameStart()) || (frameStart() == -1);
   res &= (frameId <= frameEnd()) || (frameEnd() == -1);
-  /*   std::cout << "shape "
-       << name() 
-       << " is displayable: " 
-       << res << " start " 
-       << frameStart() 
-       << " end " 
-       << frameEnd() 
-       << " frameId "
-       << frameId
-       << std::endl;*/
-
   return res;
 }
 
@@ -142,7 +131,7 @@ double
 Shape::_yGL()
 {
   double ratio = _session->setup->ratio();
-  double yGL = *_y * ratio+(*_height/2.0*ratio);
+  double yGL = (*_y * ratio/2)+(*_height/2.0*ratio);
   return yGL;
 }
 
@@ -392,6 +381,7 @@ Shape::Shape()
   _loggedEnd = false;
   _subjectVisible = true;
   _start = false;
+  _opacity = new Variable(1);
 }
 
 
