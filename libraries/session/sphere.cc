@@ -73,9 +73,6 @@ Sphere::Sphere(const ShapeInfo& si,
 
   _father = father;
 
-  SphereShadow* s = new SphereShadow(*_radius, *_z, *_stacks, true);
-  _shadow = s;
-
   _textureName = "sphere.bmp";
 
   CompParam(1);
@@ -89,9 +86,6 @@ Sphere::~Sphere()
 
 void Sphere::CompParam(bool init)
 {
-  if (_session == NULL){
-    _session = _father->session();
-  }
 
   if (init==0)
     {
@@ -123,9 +117,7 @@ Sphere::React2input(Status& s,
 		    int frameId,
 		    ms displayTime)
 {
-  if (_session == NULL){
-    _session = _father->session();
-  }
+
   int fps = (_session->setup)->refreshRate();
   //  printf("Orient V: %f\t moveV: %f\t angleV: %f\t RotAxe: [%f,%f]\n",OrientV,moveV,_angleV,RotAxe[0],RotAxe[1]);
 
@@ -202,24 +194,32 @@ Sphere::initTexture()
   _params = gluNewQuadric();
   gluQuadricDrawStyle(_params,GLU_FILL);
   gluQuadricTexture(_params ,GL_TRUE);
+
+  SphereShadow* s = new SphereShadow((*_radius * _session->setup->ratio()), *_z, *_stacks, true);
+  _shadow = s;
+
 }
 void
 Sphere::Display()
 {
   glPushMatrix();
 
-  //glEnable(GL_TEXTURE_2D);
+  double ratio = _session->setup->ratio();
 
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
-  
-  glTranslatef(*_x,*_radius+*_y,*_z);
-  glRotatef(_angleV,RotAxe[0],0,RotAxe[1]);
+
+  double rGL = (*_radius*ratio);
+  double stacksGL = (*_stacks*ratio);
+  double slicesGL = (*_slices*ratio);
+
+  glTranslatef(*_x,*_y+rGL,*_z);
+
+  glRotatef(_angleV, RotAxe[0], 0, RotAxe[1]);
   
   glRotated(90.0f,1,0,0);
-  gluSphere(_params, *_radius, *_stacks, *_slices);
+  gluSphere(_params, rGL, stacksGL, slicesGL);
 
   glBindTexture(GL_TEXTURE_2D, 0);
-  // glDisable( GL_TEXTURE_2D );
 
   glPopMatrix();
 
@@ -253,10 +253,6 @@ Sphere::DisplayMonitor()
 string
 Sphere::toString()
 {
-
-  if (_session == NULL){
-    _session = _father->session();
-  }
 
   double fps = (_session->setup)->refreshRate();
   float move = *_veloX/fps;
@@ -296,11 +292,6 @@ void
 Sphere::initPos()
 {
 
-
-  if (_session == NULL){
-    _session = _father->session();
-  }
- 
   double hz =  (_session->setup)->refreshRate();
 
   float secs = ((int) (_initFrameEnd * _gainD) - _frameStart->value)/hz;

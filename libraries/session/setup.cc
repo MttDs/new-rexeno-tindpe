@@ -57,8 +57,8 @@ Setup::Setup(configuration::SessionInfo& si)
 void
 Setup::prepareRatio()
 {
-  int window_height =  glutGet(GLUT_WINDOW_HEIGHT);
-  int window_width = glutGet(GLUT_WINDOW_WIDTH);
+  double window_height = (double) glutGet(GLUT_WINDOW_HEIGHT);
+  double window_width = (double) glutGet(GLUT_WINDOW_WIDTH);
 
   if (nbScreen()==2){
     window_width = window_width/2;
@@ -78,6 +78,7 @@ Setup::ratio()
   if (_ratio==(-1.0)){
     prepareRatio();
   } 
+
   return _ratio;
 }
 

@@ -55,7 +55,8 @@ public:
   void addTtl();
   void Reset(Driver * d);
   void setIdScreen(int id){ _idScreen = id;}
- 
+  void setSession(Session * s){ _session = s;}
+
   bool finished();
   bool atStart();
   bool status(int);

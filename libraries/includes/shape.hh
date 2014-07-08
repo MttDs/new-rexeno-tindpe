@@ -65,6 +65,7 @@ public:
   void updateDuration(double coef);
   void setAdapts(vector<Adapt*>*k);
   void setStart(bool b){_start=b;}
+  void setSession(Session * s){ _session = s;}
 
   bool MonitorDisplayable();
   bool Displayable(int frameId);
@@ -83,8 +84,6 @@ public:
   const string& name() {return _name;}
 
   vector<Adapt*> getAdapts(){ return _adapts;}
-
-
 
 protected:
  

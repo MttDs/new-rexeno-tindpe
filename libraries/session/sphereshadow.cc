@@ -28,39 +28,41 @@ void
 SphereShadow::Display()
 {
 
-  if (active()){
+  if (active())
+    {
 
-    glPushMatrix();
+      glPushMatrix();
 
-    float angh = 2*M_PI/_stacks;
-    float prec[3] = {_radius, 0, 0};
-    int ii=0;
+      float angh = 2*M_PI/_stacks;
+      float prec[3] = {_radius, 0, 0};
+      int ii=0;
 
-    glTranslated(_x,0,_z);
+      glTranslated(_x,0,_z);
 
-    glDisable(GL_LIGHTING);
+      glDisable(GL_LIGHTING);
 
-    glBegin(GL_TRIANGLES);
+      glBegin(GL_TRIANGLES);
 
-    for (ii=0; ii<=_stacks; ii++){
+      for (ii=0; ii<=_stacks; ii++)
+	{
 
-      float pts[3] = {_radius*cos(angh*ii), _radius*sin(angh*ii), 0};
-      glColor4f(0.0f,0.0f,0.0f,0.9f);
-      glVertex3f(0.0f,0.0f,0.0f);
-      glVertex3f(pts[0],0.0f,pts[1]);
-      glVertex3f(prec[0],0.0f, prec[1]);
+	  float pts[3] = {_radius*cos(angh*ii), _radius*sin(angh*ii), 0};
+	  glColor4f(0.0f,0.0f,0.0f,0.8f);
+	  glVertex3f(0.0f,0.0f,0.0f);
+	  glVertex3f(pts[0],0.0f,pts[1]);
+	  glVertex3f(prec[0],0.0f, prec[1]);
 
-      prec[0] = pts[0];
-      prec[1] = pts[1];
-      prec[2] = pts[2];
+	  prec[0] = pts[0];
+	  prec[1] = pts[1];
+	  prec[2] = pts[2];
 
+	}
+
+      glEnd();
+
+      glEnable(GL_LIGHTING); 
+      glPopMatrix();
     }
-
-    glEnd();
-
-    glEnable(GL_LIGHTING); 
-    glPopMatrix();
-  }
 }
 
 void 

@@ -255,6 +255,7 @@ Session::initShape()
   Trial* t= NULL;
   Shape* s = NULL;
   Adapt* a = NULL;
+  Session * ss = Session::getInstance();
 
   vector<Adapt*> adapts;
 
@@ -265,12 +266,15 @@ Session::initShape()
   for (itTrial = _trialsDefinitions.begin(); itTrial != _trialsDefinitions.end(); ++itTrial)
     {
 
-      t = (*itTrial);	   
+      t = (*itTrial);
+      t->setSession(ss);
+
       recorder->Save(t->toString(), "protocole.txt");
 
       for (itShape = t->shapes()->begin(); itShape != t->shapes()->end(); ++itShape)
 	{
 	  s = (*itShape);
+	  s->setSession(ss);
 
 	  recorder->Save(s->toString() ,"protocole.txt");
 
@@ -287,6 +291,7 @@ Session::initShape()
 	  s->Display(); // Load textures.
 	}
     }
+
   _initShape = true;
   
 }
@@ -436,7 +441,7 @@ Session::run(int argc,
 
   glutGameModeString(setup->gameModeString().c_str());
   //  glutEnterGameMode();
-  glutFullScreen();
+  //glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   glutReshapeFunc(&reshape);

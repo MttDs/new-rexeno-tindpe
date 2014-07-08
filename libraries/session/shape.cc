@@ -21,8 +21,9 @@ Shape::Display()
 {
   double xGL = _xGL();
   double yGL = _yGL();
-  double demi_horizontal = _demiHorizontal();
+  double demi_horizontal =  _demiHorizontal();
   double demi_vertical = _demiVertical();
+
   glDisable(GL_LIGHTING);
   glBegin(GL_QUADS);
   glColor3ub(*_R,*_G,*_B);
@@ -98,9 +99,8 @@ Shape::MonitorDisplayable()
 double
 Shape::_demiVertical()
 {
-  Session* s = Session::getInstance();
-  double xRatio = s->setup->xRatio();
-  double demi_vertical = xRatio * *_width / 2;
+  double ratio = _session->setup->ratio();
+  double demi_vertical = ratio * *_width / 2;
   return (demi_vertical);
 }
 
@@ -113,9 +113,8 @@ Shape::_demiVertical()
 double
 Shape::_demiHorizontal()
 {
-  Session* s = Session::getInstance();
-  double yRatio = s->setup->yRatio();
-  double demi_horizontal = yRatio * *_height / 2;
+  double ratio = _session->setup->ratio();
+  double demi_horizontal = ratio * *_height / 2;
   return (demi_horizontal);
 }
 
@@ -128,9 +127,8 @@ Shape::_demiHorizontal()
 double
 Shape::_xGL()
 {
-  Session* s = Session::getInstance();
-  double xRatio = s->setup->xRatio();
-  double xGL = *_x * xRatio / 2;
+  double ratio = _session->setup->ratio();
+  double xGL = *_x * ratio / 2 ;
   return xGL;
 }
 
@@ -143,9 +141,8 @@ Shape::_xGL()
 double
 Shape::_yGL()
 {
-  Session* s = Session::getInstance();
-  double yRatio = s->setup->yRatio();
-  double yGL = *_y * yRatio;
+  double ratio = _session->setup->ratio();
+  double yGL = *_y * ratio+(*_height/2.0*ratio);
   return yGL;
 }
 
@@ -164,9 +161,9 @@ Shape::React2input(Status& s,
                    int frameId,
                    ms displayTime)
 {
-  if (_session==NULL){
+  /*  if (_session==NULL){
     _session = _father->session();
-  }
+    }*/
   ostringstream ostr;
  
   // Saving of shape apparition
@@ -205,40 +202,42 @@ Shape::React2input(Status& s,
 void
 Shape::initTexture()
 {
-  ImageLoad iload;
-  iload.setFilename(_textureName.c_str());
-  if(!(iload.load()))
-    {
-      exit(1);
-    }
+
+  if (_textureName!=""){
+    ImageLoad iload;
+    iload.setFilename(_textureName.c_str());
+    if(!(iload.load()))
+      {
+	exit(1);
+      }
   
-  glGenTextures(1, &_texture[0]); // Donne numero de texture
-  glBindTexture(GL_TEXTURE_2D, _texture[0]); //Selectionne la texture
+    glGenTextures(1, &_texture[0]); // Donne numero de texture
+    glBindTexture(GL_TEXTURE_2D, _texture[0]); //Selectionne la texture
 
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   
-  glTexImage2D(
-	       GL_TEXTURE_2D,		//Type de texture
-	       0,			//Mipmap : aucun
-	       3,		        //Couleurs: 4
-	       iload.getSizeY(),	//Largeur: 2
-	       iload.getSizeX(),	//Hauteur: 2
-	       0,			//Largeur des bords: 0
-	       GL_RGB,			//RGBA format
-	       GL_UNSIGNED_BYTE,	//Type des couleurs
-	       iload.getData()	        //Adresse de l'image
-	       );
+    glTexImage2D(
+		 GL_TEXTURE_2D,		//Type de texture
+		 0,			//Mipmap : aucun
+		 3,		        //Couleurs: 4
+		 iload.getSizeY(),	//Largeur: 2
+		 iload.getSizeX(),	//Hauteur: 2
+		 0,			//Largeur des bords: 0
+		 GL_RGB,			//RGBA format
+		 GL_UNSIGNED_BYTE,	//Type des couleurs
+		 iload.getData()	        //Adresse de l'image
+		 );
 
-  if (_texture[0] == 0)
-    {
-      std::cout << "Impossible d'appliquer la texture de la forme " << _name << std::endl;
-      exit(0);
-    }
-
+    if (_texture[0] == 0)
+      {
+	std::cout << "Impossible d'appliquer la texture de la forme " << _name << std::endl;
+	exit(0);
+      }
+  }
 }
 
 void
@@ -282,44 +281,33 @@ Shape::RoundNdecimal(int n, float nb){
 int
 Shape::random2params(int min, int max){
 
-    std::ostringstream oss;
-    oss << rand();
+  std::ostringstream oss;
+  oss << rand();
 
-    unsigned int sum, ii;
+  unsigned int sum, ii;
 
-    std::string result = oss.str();
+  std::string result = oss.str();
 
-    const char* chars = result.c_str();
+  const char* chars = result.c_str();
 
-    for(ii=0; ii < strlen(chars); ii++)
-      {
-	sum += (int) chars[ii]*2;
-      }
+  for(ii=0; ii < strlen(chars); ii++)
+    {
+      sum += (int) chars[ii]*2;
+    }
 
-    int seed = (int) (std::time(0)+sum);
-    srand(seed);   
+  int seed = (int) (std::time(0)+sum);
+  srand(seed);   
 
-    if (max-min>0)
-      {
-	return rand()%((max+1) - min) + min;
-      }
-    if (max-min>0)
-      {
-	return rand()%((max+1) - min) + min;
-      }
-    return 0;
-
-    /*
-      int seed = (int) (std::time(0)); 
-      srand(seed);
-  
-      if (max-min>0)
-      {
+  if (max-min>0)
+    {
       return rand()%((max+1) - min) + min;
-      }
-    
-      return 0;*/
-  }
+    }
+  if (max-min>0)
+    {
+      return rand()%((max+1) - min) + min;
+    }
+  return 0;
+}
 
 float 
 Shape::_getRandomNumber(float pos, float nb)
@@ -386,7 +374,7 @@ Shape::_adaptFrame()
 {
 
   int frame = random2params(lexical_cast<int>(_minStart->value),
-				 lexical_cast<int>(_maxStart->value)); 
+			    lexical_cast<int>(_maxStart->value)); 
 
   _frameStart->value = lexical_cast<int>(_frameStart->value)+frame;
   _frameEnd->value = lexical_cast<int>(_frameEnd->value)+frame;
