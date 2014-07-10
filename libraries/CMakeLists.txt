@@ -62,11 +62,11 @@ add_subdirectory (textures)
 
 # add_subdirectory (unitTest)
 
-if (GUI)
+#if (GUI)
   # the GUIS
   add_subdirectory (interface)
-  add_subdirectory (CreateSession)
-endif()
+  #add_subdirectory (CreateSession)
+#endif()
 add_executable(Rexeno main.cc )
 target_link_libraries (Rexeno configuration)
 target_link_libraries (Rexeno session)
