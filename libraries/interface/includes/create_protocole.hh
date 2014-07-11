@@ -1,24 +1,41 @@
 #ifndef CREATE_PROTOCOLE_HH_
 # define CREATE_PROTOCOLE_HH_
 
+#include <iostream>
+
 #include <QObject>
 #include <QWidget>
 #include <QLabel>
-#include <QLineEdit>
+#include <QLineEdit> 
+#include <QPushButton>
+#include <QGridLayout>
 
-class CreateProtocole : public QWidget
+#include "view.hh"
+
+class CreateProtocole : public View
 {
-  Q_OBJECT
-public: 
+private: 
 
-  QLabel *frequency;
-  QLabel *screenWidth;
-  QLabel *screenHeight;
-  QLabel *nbScreens;
-  QLabel *nbTrials;
-  QLabel *shuffle;
-  QLabel *save;
+  QGridLayout *_gridForm;
+  QPushButton *_submit;
 
+  QLabel *_frequency;
+  QLabel *_screenWidth;
+  QLabel *_screenHeight;
+  QLabel *_nbScreens;
+  QLabel *_nbTrials;
+  QLabel *_shuffle;
+  QLabel *_save;
+  
+  QLineEdit *_frequencyField;
+  QLineEdit *_screenWidthField;
+  QLineEdit *_screenHeightField;
+  QLineEdit *_nbScreensField;
+  QLineEdit *_nbTrialsField;
+  QLineEdit *_shuffleField;
+  QLineEdit *_saveField;
+   
+public:
   CreateProtocole(QWidget *parent);
   ~CreateProtocole();
 };

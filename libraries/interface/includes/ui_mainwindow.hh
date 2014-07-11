@@ -50,6 +50,9 @@ public:
   QStatusBar *statusBar;
   QPushButton *button1;
   QGridLayout *grid;
+  
+  QAction* showCreateProtocole;
+  QAction* showCreateSession;
 
   void setupUi(QMainWindow *MainWindow)
   {
@@ -67,8 +70,15 @@ public:
 
     mainToolBar = new QToolBar(MainWindow);
     mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-    mainToolBar->addAction("Nouveau protocole");
-    mainToolBar->addAction("Nouvelle session");
+    
+    showCreateProtocole = new QAction("Nouveau protocole", MainWindow);
+    showCreateProtocole->setShortcut(QKeySequence("Ctrl+N+P"));
+ 
+    showCreateSession = new QAction("Nouvelle session", MainWindow);
+    showCreateSession->setShortcut(QKeySequence("Ctrl+N+S"));  
+
+    mainToolBar->addAction(showCreateProtocole);
+    mainToolBar->addAction(showCreateSession);
     mainToolBar->addAction("Nouvelle forme");
     MainWindow->addToolBar(mainToolBar);
 
@@ -105,9 +115,9 @@ public:
   {
     MainWindow->setWindowTitle(QApplication::translate("Interface", "Interface", 0, QApplication::UnicodeUTF8));
   } // retranslateUi
-
-  void connectEvts(){
-    //    QObject::connect(button1, SIGNAL(clicked()), controller, SLOT(teest()));
+  
+  void on_showCreateProtocole_triggered(){
+    std::cout<< "helloword"<<std::endl;
   }
 };
 
