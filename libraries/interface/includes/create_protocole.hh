@@ -4,23 +4,23 @@
 #include <QObject>
 #include <QWidget>
 #include <QLabel>
+#include <QLineEdit>
+
 class CreateProtocole : public QWidget
 {
   Q_OBJECT
 public: 
+
+  QLabel *frequency;
+  QLabel *screenWidth;
+  QLabel *screenHeight;
+  QLabel *nbScreens;
+  QLabel *nbTrials;
+  QLabel *shuffle;
+  QLabel *save;
+
   CreateProtocole(QWidget *parent);
   ~CreateProtocole();
-
-  QLabel* test;
-
-  void display();
-public slots:
-  void teest(){
-    test->setText("youpi!");
-  }
-
-
-
 };
 
 #endif

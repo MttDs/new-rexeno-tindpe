@@ -17,7 +17,6 @@ void
 Controller::Init(){
   QObject::connect(_ui->button1, SIGNAL(clicked()), this, SLOT(render()));
 }
-
 void 
 Controller::render(){
 
