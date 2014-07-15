@@ -1,13 +1,13 @@
 #include "controller.hh"
 
+
 Controller::Controller(Ui::MainWindow* ui)
   :_ui(ui)
 {
   _viewWidget = _ui->contentBar;
-  _views.push_back(new Error(_viewWidget));
-  _views.push_back(new CreateProtocole(_viewWidget));
-  _views.push_back(new CreateSession(_viewWidget));
-
+  _views.push_back(new Error(_viewWidget, this));
+  _views.push_back(new CreateProtocole(_viewWidget, this));
+  _views.push_back(new CreateSession(_viewWidget, this));
 }
 
 Controller::~Controller()
@@ -29,6 +29,8 @@ Controller::Init()
   signalMapper->setMapping(_ui->showCreateProtocole, _ui->showCreateProtocole->text());
 
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
+
+  //_views[1]->setController();
 }
 void 
 Controller::_render(QString text)
@@ -63,6 +65,7 @@ Controller::_getView(QString text)
 {
   View* view = NULL;
   vector<View*>::iterator it;
+  std::cout << _views.size() << std::endl;
   for (it = _views.begin(); it != _views.end(); ++it)
     {
       std::cout << (*it)->name << std::endl;

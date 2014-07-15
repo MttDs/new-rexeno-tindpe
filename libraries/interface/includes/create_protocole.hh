@@ -36,7 +36,7 @@ private:
   QLineEdit *_saveField;
    
 public:
-  CreateProtocole(QWidget *parent);
+  CreateProtocole(QWidget *parent, Controller *c);
   ~CreateProtocole();
 };
 

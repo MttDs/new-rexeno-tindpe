@@ -9,7 +9,7 @@
 class Error : public View
 {
 public:
-  Error(QWidget *parent);
+  Error(QWidget *parent, Controller *c);
   ~Error();
 private:
   QLabel *_error;

@@ -12,7 +12,7 @@ private:
   
   QLabel *_title;
 public:
-  CreateSession(QWidget *parent);
+  CreateSession(QWidget *parent, Controller *c);
   ~CreateSession();
 };
 

@@ -33,9 +33,10 @@ public:
   Controller(Ui::MainWindow *ui);
   ~Controller();
   void Init();
-
+  void hello(){std::cout << "hello" <<std::endl;}
 private:
   View* _getView(QString text);
+
 
 private slots:
   void _render(QString text);

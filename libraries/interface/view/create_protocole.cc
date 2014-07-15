@@ -3,9 +3,8 @@
 void print(const char*str){
   std::cout << str << std::endl;
 }
-
-CreateProtocole::CreateProtocole(QWidget *parent)
-  : View(parent)
+CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
+  : View(parent, c)
 {
   name = "Nouveau protocole";
   _gridForm = new QGridLayout(this);
