@@ -14,6 +14,7 @@
 #include "create_protocole.hh"
 #include "create_session.hh"
 #include "error.hh"
+#include "parser.hh"
 
 #include <iostream>
 #include <vector>
@@ -38,6 +39,7 @@ private:
 
 private slots:
   void _render(QString text);
+  void _save();
 };
 
 #endif 

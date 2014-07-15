@@ -18,9 +18,13 @@ Controller::~Controller()
 void
 Controller::Init()
 {
+
+  QObject::connect(_ui->save, SIGNAL(triggered()), this, SLOT(_save()));
+
   QSignalMapper* signalMapper = new QSignalMapper(this);
   QObject::connect(_ui->showCreateSession, SIGNAL( triggered() ), signalMapper, SLOT(map()));
   QObject::connect(_ui->showCreateProtocole, SIGNAL( triggered() ), signalMapper, SLOT(map()));
+
   signalMapper->setMapping(_ui->showCreateSession, _ui->showCreateSession->text());
   signalMapper->setMapping(_ui->showCreateProtocole, _ui->showCreateProtocole->text());
 
@@ -74,4 +78,12 @@ Controller::_getView(QString text)
       view = false;
     }
   return view;
+}
+
+
+void
+Controller::_save()
+{
+  std::cout << "save!" << std::endl;
+
 }

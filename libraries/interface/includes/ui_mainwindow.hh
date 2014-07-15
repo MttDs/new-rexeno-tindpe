@@ -53,6 +53,7 @@ public:
   
   QAction* showCreateProtocole;
   QAction* showCreateSession;
+  QAction* save;
 
   void setupUi(QMainWindow *MainWindow)
   {
@@ -77,9 +78,14 @@ public:
     showCreateSession = new QAction("Nouvelle session", MainWindow);
     showCreateSession->setShortcut(QKeySequence("Ctrl+N+S"));  
 
+    save = new QAction("Sauvegarder", MainWindow);
+    save->setShortcut(QKeySequence("Ctrl-S"));
+
     mainToolBar->addAction(showCreateProtocole);
     mainToolBar->addAction(showCreateSession);
     mainToolBar->addAction("Nouvelle forme");
+    mainToolBar->addAction(save);
+
     MainWindow->addToolBar(mainToolBar);
 
     infosBar = new QWidget;
@@ -116,9 +122,6 @@ public:
     MainWindow->setWindowTitle(QApplication::translate("Interface", "Interface", 0, QApplication::UnicodeUTF8));
   } // retranslateUi
   
-  void on_showCreateProtocole_triggered(){
-    std::cout<< "helloword"<<std::endl;
-  }
 };
 
 namespace Ui {
