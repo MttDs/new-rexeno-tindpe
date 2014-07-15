@@ -1,6 +1,5 @@
 #include "controller.hh"
-
-
+#include "recorder.hh"
 Controller::Controller(Ui::MainWindow* ui)
   :_ui(ui)
 {
@@ -8,6 +7,11 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new Error(_viewWidget, this));
   _views.push_back(new CreateProtocole(_viewWidget, this));
   _views.push_back(new CreateSession(_viewWidget, this));
+
+  _recorder = new Recorder("../../files/", 0);
+  _recorder->AddFile("test.txt");
+
+  sessionInfo = new SessionInfo();
 }
 
 Controller::~Controller()
@@ -88,5 +92,12 @@ void
 Controller::_save()
 {
   std::cout << "save!" << std::endl;
-
+  std::cout << sessionInfo << " " << lexical_cast<string>(sessionInfo->frequency) << std::endl;
+  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "test.txt");
+   _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "test.txt");
+  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "test.txt");
+  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "test.txt");
+  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "test.txt");
+  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "test.txt");
+  _recorder->Save("save= " + sessionInfo->save, "test.txt");
 }

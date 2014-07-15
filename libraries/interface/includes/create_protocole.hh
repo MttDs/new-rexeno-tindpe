@@ -9,11 +9,12 @@
 #include <QLineEdit> 
 #include <QPushButton>
 #include <QGridLayout>
-
+#include <QtDebug>
 #include "view.hh"
 
 class CreateProtocole : public View
 {
+Q_OBJECT
 private: 
 
   QGridLayout *_gridForm;
@@ -38,6 +39,10 @@ private:
 public:
   CreateProtocole(QWidget *parent, Controller *c);
   ~CreateProtocole();
+  void Init();
+
+public slots:
+  void save();
 };
 
 #endif

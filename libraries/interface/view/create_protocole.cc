@@ -1,5 +1,5 @@
 #include "create_protocole.hh"
-
+#include "controller.hh"
 void print(const char*str){
   std::cout << str << std::endl;
 }
@@ -43,10 +43,31 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
 
   _gridForm->addWidget(_submit, 7, 0, 1, 2);
   resize(800, 500);
+
+  Init();
   // show();
 }
 
+void
+CreateProtocole::Init()
+{
+  connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+}
+
+void 
+CreateProtocole::save()
+{
+  std::cout << "save from create protocole" << std::endl;
+  _controller->sessionInfo->frequency = _frequencyField->text().toInt(); 
+  qDebug() << _frequencyField->text() ;
+  std::cout << _controller->sessionInfo->frequency << std::endl;
+  _controller->sessionInfo->width = _screenWidthField->text().toInt(); 
+  _controller->sessionInfo->height = _screenHeightField->text().toInt();
+  _controller->sessionInfo->nb_screens = _nbScreensField->text().toInt(); 
+  _controller->sessionInfo->nb_trials = _nbTrialsField->text().toInt(); 
+  _controller->sessionInfo->shuffle = _shuffleField->text().toInt(); 
+  _controller->sessionInfo->save = _saveField->text().toUtf8().constData();
+}
 CreateProtocole::~CreateProtocole()
 {
-
 }
