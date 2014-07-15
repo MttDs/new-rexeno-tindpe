@@ -22,7 +22,7 @@ Order::Order(std::string filename, configuration::SessionInfo& s)
 
   if (!_isValid())
     {
-      std::cout << "( numbers of sessions % numbers of trials ) != 0 !" << std::endl;
+      std::cout << "( numbers of sessions [" << _nbSessions <<"]  % numbers of trials ["<< _nbTrials<<"] ) != 0 !" << std::endl;
       throw;
     }
 
@@ -243,7 +243,6 @@ Order::_blockRandom()
   for (ii=0; ii<(_nbSessions/_nbTrials); ii++)
     {
       temp = block;
-      printf("%d\n", ii);
       for(jj = 0; jj<block.size(); jj++)
 	{
 	  pp = pp+1;

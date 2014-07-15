@@ -194,7 +194,6 @@ specialKey(int key){
 void 
 keyPressed(unsigned char key, int x, int y)
 {
-  std::cout << "normal => " << (int)key << std::endl;
   Setup::keys[key] = true;
   Setup::key = key;
   if (key == 27)
@@ -207,9 +206,7 @@ keyPressed(unsigned char key, int x, int y)
 void 
 keySpecialPressed(int key, int x, int y)
 {
-  std::cout << "special => " << key << std::endl;
   key = specialKey(key);
-  std::cout << "special => " << key << std::endl;
   Setup::keys[key] = true;
   Setup::key = key;
 }
@@ -244,6 +241,11 @@ reshape(int width, int height)
   (Session::getInstance()->setup)->prepareRatio();
 }
 
+
+/**
+ * Initialisation des trials
+ * Solution provisoire
+ */
 void 
 Session::initShape()
 {
@@ -289,6 +291,7 @@ Session::initShape()
 	  s->initTexture();
 	  s->initPos();
 	  s->Display(); // Load textures.
+	  s->Reset();
 	}
     }
 
@@ -359,7 +362,7 @@ Session::displayHeader()
 		glViewport(0,0,window_width/2, window_height); 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(90, ratio, 1.0f, 2000.0f); 
+		gluPerspective(90, ratio, 1.0f, 100.0f); 
 		glMatrixMode(GL_MODELVIEW);
 	      }
 	      if (loop==1)
@@ -367,7 +370,7 @@ Session::displayHeader()
 		  glViewport(window_width/2,0,window_width/2, window_height);
 		  glMatrixMode(GL_PROJECTION); 
 		  glLoadIdentity(); 
-		  gluPerspective(90, ratio, 1.0f, 2000.0f); 
+		  gluPerspective(90, ratio, 1.0f, 100.0f); 
 		  glMatrixMode(GL_MODELVIEW);
 		}
 
