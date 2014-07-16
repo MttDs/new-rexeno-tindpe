@@ -251,7 +251,6 @@ Order::_blockRandom()
   
 	  val = (rand()%((temp.size()) - min) + min);
 	  _order->Save(lexical_cast<string>((int)temp.at(val)), "order");
-	  std::cout <<pp << " => " << temp.at(val) << std::endl;
 	  temp.erase(temp.begin()+(val));
 	}
     }

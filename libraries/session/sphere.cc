@@ -294,7 +294,7 @@ Sphere::initPos()
 
   double hz =  (_session->setup)->refreshRate();
 
-  float secs = ((int) (_initFrameEnd * _gainD) - _frameStart->value)/hz;
+  float secs = ((int) (_frameEnd->value * _gainD) - _frameStart->value)/hz;
   // std::cout << secs << std::endl;
   float veloV = _gainV * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
 
@@ -325,6 +325,7 @@ Sphere::initPos()
       _z->value = randomPos+(distance/2); 
     }
   }
+  std::cout << "ramdom pos => " << randomPos << "x pos => " << _x->value << "secs => " << secs<< std::endl; 
   // std::cout << randomPos << std::endl;
 
 
