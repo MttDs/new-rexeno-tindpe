@@ -109,9 +109,10 @@ public:
     MainWindow->addToolBar(mainToolBar);
 
     infosBar = new QWidget;
+    infosBar->resize(300, 700);
     contentBar = new QWidget;
-    infosBar->setStyleSheet("border: 1px solid black; border-radius: 10px;");
-    contentBar->setStyleSheet("border: 1px solid black; border-radius: 10px;");
+    infosBar->setStyleSheet("border-right: 1px solid black;");
+    //   contentBar->setStyleSheet("border: 1px solid black; border-radius: 10px;");
     centralWidget = new QWidget(MainWindow);
 
     centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
@@ -158,7 +159,7 @@ public:
     shuffleField = new QLabel("");
     saveField = new QLabel("");
     nbSessionsField = new QLabel("0");
-
+     gridLeftBar->setHorizontalSpacing(10);
     gridLeftBar->addWidget(frequency,0,0);
     gridLeftBar->addWidget(frequencyField,0,1);
     gridLeftBar->addWidget(screenWidth,1,0);
@@ -175,6 +176,7 @@ public:
     gridLeftBar->addWidget(saveField,6,1);
     gridLeftBar->addWidget(nbSessions,7,0);
     gridLeftBar->addWidget(nbSessionsField, 7,1);
+
   }
   void retranslateUi(QMainWindow *MainWindow)
   {
