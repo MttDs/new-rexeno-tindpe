@@ -1,8 +1,6 @@
 #include "create_protocole.hh"
 #include "controller.hh"
-void print(const char*str){
-  std::cout << str << std::endl;
-}
+
 CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   : View(parent, c)
 {

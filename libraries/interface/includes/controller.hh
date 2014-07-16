@@ -39,7 +39,6 @@ private:
 
 public:
   SessionInfo* sessionInfo;
-
   Controller(Ui::MainWindow *ui);
   ~Controller();
   void Init();

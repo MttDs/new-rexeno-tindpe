@@ -65,7 +65,8 @@ public:
   QLabel *nbTrials;
   QLabel *shuffle;
   QLabel *saveLabel;
-  
+  QLabel *nbSessions;
+
   QLabel *frequencyField;
   QLabel *screenWidthField;
   QLabel *screenHeightField;
@@ -73,7 +74,7 @@ public:
   QLabel *nbTrialsField;
   QLabel *shuffleField;
   QLabel *saveField;
-
+  QLabel *nbSessionsField;
   void setupUi(QMainWindow *MainWindow)
   {
     if (MainWindow->objectName().isEmpty())
@@ -146,6 +147,8 @@ public:
     nbTrials = new QLabel("Nombre d'essai (nb_trials=)");
     shuffle = new QLabel("Ordre d'affichage des sessions (shuffle=)");
     saveLabel = new QLabel("Dossier de sauvegarde des données");
+    nbSessions = new QLabel("Nombre de sessions");
+
 
     frequencyField = new QLabel("");
     screenWidthField = new QLabel("");
@@ -154,6 +157,7 @@ public:
     nbTrialsField = new QLabel("");
     shuffleField = new QLabel("");
     saveField = new QLabel("");
+    nbSessionsField = new QLabel("0");
 
     gridLeftBar->addWidget(frequency,0,0);
     gridLeftBar->addWidget(frequencyField,0,1);
@@ -169,6 +173,8 @@ public:
     gridLeftBar->addWidget(shuffleField,5,1);
     gridLeftBar->addWidget(saveLabel,6,0);  
     gridLeftBar->addWidget(saveField,6,1);
+    gridLeftBar->addWidget(nbSessions,7,0);
+    gridLeftBar->addWidget(nbSessionsField, 7,1);
   }
   void retranslateUi(QMainWindow *MainWindow)
   {

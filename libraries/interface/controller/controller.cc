@@ -109,8 +109,9 @@ Controller::_updateLeftBar()
  _ui->screenWidthField->setText(lexical_cast<string>(sessionInfo->width).c_str());
   _ui->screenHeightField->setText(lexical_cast<string>(sessionInfo->height).c_str());
   _ui->nbScreensField->setText(lexical_cast<string>(sessionInfo->nb_screens).c_str());
- _ui-> nbTrialsField->setText(lexical_cast<string>(sessionInfo->nb_trials).c_str());
- _ui-> shuffleField->setText(lexical_cast<string>(sessionInfo->shuffle).c_str());
- _ui-> saveField->setText(lexical_cast<string>(sessionInfo->save).c_str());
-
+ _ui->nbTrialsField->setText(lexical_cast<string>(sessionInfo->nb_trials).c_str());
+ _ui->shuffleField->setText(lexical_cast<string>(sessionInfo->shuffle).c_str());
+ _ui->saveField->setText(lexical_cast<string>(sessionInfo->save).c_str());
+ _ui->nbSessionsField->setText(lexical_cast<string>(sessionInfo->trials.size()).c_str());
+ std::cout << "left bar updated" << std::endl;
 }
