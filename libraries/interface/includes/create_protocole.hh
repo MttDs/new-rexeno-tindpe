@@ -43,6 +43,10 @@ public:
 
 public slots:
   void save();
+
+signals:
+  void changeLeftBar();
+
 };
 
 #endif

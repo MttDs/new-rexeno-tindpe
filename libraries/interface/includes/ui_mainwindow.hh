@@ -48,12 +48,31 @@ public:
   QWidget *contentBar;
   QWidget *centralWidget;
   QStatusBar *statusBar;
-  QPushButton *button1;
   QGridLayout *grid;
   
   QAction* showCreateProtocole;
   QAction* showCreateSession;
   QAction* save;
+
+  // Left bar
+
+  QGridLayout *gridLeftBar;
+
+  QLabel *frequency;
+  QLabel *screenWidth;
+  QLabel *screenHeight;
+  QLabel *nbScreens;
+  QLabel *nbTrials;
+  QLabel *shuffle;
+  QLabel *saveLabel;
+  
+  QLabel *frequencyField;
+  QLabel *screenWidthField;
+  QLabel *screenHeightField;
+  QLabel *nbScreensField;
+  QLabel *nbTrialsField;
+  QLabel *shuffleField;
+  QLabel *saveField;
 
   void setupUi(QMainWindow *MainWindow)
   {
@@ -98,9 +117,6 @@ public:
     // CreateProtocole* view = new CreateProtocole(contentBar);
     //view->display();
     grid = new QGridLayout;
-    button1 = new QPushButton(infosBar);
-    button1->setText("Ici les affaires courantes...");
-
     grid->addWidget(infosBar, 0, 0, 1, 1);
     grid->addWidget(contentBar, 0, 1, 1, 3);
     
@@ -112,11 +128,48 @@ public:
     statusBar->setObjectName(QString::fromUtf8("statusBar"));
     MainWindow->setStatusBar(statusBar);
     retranslateUi(MainWindow);
- 
+    
+    InitLeftBar(infosBar);
+
     QMetaObject::connectSlotsByName(MainWindow);
 
   } // setupUi
 
+  void InitLeftBar(QWidget* infosBar)
+  {
+    gridLeftBar = new QGridLayout(infosBar);
+  
+    frequency = new QLabel("Rafraichissement de l'écran (frequency=)");
+    screenWidth = new QLabel("Largeur de l'écran (width=)");
+    screenHeight = new QLabel("Hauteur de l'écran (height=)");
+    nbScreens = new QLabel("Nombre d'écran (nb_screens=)");
+    nbTrials = new QLabel("Nombre d'essai (nb_trials=)");
+    shuffle = new QLabel("Ordre d'affichage des sessions (shuffle=)");
+    saveLabel = new QLabel("Dossier de sauvegarde des données");
+
+    frequencyField = new QLabel("");
+    screenWidthField = new QLabel("");
+    screenHeightField = new QLabel("");
+    nbScreensField = new QLabel("");
+    nbTrialsField = new QLabel("");
+    shuffleField = new QLabel("");
+    saveField = new QLabel("");
+
+    gridLeftBar->addWidget(frequency,0,0);
+    gridLeftBar->addWidget(frequencyField,0,1);
+    gridLeftBar->addWidget(screenWidth,1,0);
+    gridLeftBar->addWidget(screenWidthField,1,1);
+    gridLeftBar->addWidget(screenHeight,2,0);
+    gridLeftBar->addWidget(screenHeightField,2,1);
+    gridLeftBar->addWidget(nbScreens,3,0);
+    gridLeftBar->addWidget(nbScreensField,3,1);
+    gridLeftBar->addWidget(nbTrials,4,0);
+    gridLeftBar->addWidget(nbTrialsField,4,1);
+    gridLeftBar->addWidget(shuffle,5,0);
+    gridLeftBar->addWidget(shuffleField,5,1);
+    gridLeftBar->addWidget(saveLabel,6,0);  
+    gridLeftBar->addWidget(saveField,6,1);
+  }
   void retranslateUi(QMainWindow *MainWindow)
   {
     MainWindow->setWindowTitle(QApplication::translate("Interface", "Interface", 0, QApplication::UnicodeUTF8));

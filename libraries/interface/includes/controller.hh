@@ -48,6 +48,7 @@ public:
 private slots:
   void _render(QString text);
   void _save();
+  void _updateLeftBar();
 
 };
 

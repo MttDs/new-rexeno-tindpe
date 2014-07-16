@@ -52,6 +52,7 @@ void
 CreateProtocole::Init()
 {
   connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+  connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
 }
 
 void 
@@ -67,6 +68,8 @@ CreateProtocole::save()
   _controller->sessionInfo->nb_trials = _nbTrialsField->text().toInt(); 
   _controller->sessionInfo->shuffle = _shuffleField->text().toInt(); 
   _controller->sessionInfo->save = _saveField->text().toUtf8().constData();
+
+  emit changeLeftBar();
 }
 CreateProtocole::~CreateProtocole()
 {
