@@ -8,8 +8,7 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new CreateProtocole(_viewWidget, this));
   _views.push_back(new CreateSession(_viewWidget, this));
 
-  _recorder = new Recorder("../../files/", 0);
-  _recorder->AddFile("test.txt");
+  _recorder = NULL;
 
   sessionInfo = new SessionInfo();
 }
@@ -92,14 +91,35 @@ void
 Controller::_save()
 {
   std::cout << "save!" << std::endl;
+  _recorder = new Recorder("../../files/", 0);
+  _recorder->AddFile("test.txt");
+
   std::cout << sessionInfo << " " << lexical_cast<string>(sessionInfo->frequency) << std::endl;
   _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "test.txt");
-   _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "test.txt");
+  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "test.txt");
   _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "test.txt");
   _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "test.txt");
   _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "test.txt");
   _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "test.txt");
   _recorder->Save("save= " + sessionInfo->save, "test.txt");
+
+  TrialInfo ti;
+  foreach (ti, sessionInfo->trials)
+    {
+      _recorder->Save("| "+
+		      ti.name+" "+
+		      ti.attributes[0]+" "+
+		      ti.attributes[1]+" "+
+		      ti.attributes[2]+" "+
+		      ti.attributes[3]+" "+
+		      ti.attributes[4]+" "+
+		      ti.attributes[5]+" "+
+		      ti.attributes[6]+" "+
+		      ti.attributes[7]+" "+
+		      ti.attributes[8]
+		      , "test.txt");
+      _recorder->Save(";", "test.txt");
+    }
 }
 
 void
