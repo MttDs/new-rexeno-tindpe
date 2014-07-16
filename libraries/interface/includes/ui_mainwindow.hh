@@ -24,6 +24,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
+#include <QComboBox>
 #include <QObject>
 
 #include <iostream>
@@ -75,6 +76,9 @@ public:
   QLabel *shuffleField;
   QLabel *saveField;
   QLabel *nbSessionsField;
+ 
+  QComboBox *comboTrials;
+
   void setupUi(QMainWindow *MainWindow)
   {
     if (MainWindow->objectName().isEmpty())
@@ -150,7 +154,6 @@ public:
     saveLabel = new QLabel("Dossier de sauvegarde des données");
     nbSessions = new QLabel("Nombre de sessions");
 
-
     frequencyField = new QLabel("");
     screenWidthField = new QLabel("");
     screenHeightField = new QLabel("");
@@ -159,7 +162,7 @@ public:
     shuffleField = new QLabel("");
     saveField = new QLabel("");
     nbSessionsField = new QLabel("0");
-     gridLeftBar->setHorizontalSpacing(10);
+    gridLeftBar->setHorizontalSpacing(10);
     gridLeftBar->addWidget(frequency,0,0);
     gridLeftBar->addWidget(frequencyField,0,1);
     gridLeftBar->addWidget(screenWidth,1,0);
@@ -176,6 +179,9 @@ public:
     gridLeftBar->addWidget(saveField,6,1);
     gridLeftBar->addWidget(nbSessions,7,0);
     gridLeftBar->addWidget(nbSessionsField, 7,1);
+
+    comboTrials = new QComboBox(infosBar);
+   
 
   }
   void retranslateUi(QMainWindow *MainWindow)

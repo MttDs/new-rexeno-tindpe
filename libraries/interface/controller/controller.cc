@@ -9,7 +9,7 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new CreateSession(_viewWidget, this));
 
   _recorder = NULL;
-
+  _indexTrial = -1;
   sessionInfo = new SessionInfo();
 }
 
@@ -32,8 +32,14 @@ Controller::Init()
   signalMapper->setMapping(_ui->showCreateProtocole, _ui->showCreateProtocole->text());
 
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
+  QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
 
   //_views[1]->setController();
+}
+void 
+Controller::_changeCurrentTrial(int index){
+  _indexTrial = index;
+  emit(fillSessionForm(_indexTrial));
 }
 void 
 Controller::_render(QString text)
@@ -134,4 +140,12 @@ Controller::_updateLeftBar()
  _ui->saveField->setText(lexical_cast<string>(sessionInfo->save).c_str());
  _ui->nbSessionsField->setText(lexical_cast<string>(sessionInfo->trials.size()).c_str());
  std::cout << "left bar updated" << std::endl;
+
+
+}
+
+void
+Controller::addInComboBox(QString str)
+{
+  _ui->comboTrials->addItem(str);
 }

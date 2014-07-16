@@ -60,9 +60,27 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
 }
 
 void
+CreateSession::fillForm(int index)
+{
+  TrialInfo ti = _controller->sessionInfo->trials[index];
+ QString str;
+ _nameField->setText( str =ti.name.c_str());
+  _veloCmraXField->setText( str =ti.attributes[0].c_str());
+  _veloCmraYField->setText( str =ti.attributes[1].c_str());
+  _veloCmraZField->setText(str =ti.attributes[2].c_str());
+  _eyeXField->setText(str =ti.attributes[3].c_str());
+  _eyeYField->setText(str =ti.attributes[4].c_str());
+  _eyeZField->setText(str =ti.attributes[5].c_str());
+  _centerXField->setText(str =ti.attributes[6].c_str());
+  _centerYField->setText(str =ti.attributes[7].c_str());
+  _centerZField->setText(str =ti.attributes[8].c_str());
+
+}
+void
 CreateSession::Init()
 {
   connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+  connect(_controller, SIGNAL(fillSessionForm(int)), this, SLOT(fillForm(int)));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
 }
 
@@ -70,6 +88,8 @@ void CreateSession::save()
 {
 
   std::cout << "save from create session" << std::endl;
+  // todo if name is in trials...name 
+  // replace
   vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
   TrialInfo trial;
   trial.name = _nameField->text().toUtf8().constData();
@@ -88,6 +108,8 @@ void CreateSession::save()
   trial.attributes = attributes;
   trials->push_back(trial);
 
+  QString str = trial.name.c_str();
+  _controller->addInComboBox(str);
   emit(changeLeftBar());
 }
 CreateSession::~CreateSession(){

@@ -52,6 +52,7 @@ public:
 
 public slots:
   void save();
+  void fillForm(int index);
 
 signals:
   void changeLeftBar();

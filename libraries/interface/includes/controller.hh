@@ -36,19 +36,23 @@ private:
   Ui::MainWindow* _ui;
   Recorder* _recorder;
   View* _getView(QString text);
-
+  int _indexTrial;
 public:
   SessionInfo* sessionInfo;
   Controller(Ui::MainWindow *ui);
   ~Controller();
   void Init();
   void hello(){std::cout << "hello" <<std::endl;}
-
+  void addInComboBox(QString str);
 private slots:
   void _render(QString text);
   void _save();
   void _updateLeftBar();
+  void _changeCurrentTrial(int index);
 
+signals:
+
+  void fillSessionForm(int);
 };
 
 #endif 
