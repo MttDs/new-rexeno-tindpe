@@ -133,9 +133,9 @@ Sphere::React2input(Status& s,
 
       _logged = true;
       // name 'start' time frameStart x z angleX angleZ angleV veloX veloZ gainV gainD 
-
+      _displayStart = displayTime;
       ostr << _name 
-	   << " start " << lexical_cast<string>(displayTime) 
+	   << " start " << lexical_cast<string>(_displayStart)
 	   << " " << _frameStart->value
 	   << " " << RoundNdecimal(4, _x->value)
 	   << " " << RoundNdecimal(4, _z->value)
@@ -158,6 +158,7 @@ Sphere::React2input(Status& s,
 
       ostr << _name 
 	   << " end " << lexical_cast<string>(displayTime) 
+	   << " " << lexical_cast<string>(_displayStart+_displayPeriod)
 	   << " " << _frameEnd->value
 	   << " " << RoundNdecimal(4, _x->value)
 	   << " " << RoundNdecimal(4, _z->value)
@@ -294,15 +295,12 @@ Sphere::initPos()
 
   double hz =  (_session->setup)->refreshRate();
 
-  float secs = ((int) (_frameEnd->value * _gainD) - _frameStart->value)/hz;
-  // std::cout << secs << std::endl;
+  float secs = ((_frameEnd->value * _gainD) - _frameStart->value)/hz;
   float veloV = _gainV * sqrt((*_veloX)*(*_veloX)+(*_veloZ)*(*_veloZ));
-
 
   float distance = veloV*secs;
   // std::cout << veloV << std::endl;
   // std::cout << distance << std::endl;
-  
   float randomPos = 0.0;
 
   _adaptFrame();
@@ -325,7 +323,7 @@ Sphere::initPos()
       _z->value = randomPos+(distance/2); 
     }
   }
-  std::cout << "ramdom pos => " << randomPos << "x pos => " << _x->value << "secs => " << secs<< std::endl; 
+  // std::cout << "ramdom pos => " << randomPos << "x pos => " << _x->value << "secs => " << secs<< std::endl; 
   // std::cout << randomPos << std::endl;
 
 

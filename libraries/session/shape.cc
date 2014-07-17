@@ -158,6 +158,7 @@ Shape::React2input(Status& s,
   // Saving of shape apparition
   if ((frameId == frameStart()) && (!_logged))
     {      // name time frameId
+      _displayStart = displayTime;
       _logged = true;
       ostr << _name << " start "
 	   << lexical_cast<string>(displayTime)
@@ -171,10 +172,11 @@ Shape::React2input(Status& s,
   if ((frameId == frameEnd()) && (!_loggedEnd))
     {
       // name time frameId
+
       ostr << _name << " end " 
 	   << lexical_cast<string>(displayTime) 
-	   << " "
-	   << frameId
+	   << " " << lexical_cast<string>(_displayStart+_displayPeriod)
+	   << " " << frameId
 	   << " ";
       _session->recorder->Save(ostr.str(), "events.txt");
       _loggedEnd = true;
@@ -242,12 +244,23 @@ Shape::Reset()
   _frameEnd->value = lexical_cast<int>(value);
 
   _adaptFrame();
-
+  _setDisplayTime();
 }
 
+void
+Shape::_setDisplayTime()
+{
+  int fps = (_session->setup)->refreshRate();
+  
+  if (_frameEnd->value>=0){
+  _displayPeriod = (_frameEnd->value - _frameStart->value)/fps*1000;
+   std::cout << _displayPeriod << std::endl;
+  }
+}
 
 string
-Shape::toString(){;
+Shape::toString()
+{
   string s;
   ostringstream ostr;
   ostr << _name << ": Width "<< *_width <<" Height "<<*_height << " Pos ["<< *_x <<", "<< *_y <<"] RGB ["<<*_R<<", "<<*_G<<", "<<*_B<<"]";

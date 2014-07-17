@@ -276,7 +276,10 @@ if (curShape->Displayable(_curFrameId) && _isSubScreen())
     }
 
   _logged = true; 
+  /*if (_curFrameId > 180){
 
+	  _status[CORRECT] = true;
+	  }*/
   return (_react2status());
 }
 

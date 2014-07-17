@@ -289,7 +289,6 @@ Session::initShape()
 	    }
 
 	  s->initTexture();
-	  s->initPos();
 	  s->Display(); // Load textures.
 	  s->Reset();
 	}

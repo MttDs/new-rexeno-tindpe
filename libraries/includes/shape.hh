@@ -88,6 +88,7 @@ public:
 protected:
  
   void _adaptFrame();
+  void _setDisplayTime();
 
   bool _logged;
   bool _loggedEnd;
@@ -129,6 +130,9 @@ protected:
   Variable* _veloZ;
   Variable* _minStart;
   Variable* _maxStart;
+
+  ms _displayStart;
+  ms _displayPeriod;
 
   Trial* _father;
   Session* _session;

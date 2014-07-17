@@ -35,10 +35,10 @@ Square::Reset()
 {
   _logged = false;
   _loggedEnd = false;
+  _setDisplayTime();
   /*
   _frameStart->value = _initFrameStart;
   int value = ((float)(_initFrameEnd) * _gainD);
-
   _frameEnd->value = lexical_cast<int>(value);*/
 }
 
