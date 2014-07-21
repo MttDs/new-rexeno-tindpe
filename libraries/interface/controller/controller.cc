@@ -7,6 +7,7 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new Error(_viewWidget, this));
   _views.push_back(new CreateProtocole(_viewWidget, this));
   _views.push_back(new CreateSession(_viewWidget, this));
+  _views.push_back(new CreateShape(_viewWidget, this));
 
   _recorder = NULL;
   _indexTrial = -1;
@@ -27,9 +28,10 @@ Controller::Init()
   QSignalMapper* signalMapper = new QSignalMapper(this);
   QObject::connect(_ui->showCreateSession, SIGNAL( triggered() ), signalMapper, SLOT(map()));
   QObject::connect(_ui->showCreateProtocole, SIGNAL( triggered() ), signalMapper, SLOT(map()));
-
+ QObject::connect(_ui->showCreateShape, SIGNAL( triggered() ), signalMapper, SLOT(map()));
   signalMapper->setMapping(_ui->showCreateSession, _ui->showCreateSession->text());
   signalMapper->setMapping(_ui->showCreateProtocole, _ui->showCreateProtocole->text());
+  signalMapper->setMapping(_ui->showCreateShape, _ui->showCreateShape->text());
 
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
@@ -38,8 +40,13 @@ Controller::Init()
 }
 void 
 Controller::_changeCurrentTrial(int index){
-  _indexTrial = index;
-  emit(fillSessionForm(_indexTrial));
+  if (index==0){
+    _indexTrial = index;
+  }
+  else{
+    _indexTrial = (index-1);
+    emit(fillSessionForm(_indexTrial));
+  }
 }
 void 
 Controller::_render(QString text)
@@ -51,14 +58,12 @@ Controller::_render(QString text)
   view = _getView(text);
   QWidget* parent = _ui->contentBar;
   
- 
   if (parent!=0)
     {
       if (!view)
 	{
 	  view = _views[0];
 	}
-
       view->setParent(parent);
       view->show();
     }
@@ -92,6 +97,14 @@ Controller::_getView(QString text)
   return view;
 }
 
+bool
+Controller::trialExists()
+{
+  if (_indexTrial>0){
+    return (sessionInfo->trials.size() >= (unsigned int) _indexTrial) ? true : false;
+  }
+  return false;
+}
 
 void
 Controller::_save()
@@ -132,15 +145,14 @@ void
 Controller::_updateLeftBar()
 {
   _ui->frequencyField->setText(lexical_cast<string>(sessionInfo->frequency).c_str());
- _ui->screenWidthField->setText(lexical_cast<string>(sessionInfo->width).c_str());
+  _ui->screenWidthField->setText(lexical_cast<string>(sessionInfo->width).c_str());
   _ui->screenHeightField->setText(lexical_cast<string>(sessionInfo->height).c_str());
   _ui->nbScreensField->setText(lexical_cast<string>(sessionInfo->nb_screens).c_str());
- _ui->nbTrialsField->setText(lexical_cast<string>(sessionInfo->nb_trials).c_str());
- _ui->shuffleField->setText(lexical_cast<string>(sessionInfo->shuffle).c_str());
- _ui->saveField->setText(lexical_cast<string>(sessionInfo->save).c_str());
- _ui->nbSessionsField->setText(lexical_cast<string>(sessionInfo->trials.size()).c_str());
- std::cout << "left bar updated" << std::endl;
-
+  _ui->nbTrialsField->setText(lexical_cast<string>(sessionInfo->nb_trials).c_str());
+  _ui->shuffleField->setText(lexical_cast<string>(sessionInfo->shuffle).c_str());
+  _ui->saveField->setText(lexical_cast<string>(sessionInfo->save).c_str());
+  _ui->nbSessionsField->setText(lexical_cast<string>(sessionInfo->trials.size()).c_str());
+  std::cout << "left bar updated" << std::endl;
 
 }
 
@@ -148,4 +160,10 @@ void
 Controller::addInComboBox(QString str)
 {
   _ui->comboTrials->addItem(str);
+}
+
+void 
+Controller::updateItemText(QString text)
+{
+  _ui->comboTrials->setItemText((_indexTrial+1), text);
 }

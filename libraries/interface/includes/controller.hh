@@ -15,6 +15,7 @@
 #include "view.hh"
 #include "create_protocole.hh"
 #include "create_session.hh"
+#include "create_shape.hh"
 #include "error.hh"
 #include "parser.hh"
 #include "recorder.hh"
@@ -32,11 +33,14 @@ class Controller : public QObject
   Q_OBJECT
 private:
   QWidget *_viewWidget;
+
   vector<View*> _views;
   Ui::MainWindow* _ui;
   Recorder* _recorder;
-  View* _getView(QString text);
   int _indexTrial;
+
+  View* _getView(QString text);
+
 public:
   SessionInfo* sessionInfo;
   Controller(Ui::MainWindow *ui);
@@ -44,6 +48,9 @@ public:
   void Init();
   void hello(){std::cout << "hello" <<std::endl;}
   void addInComboBox(QString str);
+  void updateItemText(QString text);
+  bool trialExists();
+  int getIndexTrial(){return _indexTrial;}
 private slots:
   void _render(QString text);
   void _save();

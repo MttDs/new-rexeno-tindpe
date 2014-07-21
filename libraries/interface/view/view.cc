@@ -14,7 +14,6 @@ View::View(QWidget *parent, Controller *c)
   : QWidget(parent)
 {
   _controller = c;
-  _controller->hello();
 }
 
 View::~View(){

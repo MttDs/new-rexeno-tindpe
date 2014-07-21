@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QLineEdit>
 
 #include <iostream>
@@ -20,7 +22,7 @@ class CreateSession : public View
 {
 Q_OBJECT
 private:
-  QGridLayout *_gridForm;
+  QVBoxLayout *_gridForm;
   QPushButton *_submit;
 
   QLabel *_name;

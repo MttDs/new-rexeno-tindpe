@@ -26,9 +26,10 @@
 #include <QtGui/QLabel>
 #include <QComboBox>
 #include <QObject>
+#include <QVBoxLayout>
+#include <QSizePolicy>
 
 #include <iostream>
-
 #include "create_protocole.hh"
 using namespace std;
 
@@ -49,15 +50,16 @@ public:
   QWidget *contentBar;
   QWidget *centralWidget;
   QStatusBar *statusBar;
-  QGridLayout *grid;
+  QHBoxLayout *grid; /* ! */
   
   QAction* showCreateProtocole;
   QAction* showCreateSession;
+  QAction* showCreateShape;
   QAction* save;
 
   // Left bar
 
-  QGridLayout *gridLeftBar;
+  QVBoxLayout *gridLeftBar;// A RENOMMERx
 
   QLabel *frequency;
   QLabel *screenWidth;
@@ -68,6 +70,7 @@ public:
   QLabel *saveLabel;
   QLabel *nbSessions;
 
+  QLabel *comboLabel;
   QLabel *frequencyField;
   QLabel *screenWidthField;
   QLabel *screenHeightField;
@@ -83,7 +86,7 @@ public:
   {
     if (MainWindow->objectName().isEmpty())
       MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-    MainWindow->resize(1200, 800);
+    MainWindow->setFixedSize(900, 650);
 
     menuFile = new QMenu("&File");
     menuFile->addAction("Nouveau");
@@ -97,34 +100,42 @@ public:
     mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
     
     showCreateProtocole = new QAction("Nouveau protocole", MainWindow);
-    showCreateProtocole->setShortcut(QKeySequence("Ctrl+N+P"));
- 
     showCreateSession = new QAction("Nouvelle session", MainWindow);
-    showCreateSession->setShortcut(QKeySequence("Ctrl+N+S"));  
+    showCreateShape = new QAction("Ajouter une forme", MainWindow);
 
     save = new QAction("Sauvegarder", MainWindow);
     save->setShortcut(QKeySequence("Ctrl-S"));
 
     mainToolBar->addAction(showCreateProtocole);
     mainToolBar->addAction(showCreateSession);
-    mainToolBar->addAction("Nouvelle forme");
+    mainToolBar->addAction(showCreateShape);
     mainToolBar->addAction(save);
 
     MainWindow->addToolBar(mainToolBar);
 
     infosBar = new QWidget;
-    infosBar->resize(300, 700);
     contentBar = new QWidget;
     infosBar->setStyleSheet("border-right: 1px solid black;");
-    //   contentBar->setStyleSheet("border: 1px solid black; border-radius: 10px;");
+     contentBar->setStyleSheet("border-right: 1px solid black;;");
     centralWidget = new QWidget(MainWindow);
 
     centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
     // CreateProtocole* view = new CreateProtocole(contentBar);
     //view->display();
-    grid = new QGridLayout;
-    grid->addWidget(infosBar, 0, 0, 1, 1);
-    grid->addWidget(contentBar, 0, 1, 1, 3);
+
+
+    QSizePolicy spLeft(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    spLeft.setHorizontalStretch(0.5);
+    infosBar->setSizePolicy(spLeft);
+
+    QSizePolicy spRight(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    spRight.setHorizontalStretch(2.5);
+    contentBar->setSizePolicy(spRight);
+
+    grid = new QHBoxLayout;
+ 
+    grid->addWidget(infosBar);
+    grid->addWidget(contentBar);
     
     centralWidget->setLayout(grid);
 
@@ -143,16 +154,17 @@ public:
 
   void InitLeftBar(QWidget* infosBar)
   {
-    gridLeftBar = new QGridLayout(infosBar);
+    gridLeftBar = new QVBoxLayout(infosBar);
   
-    frequency = new QLabel("Rafraichissement de l'écran (frequency=)");
-    screenWidth = new QLabel("Largeur de l'écran (width=)");
-    screenHeight = new QLabel("Hauteur de l'écran (height=)");
-    nbScreens = new QLabel("Nombre d'écran (nb_screens=)");
-    nbTrials = new QLabel("Nombre d'essai (nb_trials=)");
-    shuffle = new QLabel("Ordre d'affichage des sessions (shuffle=)");
-    saveLabel = new QLabel("Dossier de sauvegarde des données");
-    nbSessions = new QLabel("Nombre de sessions");
+    comboLabel = new QLabel("Editer la session:");
+    nbSessions = new QLabel("Nombre de sessions:");
+    frequency = new QLabel("Rafraichissement de l'écran:");
+    screenWidth = new QLabel("Largeur de l'écran:");
+    screenHeight = new QLabel("Hauteur de l'écran:");
+    nbScreens = new QLabel("Nombre d'écran:");
+    nbTrials = new QLabel("Nombre d'essai:");
+    shuffle = new QLabel("Ordre d'affichage des sessions:");
+    saveLabel = new QLabel("Dossier de sauvegarde des données:");
 
     frequencyField = new QLabel("");
     screenWidthField = new QLabel("");
@@ -162,26 +174,30 @@ public:
     shuffleField = new QLabel("");
     saveField = new QLabel("");
     nbSessionsField = new QLabel("0");
-    gridLeftBar->setHorizontalSpacing(10);
-    gridLeftBar->addWidget(frequency,0,0);
-    gridLeftBar->addWidget(frequencyField,0,1);
-    gridLeftBar->addWidget(screenWidth,1,0);
-    gridLeftBar->addWidget(screenWidthField,1,1);
-    gridLeftBar->addWidget(screenHeight,2,0);
-    gridLeftBar->addWidget(screenHeightField,2,1);
-    gridLeftBar->addWidget(nbScreens,3,0);
-    gridLeftBar->addWidget(nbScreensField,3,1);
-    gridLeftBar->addWidget(nbTrials,4,0);
-    gridLeftBar->addWidget(nbTrialsField,4,1);
-    gridLeftBar->addWidget(shuffle,5,0);
-    gridLeftBar->addWidget(shuffleField,5,1);
-    gridLeftBar->addWidget(saveLabel,6,0);  
-    gridLeftBar->addWidget(saveField,6,1);
-    gridLeftBar->addWidget(nbSessions,7,0);
-    gridLeftBar->addWidget(nbSessionsField, 7,1);
 
-    comboTrials = new QComboBox(infosBar);
-   
+   comboTrials = new QComboBox;
+    comboTrials->addItem("/");
+
+    //gridLeftBar->setHorizontalSpacing(10);
+    gridLeftBar->addWidget(comboTrials);
+    gridLeftBar->addWidget(nbSessions);
+    gridLeftBar->addWidget(nbSessionsField);
+    gridLeftBar->addWidget(frequency);
+    gridLeftBar->addWidget(frequencyField);
+    gridLeftBar->addWidget(screenWidth);
+    gridLeftBar->addWidget(screenWidthField);
+    gridLeftBar->addWidget(screenHeight);
+    gridLeftBar->addWidget(screenHeightField);
+    gridLeftBar->addWidget(nbScreens);
+    gridLeftBar->addWidget(nbScreensField);
+    gridLeftBar->addWidget(nbTrials);
+    gridLeftBar->addWidget(nbTrialsField);
+    gridLeftBar->addWidget(shuffle);
+    gridLeftBar->addWidget(shuffleField);
+    gridLeftBar->addWidget(saveLabel);  
+    gridLeftBar->addWidget(saveField);
+
+ 
 
   }
   void retranslateUi(QMainWindow *MainWindow)

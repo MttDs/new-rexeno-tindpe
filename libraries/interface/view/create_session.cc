@@ -5,8 +5,7 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "Nouvelle session"; 
-
-  _gridForm = new QGridLayout(this);
+  _gridForm = new QVBoxLayout(this);
   _submit = new QPushButton("Creer une session");
   
   _name = new QLabel("Nom de la session");
@@ -30,51 +29,53 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _centerXField = new QLineEdit("");
   _centerYField = new QLineEdit("");
   _centerZField = new QLineEdit("");
+  _nameField->setMinimumWidth(250);
+  _gridForm->addWidget(_name);
+  _gridForm->addWidget(_nameField);
+  _gridForm->addWidget(_veloCameraX);
+  _gridForm->addWidget(_veloCmraXField);
+  _gridForm->addWidget(_veloCameraY);
+  _gridForm->addWidget(_veloCmraYField);
+  _gridForm->addWidget(_veloCameraZ);
+  _gridForm->addWidget(_veloCmraZField);
+  _gridForm->addWidget(_eyeX);
+  _gridForm->addWidget(_eyeXField);
+  _gridForm->addWidget(_eyeY);
+  _gridForm->addWidget(_eyeYField);
+  _gridForm->addWidget(_eyeZ);  
+  _gridForm->addWidget(_eyeZField);
+  _gridForm->addWidget(_centerX);
+  _gridForm->addWidget(_centerXField);
+  _gridForm->addWidget(_centerY);
+  _gridForm->addWidget(_centerYField);
+  _gridForm->addWidget(_centerZ);  
+  _gridForm->addWidget(_centerZField);
 
-  _gridForm->addWidget(_name,0,0);
-  _gridForm->addWidget(_nameField,0,1);
-  _gridForm->addWidget(_veloCameraX,1,0);
-  _gridForm->addWidget(_veloCmraXField,1,1);
-  _gridForm->addWidget(_veloCameraY,2,0);
-  _gridForm->addWidget(_veloCmraYField,2,1);
-  _gridForm->addWidget(_veloCameraZ,3,0);
-  _gridForm->addWidget(_veloCmraZField,3,1);
-  _gridForm->addWidget(_eyeX,4,0);
-  _gridForm->addWidget(_eyeXField,4,1);
-  _gridForm->addWidget(_eyeY,5,0);
-  _gridForm->addWidget(_eyeYField,5,1);
-  _gridForm->addWidget(_eyeZ,6,0);  
-  _gridForm->addWidget(_eyeZField,6,1);
-  _gridForm->addWidget(_centerX,7,0);
-  _gridForm->addWidget(_centerXField,7,1);
-  _gridForm->addWidget(_centerY,8,0);
-  _gridForm->addWidget(_centerYField,8,1);
-  _gridForm->addWidget(_centerZ,9,0);  
-  _gridForm->addWidget(_centerZField,9,1);
+  _gridForm->addWidget(_submit);
 
-  _gridForm->addWidget(_submit, 10, 0, 1, 2);
-  resize(800, 500);
+  _gridForm->setSpacing(2);
+
 
   Init();
-  // show();
 }
 
 void
 CreateSession::fillForm(int index)
 {
-  TrialInfo ti = _controller->sessionInfo->trials[index];
- QString str;
- _nameField->setText( str =ti.name.c_str());
-  _veloCmraXField->setText( str =ti.attributes[0].c_str());
-  _veloCmraYField->setText( str =ti.attributes[1].c_str());
-  _veloCmraZField->setText(str =ti.attributes[2].c_str());
-  _eyeXField->setText(str =ti.attributes[3].c_str());
-  _eyeYField->setText(str =ti.attributes[4].c_str());
-  _eyeZField->setText(str =ti.attributes[5].c_str());
-  _centerXField->setText(str =ti.attributes[6].c_str());
-  _centerYField->setText(str =ti.attributes[7].c_str());
-  _centerZField->setText(str =ti.attributes[8].c_str());
-
+  std::cout << index << std::endl;
+    TrialInfo ti = _controller->sessionInfo->trials[index];
+    QString str;
+    _nameField->setText( str =ti.name.c_str());
+    _veloCmraXField->setText( str =ti.attributes[0].c_str());
+    _veloCmraYField->setText( str =ti.attributes[1].c_str());
+    _veloCmraZField->setText(str =ti.attributes[2].c_str());
+    _eyeXField->setText(str =ti.attributes[3].c_str());
+    _eyeYField->setText(str =ti.attributes[4].c_str());
+    _eyeZField->setText(str =ti.attributes[5].c_str());
+    _centerXField->setText(str =ti.attributes[6].c_str());
+    _centerYField->setText(str =ti.attributes[7].c_str());
+    _centerZField->setText(str =ti.attributes[8].c_str());
+  
 }
 void
 CreateSession::Init()
@@ -88,30 +89,57 @@ void CreateSession::save()
 {
 
   std::cout << "save from create session" << std::endl;
-  // todo if name is in trials...name 
-  // replace
+
   vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
   TrialInfo trial;
+  bool b = false;
+  int indexTrial = _controller->getIndexTrial();
+
+  if (_controller->trialExists())
+    {
+      std::cout << "save from create session" << std::endl;
+
+      b = true;
+      trial = trials->at(indexTrial);
+      std::cout << "save from create session" << std::endl;
+
+    }
+  std::cout << "save from create session" << std::endl;
+
   trial.name = _nameField->text().toUtf8().constData();
 
   vector<string> attributes;
   attributes.push_back(_veloCmraXField->text().toUtf8().constData());
-    attributes.push_back(_veloCmraYField->text().toUtf8().constData());
-     attributes.push_back(_veloCmraZField->text().toUtf8().constData());
-      attributes.push_back(_eyeXField->text().toUtf8().constData());
-       attributes.push_back(_eyeYField->text().toUtf8().constData());
-   attributes.push_back(_eyeZField->text().toUtf8().constData());
+  attributes.push_back(_veloCmraYField->text().toUtf8().constData());
+  attributes.push_back(_veloCmraZField->text().toUtf8().constData());
+  attributes.push_back(_eyeXField->text().toUtf8().constData());
+  attributes.push_back(_eyeYField->text().toUtf8().constData());
+  attributes.push_back(_eyeZField->text().toUtf8().constData());
   attributes.push_back(_centerXField->text().toUtf8().constData());
   attributes.push_back(_centerYField->text().toUtf8().constData());
   attributes.push_back(_centerZField->text().toUtf8().constData());
 
   trial.attributes = attributes;
-  trials->push_back(trial);
+  std::cout << "size => " << trials->size() << std::endl;
+  if (b)
+    {
+      trials->insert(trials->begin()+(indexTrial), trial);
+      _controller->updateItemText(trial.name.c_str());
+      ;
+      std::cout << (trials->begin()+indexTrial)->name << " " << trial.name <<std::endl;
 
-  QString str = trial.name.c_str();
-  _controller->addInComboBox(str);
+      std::cout << "il existe deja "  << std::endl;
+    }
+  else
+    {
+      std::cout << "il existe pas" << std::endl;
+      trials->push_back(trial);
+           QString str = trial.name.c_str();
+         _controller->addInComboBox(str);
+    }
   emit(changeLeftBar());
 }
-CreateSession::~CreateSession(){
+CreateSession::~CreateSession()
+{
 
 }

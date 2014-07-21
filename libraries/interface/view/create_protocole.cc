@@ -7,14 +7,14 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   name = "Nouveau protocole";
   _gridForm = new QGridLayout(this);
   _submit = new QPushButton("Creer le protocole");
-  
-  _frequency = new QLabel("Rafraichissement de l'écran (frequency=)");
-  _screenWidth = new QLabel("Largeur de l'écran (width=)");
-  _screenHeight = new QLabel("Hauteur de l'écran (height=)");
-  _nbScreens = new QLabel("Nombre d'écran (nb_screens=)");
-  _nbTrials = new QLabel("Nombre d'essai (nb_trials=)");
-  _shuffle = new QLabel("Ordre d'affichage des sessions (shuffle=)");
-  _save = new QLabel("Dossier de sauvegarde des données");
+  //_gridForm->setStyleSheet("border-right: 1px solid blue;");
+  _frequency = new QLabel("Rafraichissement de l'écran:");
+  _screenWidth = new QLabel("Largeur de l'écran:");
+  _screenHeight = new QLabel("Hauteur de l'écran:");
+  _nbScreens = new QLabel("Nombre d'écran:");
+  _nbTrials = new QLabel("Nombre d'essai:");
+  _shuffle = new QLabel("Ordre d'affichage des sessions:");
+  _save = new QLabel("Emplacement de sauvegarde des données");
 
   _frequencyField = new QLineEdit("");
   _screenWidthField = new QLineEdit("");
@@ -38,10 +38,8 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   _gridForm->addWidget(_shuffleField,5,1);
   _gridForm->addWidget(_save,6,0);  
   _gridForm->addWidget(_saveField,6,1);
-
-  _gridForm->addWidget(_submit, 7, 0, 1, 2);
-  resize(800, 500);
-
+  resize(parent->size());
+   _gridForm->addWidget(_submit, 7, 0, 1, 2);
   Init();
   // show();
 }
@@ -58,8 +56,6 @@ CreateProtocole::save()
 {
   std::cout << "save from create protocole" << std::endl;
   _controller->sessionInfo->frequency = _frequencyField->text().toInt(); 
-  qDebug() << _frequencyField->text() ;
-  std::cout << _controller->sessionInfo->frequency << std::endl;
   _controller->sessionInfo->width = _screenWidthField->text().toInt(); 
   _controller->sessionInfo->height = _screenHeightField->text().toInt();
   _controller->sessionInfo->nb_screens = _nbScreensField->text().toInt(); 
