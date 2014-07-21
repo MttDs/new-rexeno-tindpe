@@ -18,17 +18,17 @@ FormSphere::FormSphere(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _veloX = new QLabel("Vitesse en X:");
   _veloZ = new QLabel("Vitesse en Y:");
 
-  _minStartField = new QLineEdit("");
-  _maxStartField = new  QLineEdit("");
-  _xField = new QLineEdit("");
-  _zField = new QLineEdit("");
-  _randomXField = new QLineEdit("");
-  _randomZField = new QLineEdit("");
+  _minStartField = new QLineEdit("0");
+  _maxStartField = new  QLineEdit("60");
+  _xField = new QLineEdit("2");
+  _zField = new QLineEdit("0");
+  _randomXField = new QLineEdit("0.2");
+  _randomZField = new QLineEdit("0");
   _stacksField = new QLineEdit("20");
   _slicesField = new QLineEdit("20");
-  _radiusField = new QLineEdit("");
-  _veloXField = new QLineEdit("");
-  _veloZField = new QLineEdit("");
+  _radiusField = new QLineEdit("0.2");
+  _veloXField = new QLineEdit("0.4");
+  _veloZField = new QLineEdit("0");
 
   _layout->addWidget(_minStart, 3,0);
   _layout->addWidget(_minStartField,3,1);
@@ -53,6 +53,8 @@ FormSphere::FormSphere(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _layout->addWidget(_veloZ,13,0);
   _layout->addWidget(_veloZField,13,1);
   _layout->addWidget(_submit,14,0,1,2);
+
+  Init();
 }
 
 FormSphere::~FormSphere()
@@ -60,9 +62,41 @@ FormSphere::~FormSphere()
 
 }
 
-void 
-FormSphere::Iniit()
-{
 
+void 
+FormSphere::Init()
+{
+  connect(_submit, SIGNAL(clicked()), this, SLOT(_save()));
 }
 
+void
+FormSphere::_save()
+{
+  if (_controller->getIndexTrial() >= 0 )
+    {
+      vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
+      TrialInfo* ti = &trials->at(_controller->getIndexTrial());
+      ShapeInfo si;
+
+      si.name =  _type->toUtf8().constData();
+      si.attributes.push_back(_nameField->text().toUtf8().constData());
+      si.attributes.push_back(_minStartField->text().toUtf8().constData());
+      si.attributes.push_back(_maxStartField->text().toUtf8().constData());
+      si.attributes.push_back(_xField->text().toUtf8().constData());
+      si.attributes.push_back(_zField->text().toUtf8().constData());
+      si.attributes.push_back(_randomXField->text().toUtf8().constData());
+      si.attributes.push_back(_randomZField->text().toUtf8().constData());
+      si.attributes.push_back(_frameStartField->text().toUtf8().constData());
+      si.attributes.push_back(_frameEndField->text().toUtf8().constData());
+      si.attributes.push_back(_stacksField->text().toUtf8().constData());
+      si.attributes.push_back(_slicesField->text().toUtf8().constData());
+      si.attributes.push_back(_radiusField->text().toUtf8().constData());
+      si.attributes.push_back(_veloXField->text().toUtf8().constData());
+      si.attributes.push_back(_veloZField->text().toUtf8().constData());
+      ti->shapes.push_back(si);
+      std::cout << "add sphere" << std::endl;
+    }
+  else{
+    std::cout << "pas de session selectionnééée" << std::endl;
+  }
+}

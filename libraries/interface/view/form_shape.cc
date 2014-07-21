@@ -15,9 +15,9 @@ FormShape::FormShape(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   _frameStart = new QLabel("Frame de départ:");
   _frameEnd = new QLabel("Frame de fin:");
 
-  _nameField = new QLineEdit("");
+  _nameField = new QLineEdit("Shape");
   _frameStartField = new QLineEdit("0");
-  _frameEndField = new QLineEdit("");
+  _frameEndField = new QLineEdit("60");
 
   _submit = new QPushButton("Enregistrer la forme");
 
@@ -32,7 +32,6 @@ FormShape::FormShape(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
 
   _parentWidget->hide();
   //resize(parent->size());
-  Init();
 }
 
 FormShape::~FormShape()
@@ -49,8 +48,4 @@ void
 FormShape::inactivate()
 {
   _parentWidget->hide();
-}
-void
-FormShape::Init()
-{
 }

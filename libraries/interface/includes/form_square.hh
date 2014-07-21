@@ -10,11 +10,12 @@
 #include <QVBoxLayout>
 class FormSquare : public FormShape
 {
+Q_OBJECT
 public:
   FormSquare(QWidget *parent, Controller *c, QVBoxLayout *parentLayout);
   ~FormSquare();
 
-  void Iniit();
+  void Init();
 protected:
 
 private:
@@ -35,5 +36,8 @@ private:
   QLineEdit *_bField;
   QLineEdit *_opacityField;
   QLineEdit *_sizeField;
+
+private slots:
+  void _save();
 };
 #endif

@@ -11,11 +11,12 @@
 
 class FormPlan : public FormShape
 {
+Q_OBJECT
 public:
   FormPlan(QWidget *parent, Controller *c, QVBoxLayout *parentLayout);
   ~FormPlan();
 
-  void Iniit();
+  void Init();
 
 private:
   QLabel *_minStart;
@@ -34,6 +35,8 @@ private:
   QLineEdit *_heightField;
   QLineEdit *_repeatField;
  
+private slots:
+  void _save();
 };
 
 #endif

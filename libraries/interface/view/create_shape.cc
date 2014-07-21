@@ -45,13 +45,9 @@ CreateShape::showFormShape(int index)
 
   std::cout << "show shape" << std::endl;
 
-  //  sf->setVisible(true);
-  // sf->show();
-   _formShapes.at(index)->activate();
+  _formShapes.at(index)->activate();
   std::cout << "current index => " << index << std::endl;
   _lastIndex = index;
-
-  // _layout->addWidget(sf, 0);
 }
 
 void

@@ -11,11 +11,12 @@
 
 class FormSphere : public FormShape
 {
+Q_OBJECT
 public:
   FormSphere(QWidget *parent, Controller *c, QVBoxLayout *parentLayout);
   ~FormSphere();
 
-  void Iniit();
+  void Init();
 protected:
 
 private:
@@ -43,7 +44,7 @@ private:
   QLineEdit *_veloXField;
   QLineEdit *_veloZField;
 
-
-
+private slots:
+  void _save();
 };
 #endif

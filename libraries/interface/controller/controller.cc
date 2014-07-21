@@ -123,6 +123,10 @@ Controller::_save()
   _recorder->Save("save= " + sessionInfo->save, "test.txt");
 
   TrialInfo ti;
+  ShapeInfo si;
+  vector<string>::iterator it;
+  bool first;
+  string str = "";
   foreach (ti, sessionInfo->trials)
     {
       _recorder->Save("| "+
@@ -137,6 +141,24 @@ Controller::_save()
 		      ti.attributes[7]+" "+
 		      ti.attributes[8]
 		      , "test.txt");
+      foreach (si, ti.shapes)
+	{
+	  first = true;
+	  str = "";
+	  for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
+	    {
+	      if (first)
+		{
+		  first = false;
+		  str += "> "+ si.name + " " + (*it);
+		}
+	      else
+		{
+		  str += " " + (*it) + " ";
+		}
+	    }
+	  _recorder->Save(str, "test.txt");
+	}
       _recorder->Save(";", "test.txt");
     }
 }

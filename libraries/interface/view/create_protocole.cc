@@ -16,12 +16,12 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   _shuffle = new QLabel("Ordre d'affichage des sessions:");
   _save = new QLabel("Emplacement de sauvegarde des données");
 
-  _frequencyField = new QLineEdit("");
-  _screenWidthField = new QLineEdit("");
-  _screenHeightField = new QLineEdit("");
-  _nbScreensField = new QLineEdit("");
-  _nbTrialsField = new QLineEdit("");
-  _shuffleField = new QLineEdit("");
+  _frequencyField = new QLineEdit("60");
+  _screenWidthField = new QLineEdit("1920");
+  _screenHeightField = new QLineEdit("1080");
+  _nbScreensField = new QLineEdit("1");
+  _nbTrialsField = new QLineEdit("20");
+  _shuffleField = new QLineEdit("1");
   _saveField = new QLineEdit("");
 
   _gridForm->addWidget(_frequency,0,0);

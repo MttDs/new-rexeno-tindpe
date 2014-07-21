@@ -45,8 +45,8 @@ public:
   SessionInfo* sessionInfo;
   Controller(Ui::MainWindow *ui);
   ~Controller();
+
   void Init();
-  void hello(){std::cout << "hello" <<std::endl;}
   void addInComboBox(QString str);
   void updateItemText(QString text);
   bool trialExists();

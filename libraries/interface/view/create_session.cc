@@ -19,16 +19,16 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _centerY = new QLabel("Direction de la camera en Y");
   _centerZ = new QLabel("Direction de la camera en Z"); 
   
-  _nameField = new QLineEdit("");
-  _veloCmraXField = new QLineEdit("");
-  _veloCmraYField = new QLineEdit("");
-  _veloCmraZField = new QLineEdit("");
-  _eyeXField = new QLineEdit("");
-  _eyeYField = new QLineEdit("");
-  _eyeZField = new QLineEdit("");
-  _centerXField = new QLineEdit("");
-  _centerYField = new QLineEdit("");
-  _centerZField = new QLineEdit("");
+  _nameField = new QLineEdit("Session1");
+  _veloCmraXField = new QLineEdit("0");
+  _veloCmraYField = new QLineEdit("0");
+  _veloCmraZField = new QLineEdit("0");
+  _eyeXField = new QLineEdit("0");
+  _eyeYField = new QLineEdit("1");
+  _eyeZField = new QLineEdit("1.8");
+  _centerXField = new QLineEdit("0");
+  _centerYField = new QLineEdit("0");
+  _centerZField = new QLineEdit("0");
   _nameField->setMinimumWidth(250);
   _gridForm->addWidget(_name);
   _gridForm->addWidget(_nameField);
