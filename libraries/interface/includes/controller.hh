@@ -19,6 +19,7 @@
 #include "error.hh"
 #include "parser.hh"
 #include "recorder.hh"
+#include "model.hh"
 
 #include <iostream>
 #include <vector>
@@ -35,11 +36,11 @@ private:
   QWidget *_viewWidget;
 
   vector<View*> _views;
-  Ui::MainWindow* _ui;
-  Recorder* _recorder;
+  Ui::MainWindow *_ui;
   int _indexTrial;
-
-  View* _getView(QString text);
+  
+  Model *_model;
+  View *_getView(QString text);
 
 public:
   SessionInfo* sessionInfo;
@@ -53,7 +54,7 @@ public:
   int getIndexTrial(){return _indexTrial;}
 private slots:
   void _render(QString text);
-  void _save();
+  //  void _save();
   void _updateLeftBar();
   void _changeCurrentTrial(int index);
 

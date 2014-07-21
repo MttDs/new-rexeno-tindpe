@@ -1,78 +1,69 @@
-#include "parser.hh"
 #include "model.hh"
-#include <iostream>
-#include <fstream>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
 
-Model::Model()
+Model::Model(SessionInfo *si)
+{
+  sessionInfo = new SessionInfo();
+  _recorder = new Recorder("../../files/", 0);
+}
+
+Model::~Model()
 {
 
 }
 
 void
-Model::setTrialName(const string& trialName)
+Model::save()
 {
-  _trialName = trialName;
-}
+  std::cout << "save!" << std::endl;
+  _recorder->AddFile("test.txt");
 
-void
-Model::addShape2Trial(const string& shape)
-{
-  _availableShapes.push_back(shape);
-}
+  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "test.txt");
+  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "test.txt");
+  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "test.txt");
+  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "test.txt");
+  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "test.txt");
+  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "test.txt");
+  _recorder->Save("save= " + sessionInfo->save, "test.txt");
 
-void
-Model::fillAvailableShapes(const string& confDir)
-{
-  string sLine;
-  ifstream infile;
-  infile.open ((confDir + "/shape_prototypes").c_str());
-  string previousLine="";
-  std::vector<std::string> strs;
-  std::vector<std::string>::iterator it;
- 
-  while (!infile.eof())
-  {
-    getline(infile, sLine);
-    boost::split(strs, sLine, boost::is_any_of("\t "));
-    _availableShapes.push_back(strs[0]);
-    cout << strs[0] << endl;
-    vector<string>::const_iterator first = strs.begin() + 1;
-    vector<string>::const_iterator last = strs.end();
-    shapePrototypes[strs[0]] = vector<string>(first, last);
-  }  
-  infile.close();
-  for (it = strs.begin(); it != strs.end(); ++it)
-  {
-    
-
-  }
-}
-
-void
-Model::fillAlreadyExistingTrials(const string& confDir)
-{
-  namespace fs = boost::filesystem;
-  fs::path someDir(confDir + "/trial_types/");
-  fs::directory_iterator end_iter;
-
-  cout << confDir << endl;
-  //typedef std::multimap<std::time_t, fs::path> result_set_t;
-  //result_set_t result_set;
-
-  if ( fs::exists(someDir) && fs::is_directory(someDir))
-  {
-    for( fs::directory_iterator dir_iter(someDir) ; dir_iter != end_iter ; ++dir_iter)
+  TrialInfo ti;
+  ShapeInfo si;
+  vector<string>::iterator it;
+  bool first;
+  string str = "";
+  foreach (ti, sessionInfo->trials)
     {
-      if (fs::is_regular_file(dir_iter->status()) )
-      {
-        //result_set.insert(result_set_t::value_type(fs::last_write_time(dir_iter->status()), *dir_iter));
-        _availableTrials.push_back((*dir_iter).path().filename().string());
-        //cout << (*dir_iter).path().filename().string() << endl;
-      }
+      _recorder->Save("| "+
+		      ti.name+" "+
+		      ti.attributes[0]+" "+
+		      ti.attributes[1]+" "+
+		      ti.attributes[2]+" "+
+		      ti.attributes[3]+" "+
+		      ti.attributes[4]+" "+
+		      ti.attributes[5]+" "+
+		      ti.attributes[6]+" "+
+		      ti.attributes[7]+" "+
+		      ti.attributes[8]
+		      , "test.txt");
+      foreach (si, ti.shapes)
+	{
+	  first = true;
+	  str = "";
+	  for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
+	    {
+	      if (first)
+		{
+		  first = false;
+		  str += "> "+ si.name + " " + (*it);
+		}
+	      else
+		{
+		  str += " " + (*it) + " ";
+		}
+	    }
+	  _recorder->Save(str, "test.txt");
+	}
+      _recorder->Save(";", "test.txt");
     }
-  }
 }
 

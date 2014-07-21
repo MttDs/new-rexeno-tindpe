@@ -1,18 +1,34 @@
 #ifndef MODEL_HH_
 # define MODEL_HH_
 
-# include <vector>
-# include <string>
-# include <set>
+#include <vector>
 
-class Model
+#include <boost/lexical_cast.hpp>
+
+#include "parser.hh"
+#include "recorder.hh"
+#include <QObject>
+
+
+using namespace configuration;
+using namespace boost; 
+
+class Model : public QObject
 {
-
+Q_OBJECT
 public:
 
-  Model();
+  Model(SessionInfo *si);
   ~Model();
   
+  SessionInfo *sessionInfo;
+
+private:
+  Recorder *_recorder;
+
+public slots:
+  void save();
+/*
   void fillAlreadyExistingTrials(const std::string& confFile);
 
   void fillAvailableShapes(const std::string& confFile);
@@ -31,7 +47,7 @@ private:
  std::string _trialName;
   std::vector<std::string> _availableTrials;
   std::vector<std::string> _availableShapes;
-  std::set<std::string> _trialsInSession;
+  std::set<std::string> _trialsInSession;*/
 
 };
 

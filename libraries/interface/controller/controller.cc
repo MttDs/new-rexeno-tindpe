@@ -1,5 +1,4 @@
 #include "controller.hh"
-#include "recorder.hh"
 Controller::Controller(Ui::MainWindow* ui)
   :_ui(ui)
 {
@@ -9,9 +8,8 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new CreateSession(_viewWidget, this));
   _views.push_back(new CreateShape(_viewWidget, this));
 
-  _recorder = NULL;
   _indexTrial = -1;
-  sessionInfo = new SessionInfo();
+  _model = new Model();
 }
 
 Controller::~Controller()
@@ -23,7 +21,7 @@ void
 Controller::Init()
 {
 
-  QObject::connect(_ui->save, SIGNAL(triggered()), this, SLOT(_save()));
+  QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(save()));
 
   QSignalMapper* signalMapper = new QSignalMapper(this);
   QObject::connect(_ui->showCreateSession, SIGNAL( triggered() ), signalMapper, SLOT(map()));
@@ -35,8 +33,6 @@ Controller::Init()
 
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
-
-  //_views[1]->setController();
 }
 void 
 Controller::_changeCurrentTrial(int index){
@@ -104,63 +100,6 @@ Controller::trialExists()
     return (sessionInfo->trials.size() >= (unsigned int) _indexTrial) ? true : false;
   }
   return false;
-}
-
-void
-Controller::_save()
-{
-  std::cout << "save!" << std::endl;
-  _recorder = new Recorder("../../files/", 0);
-  _recorder->AddFile("test.txt");
-
-  std::cout << sessionInfo << " " << lexical_cast<string>(sessionInfo->frequency) << std::endl;
-  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "test.txt");
-  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "test.txt");
-  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "test.txt");
-  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "test.txt");
-  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "test.txt");
-  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "test.txt");
-  _recorder->Save("save= " + sessionInfo->save, "test.txt");
-
-  TrialInfo ti;
-  ShapeInfo si;
-  vector<string>::iterator it;
-  bool first;
-  string str = "";
-  foreach (ti, sessionInfo->trials)
-    {
-      _recorder->Save("| "+
-		      ti.name+" "+
-		      ti.attributes[0]+" "+
-		      ti.attributes[1]+" "+
-		      ti.attributes[2]+" "+
-		      ti.attributes[3]+" "+
-		      ti.attributes[4]+" "+
-		      ti.attributes[5]+" "+
-		      ti.attributes[6]+" "+
-		      ti.attributes[7]+" "+
-		      ti.attributes[8]
-		      , "test.txt");
-      foreach (si, ti.shapes)
-	{
-	  first = true;
-	  str = "";
-	  for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
-	    {
-	      if (first)
-		{
-		  first = false;
-		  str += "> "+ si.name + " " + (*it);
-		}
-	      else
-		{
-		  str += " " + (*it) + " ";
-		}
-	    }
-	  _recorder->Save(str, "test.txt");
-	}
-      _recorder->Save(";", "test.txt");
-    }
 }
 
 void

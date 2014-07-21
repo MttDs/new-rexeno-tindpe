@@ -63,18 +63,18 @@ void
 CreateSession::fillForm(int index)
 {
   std::cout << index << std::endl;
-    TrialInfo ti = _controller->sessionInfo->trials[index];
-    QString str;
-    _nameField->setText( str =ti.name.c_str());
-    _veloCmraXField->setText( str =ti.attributes[0].c_str());
-    _veloCmraYField->setText( str =ti.attributes[1].c_str());
-    _veloCmraZField->setText(str =ti.attributes[2].c_str());
-    _eyeXField->setText(str =ti.attributes[3].c_str());
-    _eyeYField->setText(str =ti.attributes[4].c_str());
-    _eyeZField->setText(str =ti.attributes[5].c_str());
-    _centerXField->setText(str =ti.attributes[6].c_str());
-    _centerYField->setText(str =ti.attributes[7].c_str());
-    _centerZField->setText(str =ti.attributes[8].c_str());
+  TrialInfo ti = _controller->sessionInfo->trials[index];
+  QString str;
+  _nameField->setText( str =ti.name.c_str());
+  _veloCmraXField->setText( str =ti.attributes[0].c_str());
+  _veloCmraYField->setText( str =ti.attributes[1].c_str());
+  _veloCmraZField->setText(str =ti.attributes[2].c_str());
+  _eyeXField->setText(str =ti.attributes[3].c_str());
+  _eyeYField->setText(str =ti.attributes[4].c_str());
+  _eyeZField->setText(str =ti.attributes[5].c_str());
+  _centerXField->setText(str =ti.attributes[6].c_str());
+  _centerYField->setText(str =ti.attributes[7].c_str());
+  _centerZField->setText(str =ti.attributes[8].c_str());
   
 }
 void
@@ -134,8 +134,8 @@ void CreateSession::save()
     {
       std::cout << "il existe pas" << std::endl;
       trials->push_back(trial);
-           QString str = trial.name.c_str();
-         _controller->addInComboBox(str);
+      QString str = trial.name.c_str();
+      _controller->addInComboBox(str);
     }
   emit(changeLeftBar());
 }
