@@ -254,7 +254,7 @@ Shape::_setDisplayTime()
   
   if (_frameEnd->value>=0){
   _displayPeriod = (_frameEnd->value - _frameStart->value)/fps*1000;
-   std::cout << _displayPeriod << std::endl;
+  // std::cout << _displayPeriod << std::endl;
   }
 }
 
@@ -374,12 +374,13 @@ Shape::updateDuration(double coef)
 void
 Shape::_adaptFrame()
 {
-
+  if (_frameEnd->value>=0){
   int frame = random2params(lexical_cast<int>(_minStart->value),
 			    lexical_cast<int>(_maxStart->value)); 
 
   _frameStart->value = lexical_cast<int>(_frameStart->value)+frame;
   _frameEnd->value = lexical_cast<int>(_frameEnd->value)+frame;
+  }
 }
 
 /**
