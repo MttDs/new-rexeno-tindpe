@@ -9,7 +9,8 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new CreateShape(_viewWidget, this));
 
   _indexTrial = -1;
-  _model = new Model();
+  sessionInfo = new SessionInfo();
+  _model = new Model(sessionInfo);
 }
 
 Controller::~Controller()
@@ -37,12 +38,15 @@ Controller::Init()
 void 
 Controller::_changeCurrentTrial(int index){
   if (index==0){
-    _indexTrial = index;
+    _indexTrial = -1;
   }
   else{
     _indexTrial = (index-1);
-    emit(fillSessionForm(_indexTrial));
+     emit(fillSessionForm(_indexTrial));
   }
+
+  std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
+
 }
 void 
 Controller::_render(QString text)
@@ -96,7 +100,7 @@ Controller::_getView(QString text)
 bool
 Controller::trialExists()
 {
-  if (_indexTrial>0){
+  if (_indexTrial>=0){
     return (sessionInfo->trials.size() >= (unsigned int) _indexTrial) ? true : false;
   }
   return false;

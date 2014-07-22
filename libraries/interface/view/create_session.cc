@@ -63,6 +63,8 @@ void
 CreateSession::fillForm(int index)
 {
   std::cout << index << std::endl;
+  if (index>=0)
+    {
   TrialInfo ti = _controller->sessionInfo->trials[index];
   QString str;
   _nameField->setText( str =ti.name.c_str());
@@ -75,7 +77,7 @@ CreateSession::fillForm(int index)
   _centerXField->setText(str =ti.attributes[6].c_str());
   _centerYField->setText(str =ti.attributes[7].c_str());
   _centerZField->setText(str =ti.attributes[8].c_str());
-  
+    }
 }
 void
 CreateSession::Init()
@@ -88,7 +90,7 @@ CreateSession::Init()
 void CreateSession::save()
 {
 
-  std::cout << "save from create session" << std::endl;
+      std::cout << "save from create session" << std::endl;
 
   vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
   TrialInfo trial;
@@ -97,14 +99,11 @@ void CreateSession::save()
 
   if (_controller->trialExists())
     {
-      std::cout << "save from create session" << std::endl;
 
       b = true;
       trial = trials->at(indexTrial);
-      std::cout << "save from create session" << std::endl;
 
     }
-  std::cout << "save from create session" << std::endl;
 
   trial.name = _nameField->text().toUtf8().constData();
 
@@ -120,14 +119,13 @@ void CreateSession::save()
   attributes.push_back(_centerZField->text().toUtf8().constData());
 
   trial.attributes = attributes;
-  std::cout << "size => " << trials->size() << std::endl;
   if (b)
     {
-      trials->insert(trials->begin()+(indexTrial), trial);
+      trials->at(indexTrial)= trial;
       _controller->updateItemText(trial.name.c_str());
-      ;
+      
       std::cout << (trials->begin()+indexTrial)->name << " " << trial.name <<std::endl;
-
+      std::cout << "index trial (from create_session)" << indexTrial << std::endl;
       std::cout << "il existe deja "  << std::endl;
     }
   else

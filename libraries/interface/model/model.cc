@@ -3,8 +3,8 @@
 
 Model::Model(SessionInfo *si)
 {
-  sessionInfo = new SessionInfo();
-  _recorder = new Recorder("../../files/", 0);
+  sessionInfo = si;
+  _recorder = NULL;
 }
 
 Model::~Model()
@@ -15,6 +15,8 @@ Model::~Model()
 void
 Model::save()
 {
+
+  _recorder = new Recorder("../../files/", 0);
   std::cout << "save!" << std::endl;
   _recorder->AddFile("test.txt");
 
