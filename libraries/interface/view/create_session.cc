@@ -109,13 +109,13 @@ CreateSession::fillForm(int index)
 void CreateSession::_save()
 {
 
-      std::cout << "save from create session" << std::endl;
+  std::cout << "save from create session " << std::endl;
 
   vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
   TrialInfo trial;
   bool b = false;
   int indexTrial = _controller->getIndexTrial();
-
+  std::cout << indexTrial << std::endl;
   if (_controller->trialExists())
     {
 

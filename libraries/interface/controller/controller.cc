@@ -40,7 +40,7 @@ Controller::_init()
   QSignalMapper* signalMapper = new QSignalMapper(this);
   QObject::connect(_ui->showCreateSession, SIGNAL( triggered() ), signalMapper, SLOT(map()));
   QObject::connect(_ui->showCreateProtocole, SIGNAL( triggered() ), signalMapper, SLOT(map()));
- QObject::connect(_ui->showCreateShape, SIGNAL( triggered() ), signalMapper, SLOT(map()));
+  QObject::connect(_ui->showCreateShape, SIGNAL( triggered() ), signalMapper, SLOT(map()));
   signalMapper->setMapping(_ui->showCreateSession, _ui->showCreateSession->text());
   signalMapper->setMapping(_ui->showCreateProtocole, _ui->showCreateProtocole->text());
   signalMapper->setMapping(_ui->showCreateShape, _ui->showCreateShape->text());
@@ -160,6 +160,10 @@ Controller::_updateLeftBar()
   _ui->nbSessionsField->setText(lexical_cast<string>(sessionInfo->trials.size()).c_str());
   std::cout << "left bar updated" << std::endl;
 
+  //Reset view
+
+  _ui->comboTrials->setCurrentIndex(0);
+  _changeCurrentTrial(0);
 }
 /**
    @str: nom de la session:
