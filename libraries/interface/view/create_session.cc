@@ -4,9 +4,9 @@
 CreateSession::CreateSession(QWidget *parent, Controller *c)
   : View(parent, c)
 {
-  name = "Nouvelle session"; 
+  name = "Session"; 
   _gridForm = new QVBoxLayout(this);
-  _submit = new QPushButton("Creer une session");
+  _submit = new QPushButton("Session");
   
   _name = new QLabel("Nom de la session");
   _veloCameraX = new QLabel("Vitesse de la camera en X");

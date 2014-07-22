@@ -99,9 +99,9 @@ public:
     mainToolBar = new QToolBar(MainWindow);
     mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
     
-    showCreateProtocole = new QAction("Nouveau protocole", MainWindow);
-    showCreateSession = new QAction("Nouvelle session", MainWindow);
-    showCreateShape = new QAction("Ajouter une forme", MainWindow);
+    showCreateProtocole = new QAction("Protocole", MainWindow);
+    showCreateSession = new QAction("Session", MainWindow);
+    showCreateShape = new QAction("Formes", MainWindow);
 
     save = new QAction("Sauvegarder", MainWindow);
     save->setShortcut(QKeySequence("Ctrl-S"));

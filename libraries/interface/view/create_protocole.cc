@@ -4,7 +4,7 @@
 CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   : View(parent, c)
 {
-  name = "Nouveau protocole";
+  name = "Protocole";
   _gridForm = new QGridLayout(this);
   _submit = new QPushButton("Creer le protocole");
   //_gridForm->setStyleSheet("border-right: 1px solid blue;");
