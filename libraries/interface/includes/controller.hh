@@ -33,8 +33,6 @@ class Controller : public QObject
 {
   Q_OBJECT
 private:
-  QWidget *_viewWidget;
-
   vector<View*> _views;
   Ui::MainWindow *_ui;
   int _indexTrial;

@@ -2,13 +2,13 @@
 Controller::Controller(Ui::MainWindow* ui)
   :_ui(ui)
 {
-  _viewWidget = _ui->contentBar;
-  _views.push_back(new Error(_viewWidget, this));
-  _views.push_back(new CreateProtocole(_viewWidget, this));
-  _views.push_back(new CreateSession(_viewWidget, this));
-  _views.push_back(new CreateShape(_viewWidget, this));
-
   _indexTrial = -1;
+
+  _views.push_back(new Error(_ui->mainWidget, this));
+  _views.push_back(new CreateProtocole(_ui->mainWidget, this));
+  _views.push_back(new CreateSession(_ui->mainWidget, this));
+  _views.push_back(new CreateShape(_ui->mainWidget, this));
+
   sessionInfo = new SessionInfo();
   _model = new Model(sessionInfo);
 }
@@ -35,6 +35,9 @@ Controller::Init()
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
 }
+
+
+
 void 
 Controller::_changeCurrentTrial(int index){
   if (index==0){
@@ -56,7 +59,7 @@ Controller::_render(QString text)
   std::cout << "name => " << name << std::endl;
   View *view = NULL;
   view = _getView(text);
-  QWidget* parent = _ui->contentBar;
+  QWidget* parent = _ui->mainWidget;
   
   if (parent!=0)
     {

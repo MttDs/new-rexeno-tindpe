@@ -46,11 +46,11 @@ public:
  
   QMenuBar *menuBar;
   QToolBar *mainToolBar;
-  QWidget *infosBar;
-  QWidget *contentBar;
+  QWidget *leftWidget;
+  QWidget *mainWidget;
   QWidget *centralWidget;
   QStatusBar *statusBar;
-  QHBoxLayout *grid; /* ! */
+  QHBoxLayout *layout;
   
   QAction* showCreateProtocole;
   QAction* showCreateSession;
@@ -59,7 +59,7 @@ public:
 
   // Left bar
 
-  QVBoxLayout *gridLeftBar;// A RENOMMERx
+  QVBoxLayout *leftWidgetLayout;
 
   QLabel *frequency;
   QLabel *screenWidth;
@@ -113,31 +113,28 @@ public:
 
     MainWindow->addToolBar(mainToolBar);
 
-    infosBar = new QWidget;
-    contentBar = new QWidget;
-    infosBar->setStyleSheet("border-right: 1px solid black;");
-     contentBar->setStyleSheet("border-right: 1px solid black;;");
+    leftWidget = new QWidget;
+    mainWidget = new QWidget;
+    leftWidget->setStyleSheet("border-right: 1px solid black;");
+    mainWidget->setStyleSheet("border-right: 1px solid black;;");
     centralWidget = new QWidget(MainWindow);
 
     centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-    // CreateProtocole* view = new CreateProtocole(contentBar);
-    //view->display();
-
-
+ 
     QSizePolicy spLeft(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spLeft.setHorizontalStretch(0.5);
-    infosBar->setSizePolicy(spLeft);
+    leftWidget->setSizePolicy(spLeft);
 
     QSizePolicy spRight(QSizePolicy::Preferred, QSizePolicy::Preferred);
     spRight.setHorizontalStretch(2.5);
-    contentBar->setSizePolicy(spRight);
+    mainWidget->setSizePolicy(spRight);
 
-    grid = new QHBoxLayout;
+    layout = new QHBoxLayout;
  
-    grid->addWidget(infosBar);
-    grid->addWidget(contentBar);
+    layout->addWidget(leftWidget);
+    layout->addWidget(mainWidget);
     
-    centralWidget->setLayout(grid);
+    centralWidget->setLayout(layout);
 
     MainWindow->setCentralWidget(centralWidget);
     
@@ -146,15 +143,15 @@ public:
     MainWindow->setStatusBar(statusBar);
     retranslateUi(MainWindow);
     
-    InitLeftBar(infosBar);
+    InitLeftBar(leftWidget);
 
     QMetaObject::connectSlotsByName(MainWindow);
 
   } // setupUi
 
-  void InitLeftBar(QWidget* infosBar)
+  void InitLeftBar(QWidget* leftWidget)
   {
-    gridLeftBar = new QVBoxLayout(infosBar);
+    leftWidgetLayout = new QVBoxLayout(leftWidget);
   
     comboLabel = new QLabel("Editer la session:");
     nbSessions = new QLabel("Nombre de sessions:");
@@ -175,29 +172,27 @@ public:
     saveField = new QLabel("");
     nbSessionsField = new QLabel("0");
 
-   comboTrials = new QComboBox;
+    comboTrials = new QComboBox;
     comboTrials->addItem("/");
 
-    //gridLeftBar->setHorizontalSpacing(10);
-    gridLeftBar->addWidget(comboTrials);
-    gridLeftBar->addWidget(nbSessions);
-    gridLeftBar->addWidget(nbSessionsField);
-    gridLeftBar->addWidget(frequency);
-    gridLeftBar->addWidget(frequencyField);
-    gridLeftBar->addWidget(screenWidth);
-    gridLeftBar->addWidget(screenWidthField);
-    gridLeftBar->addWidget(screenHeight);
-    gridLeftBar->addWidget(screenHeightField);
-    gridLeftBar->addWidget(nbScreens);
-    gridLeftBar->addWidget(nbScreensField);
-    gridLeftBar->addWidget(nbTrials);
-    gridLeftBar->addWidget(nbTrialsField);
-    gridLeftBar->addWidget(shuffle);
-    gridLeftBar->addWidget(shuffleField);
-    gridLeftBar->addWidget(saveLabel);  
-    gridLeftBar->addWidget(saveField);
-
- 
+    leftWidgetLayout->addWidget(new QLabel("Les sessions:"));
+    leftWidgetLayout->addWidget(comboTrials);
+    leftWidgetLayout->addWidget(nbSessions);
+    leftWidgetLayout->addWidget(nbSessionsField);
+    leftWidgetLayout->addWidget(frequency);
+    leftWidgetLayout->addWidget(frequencyField);
+    leftWidgetLayout->addWidget(screenWidth);
+    leftWidgetLayout->addWidget(screenWidthField);
+    leftWidgetLayout->addWidget(screenHeight);
+    leftWidgetLayout->addWidget(screenHeightField);
+    leftWidgetLayout->addWidget(nbScreens);
+    leftWidgetLayout->addWidget(nbScreensField);
+    leftWidgetLayout->addWidget(nbTrials);
+    leftWidgetLayout->addWidget(nbTrialsField);
+    leftWidgetLayout->addWidget(shuffle);
+    leftWidgetLayout->addWidget(shuffleField);
+    leftWidgetLayout->addWidget(saveLabel);  
+    leftWidgetLayout->addWidget(saveField);
 
   }
   void retranslateUi(QMainWindow *MainWindow)
