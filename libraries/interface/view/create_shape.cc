@@ -33,7 +33,9 @@ CreateShape::~CreateShape()
 {
 
 }
-
+/**
+   note: initialise les evenements relatifs a la vue
+ **/
 void
 CreateShape::Init()
 {
@@ -41,7 +43,12 @@ CreateShape::Init()
   QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(hideFormShape(int)));
   QObject::connect(_comboShapesEdit, SIGNAL(activated(int)), this, SLOT(fillFormShape(int)));
 }
+/**
+   @index: indice du formulaire demande
 
+   note: affiche le formuaire et met a jour
+   le dernier index
+ **/
 void
 CreateShape::showFormShape(int index)
 {
@@ -56,6 +63,12 @@ CreateShape::showFormShape(int index)
   _lastIndex = index;
 }
 
+/**
+   @index: indice du formulaire demande (non utilise)
+
+   note: cache le dernier formulaire (_lastIndex)
+   
+ **/
 void
 CreateShape::hideFormShape(int index)
 {
@@ -68,6 +81,12 @@ CreateShape::hideFormShape(int index)
       std::cout << "last => " << _lastIndex << " current => " << index << std::endl;
     }
 }
+/**
+   note: charge les formes disponible  de l'essai selectionne
+   (_getCurrentTrial()) apres avoir remii a zero la liste des 
+   formes (pour mise a jour) (_comboShapeEdit).
+   
+ **/
 void
 CreateShape::loadComboShapesEdit()
 {
@@ -94,7 +113,9 @@ CreateShape::loadComboShapesEdit()
 	}
     }
 }
-
+/**
+   note: retourne l'essai  selectionne.
+ **/
 TrialInfo* 
 CreateShape::_getCurrentTrial()
 {
@@ -104,7 +125,9 @@ CreateShape::_getCurrentTrial()
     }
   return NULL;
 }
-
+/** 
+    note: todo
+**/
 void
 CreateShape::fillFormShape(int index)
 {

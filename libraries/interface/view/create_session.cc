@@ -59,6 +59,23 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   Init();
 }
 
+/**
+   note: initialise les evenements relatifs a la vue
+ **/
+void
+CreateSession::Init()
+{
+  connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+  connect(_controller, SIGNAL(fillSessionForm(int)), this, SLOT(fillForm(int)));
+  connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
+}
+
+/**
+   @index: indice de l'essai 
+  
+   note: recupere l'essai a l'indice "index"
+   et rempli le formulaire de la session
+ **/
 void
 CreateSession::fillForm(int index)
 {
@@ -79,14 +96,14 @@ CreateSession::fillForm(int index)
   _centerZField->setText(str =ti.attributes[8].c_str());
     }
 }
-void
-CreateSession::Init()
-{
-  connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
-  connect(_controller, SIGNAL(fillSessionForm(int)), this, SLOT(fillForm(int)));
-  connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
-}
-
+/**
+   note: Sauvegarde l'essai dans le vecteur de "trials"
+   si l'essai n'existe pas on l'ajoute a la fin du 
+   vecteur 
+   sinon on remplace l'essai
+   La meme chose est effectuee pour mettre a jour la liste
+   des sessions disponibles (comboTrials)
+ **/
 void CreateSession::save()
 {
 

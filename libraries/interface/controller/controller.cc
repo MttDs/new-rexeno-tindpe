@@ -1,4 +1,11 @@
 #include "controller.hh"
+
+/**
+   @ui: template de la fenetre
+
+   note: Creation des vues et mise en place de celles-ci 
+   dans un vector.
+**/
 Controller::Controller(Ui::MainWindow* ui)
   :_ui(ui)
 {
@@ -15,9 +22,14 @@ Controller::Controller(Ui::MainWindow* ui)
 
 Controller::~Controller()
 {
-  // delete _createProtocole;
+   delete _model;
+   delete sessionInfo;
 }
 
+/**
+   note: Connexion des differentes routes et 
+   evenements relevant de la template
+ **/
 void
 Controller::Init()
 {
@@ -36,8 +48,14 @@ Controller::Init()
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
 }
 
+/**
+   @index: Numero du champs dans la liste "comboTrials"
 
-
+   note: On retire 1 a l'index pour ne pas prendre en
+   compte de signe "/" (premier element)
+   Si l'index est != de 0 alors, on rempli le formulaire
+   de la session a l'index (_indexTrial)
+**/
 void 
 Controller::_changeCurrentTrial(int index){
   if (index==0){
@@ -51,6 +69,13 @@ Controller::_changeCurrentTrial(int index){
   std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
 
 }
+
+/**
+   @text:  Libelle de l'action (toolbar)
+
+   note: La vue doit porter le meme nom que 
+   l'action cliquee
+ **/
 void 
 Controller::_render(QString text)
 {
@@ -77,6 +102,12 @@ Controller::_render(QString text)
  
 }
 
+/**
+   @text: Libelle de l'action (toolbar)
+
+   note: retourne la vue correspondant au
+   libelle
+ **/
 View*
 Controller::_getView(QString text)
 {
@@ -100,6 +131,10 @@ Controller::_getView(QString text)
   return view;
 }
 
+/**
+   note: verifie si _indexTrial est un index
+   valide du vecteur "trials"
+**/
 bool
 Controller::trialExists()
 {
@@ -108,7 +143,9 @@ Controller::trialExists()
   }
   return false;
 }
-
+/**
+   note: mise a jour de la bar de gauche
+ **/
 void
 Controller::_updateLeftBar()
 {
@@ -123,15 +160,27 @@ Controller::_updateLeftBar()
   std::cout << "left bar updated" << std::endl;
 
 }
-
+/**
+   @str: nom de la session:
+   
+   note: ajoute dans la liste des sessions 
+   une nouvelle session
+ **/
 void
 Controller::addInComboBox(QString str)
 {
   _ui->comboTrials->addItem(str);
 }
 
+/**
+   @str: nom de la session
+
+   note: replace dans la liste des sessions
+   la session modifiee (+1 pour prendre en 
+   compte le "/" (premier element)
+**/
 void 
-Controller::updateItemText(QString text)
+Controller::updateItemText(QString str)
 {
-  _ui->comboTrials->setItemText((_indexTrial+1), text);
+  _ui->comboTrials->setItemText((_indexTrial+1), str);
 }

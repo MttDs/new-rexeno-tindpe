@@ -39,18 +39,27 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   _gridForm->addWidget(_save,6,0);  
   _gridForm->addWidget(_saveField,6,1);
   resize(parent->size());
-   _gridForm->addWidget(_submit, 7, 0, 1, 2);
+  _gridForm->addWidget(_submit, 7, 0, 1, 2);
+   
   Init();
   // show();
 }
-
+/**
+   note: initialisation des evenements relatifs a
+   la vue
+**/
 void
 CreateProtocole::Init()
 {
   connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
 }
-
+/**
+   note: sauvegarde les donnees dans la structure
+   sessionInfo
+   Envoie un signal afin de mettre a jour la bar de
+   gauche
+**/
 void 
 CreateProtocole::save()
 {
@@ -65,6 +74,8 @@ CreateProtocole::save()
 
   emit changeLeftBar();
 }
+
+
 CreateProtocole::~CreateProtocole()
 {
 }
