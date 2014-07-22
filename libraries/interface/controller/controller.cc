@@ -167,7 +167,7 @@ Controller::_updateLeftBar()
    une nouvelle session
  **/
 void
-Controller::addInComboBox(QString str)
+Controller::addItem(QString str)
 {
   _ui->comboTrials->addItem(str);
 }
@@ -180,7 +180,18 @@ Controller::addInComboBox(QString str)
    compte le "/" (premier element)
 **/
 void 
-Controller::updateItemText(QString str)
+Controller::updateItem(QString str)
 {
   _ui->comboTrials->setItemText((_indexTrial+1), str);
+}
+
+
+/**
+   note: supprime l'item a l'indice "_indexTrial+1"
+**/
+
+void
+Controller::deleteItem()
+{
+  _ui->comboTrials->removeItem(_indexTrial+1);
 }

@@ -46,8 +46,11 @@ public:
   ~Controller();
 
   void Init();
-  void addInComboBox(QString str);
-  void updateItemText(QString text);
+
+  void addItem(QString str);
+  void updateItem(QString str);
+  void deleteItem();
+
   bool trialExists();
   int getIndexTrial(){return _indexTrial;}
 private slots:

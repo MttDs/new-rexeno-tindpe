@@ -46,14 +46,19 @@ private:
   QLineEdit *_centerXField;
   QLineEdit *_centerYField;
   QLineEdit *_centerZField;
+
+  QPushButton *_deleteSession;
+
 public:
   CreateSession(QWidget *parent, Controller *c);
   ~CreateSession();
 
   void Init();
 
-public slots:
+private slots:
   void save();
+  void _delete();
+public slots:
   void fillForm(int index);
 
 signals:

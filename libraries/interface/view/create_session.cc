@@ -6,7 +6,7 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
 {
   name = "Session"; 
   _gridForm = new QVBoxLayout(this);
-  _submit = new QPushButton("Session");
+  _submit = new QPushButton("Creer/Modifier la session");
   
   _name = new QLabel("Nom de la session");
   _veloCameraX = new QLabel("Vitesse de la camera en X");
@@ -18,7 +18,8 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _centerX = new QLabel("Direction de la camera en X");
   _centerY = new QLabel("Direction de la camera en Y");
   _centerZ = new QLabel("Direction de la camera en Z"); 
-  
+  _deleteSession = new QPushButton("Supprimer cette session");
+
   _nameField = new QLineEdit("Session1");
   _veloCmraXField = new QLineEdit("0");
   _veloCmraYField = new QLineEdit("0");
@@ -29,6 +30,7 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _centerXField = new QLineEdit("0");
   _centerYField = new QLineEdit("0");
   _centerZField = new QLineEdit("0");
+
   _nameField->setMinimumWidth(250);
   _gridForm->addWidget(_name);
   _gridForm->addWidget(_nameField);
@@ -50,8 +52,8 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _gridForm->addWidget(_centerYField);
   _gridForm->addWidget(_centerZ);  
   _gridForm->addWidget(_centerZField);
-
   _gridForm->addWidget(_submit);
+  _gridForm->addWidget(_deleteSession);
 
   _gridForm->setSpacing(2);
 
@@ -66,6 +68,7 @@ void
 CreateSession::Init()
 {
   connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+  connect(_deleteSession, SIGNAL(clicked()), this, SLOT(_delete()));
   connect(_controller, SIGNAL(fillSessionForm(int)), this, SLOT(fillForm(int)));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
 }
@@ -139,7 +142,7 @@ void CreateSession::save()
   if (b)
     {
       trials->at(indexTrial)= trial;
-      _controller->updateItemText(trial.name.c_str());
+      _controller->updateItem(trial.name.c_str());
       
       std::cout << (trials->begin()+indexTrial)->name << " " << trial.name <<std::endl;
       std::cout << "index trial (from create_session)" << indexTrial << std::endl;
@@ -150,9 +153,48 @@ void CreateSession::save()
       std::cout << "il existe pas" << std::endl;
       trials->push_back(trial);
       QString str = trial.name.c_str();
-      _controller->addInComboBox(str);
+      _controller->addItem(str);
     }
   emit(changeLeftBar());
+}
+
+
+/**
+   note: supprimer ou remet a zero (todo) la session
+ **/
+void
+CreateSession::_delete()
+{
+  if (_controller->trialExists())
+    {
+
+      int indexTrial = _controller->getIndexTrial();
+      int nbOfTrial = _controller->sessionInfo->trials.size();
+      std::cout << "suppression du trial! "<< nbOfTrial << std::endl;
+      vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
+      TrialInfo* ti = &(_controller->sessionInfo->trials.at(indexTrial));
+      TrialInfo* lastTi = &(_controller->sessionInfo->trials.back());
+      if (nbOfTrial==1 || ti==lastTi )
+	{
+	  std::cout << 1 << std::endl;
+	  trials->erase(trials->begin()+indexTrial);
+	}	  
+      else
+	{
+	  
+	  trials->at(indexTrial)= trials->back();
+	  trials->erase(trials->end()-1);
+	  std::cout << 2 << std::endl;
+	  ti = lastTi;
+	  ti = NULL;
+	}
+      _controller->deleteItem();
+      emit(changeLeftBar());
+    }
+  else
+    {
+      std::cout << "theoriquement, je dois remettre a zero ici... " << std::endl;
+    }
 }
 CreateSession::~CreateSession()
 {
