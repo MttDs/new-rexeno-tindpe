@@ -26,7 +26,7 @@ private:
   QLabel *_nbScreens;
   QLabel *_nbTrials;
   QLabel *_shuffle;
-  QLabel *_save;
+  QLabel *_savePath;
   
   QLineEdit *_frequencyField;
   QLineEdit *_screenWidthField;
@@ -34,15 +34,17 @@ private:
   QLineEdit *_nbScreensField;
   QLineEdit *_nbTrialsField;
   QLineEdit *_shuffleField;
-  QLineEdit *_saveField;
+  QLineEdit *_savePathField;
    
 public:
   CreateProtocole(QWidget *parent, Controller *c);
   ~CreateProtocole();
-  void Init();
 
-public slots:
-  void save();
+private:
+  void _init();
+
+private slots:
+  void _save();
 
 signals:
   void changeLeftBar();

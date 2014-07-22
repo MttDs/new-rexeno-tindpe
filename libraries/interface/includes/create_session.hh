@@ -53,11 +53,12 @@ public:
   CreateSession(QWidget *parent, Controller *c);
   ~CreateSession();
 
-  void Init();
+  void _init();
 
 private slots:
-  void save();
+  void _save();
   void _delete();
+
 public slots:
   void fillForm(int index);
 

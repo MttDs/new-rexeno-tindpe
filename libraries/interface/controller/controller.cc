@@ -18,6 +18,7 @@ Controller::Controller(Ui::MainWindow* ui)
 
   sessionInfo = new SessionInfo();
   _model = new Model(sessionInfo);
+  _init();
 }
 
 Controller::~Controller()
@@ -31,7 +32,7 @@ Controller::~Controller()
    evenements relevant de la template
  **/
 void
-Controller::Init()
+Controller::_init()
 {
 
   QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(save()));

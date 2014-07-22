@@ -6,6 +6,7 @@
 #include "form_sphere.hh"
 #include "form_square.hh"
 #include "form_plan.hh"
+#include "parser.hh"
 
 #include <QWidget>
 #include <QLabel>
@@ -18,26 +19,33 @@
 #include <string.h>
 
 using namespace std;
-
+using namespace configuration;
 class CreateShape : public View
 {
 Q_OBJECT
 private:
   QComboBox *_comboShapes;
+  QComboBox *_comboShapesEdit;
+
   QVBoxLayout *_layout;
- 
   vector<FormShape*> _formShapes;
- 
   int _lastIndex;
+
+  TrialInfo* _getCurrentTrial();
+
 public:
   CreateShape(QWidget *parent, Controller *c);
   ~CreateShape();
   
+private:
+  void _init();
 
-  void Init();
+private slots:
+  void _showFormShape(int index);
+  void _hideFormShape(int index);
 
 public slots:
-  void showFormShape(int index);
-  void hideFormShape(int index);
+  void fillFormShape(int index);
+  void loadComboShapesEdit();
 };
 #endif

@@ -5,6 +5,8 @@ CreateShape::CreateShape(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "Formes";
+  _lastIndex = -1;
+
   _layout = new QVBoxLayout(this);
 
   _comboShapes = new QComboBox;
@@ -24,9 +26,8 @@ CreateShape::CreateShape(QWidget *parent, Controller *c)
   _formShapes.push_back(new FormSphere(this, c, _layout));
   _formShapes.push_back(new FormSquare(this, c, _layout));
   resize(parent->size());
-  Init();
+  _init();
 
-  _lastIndex = -1;
 }
 
 CreateShape::~CreateShape()
@@ -37,10 +38,10 @@ CreateShape::~CreateShape()
    note: initialise les evenements relatifs a la vue
  **/
 void
-CreateShape::Init()
+CreateShape::_init()
 {
-  QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(showFormShape(int)));
-  QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(hideFormShape(int)));
+  QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_showFormShape(int)));
+  QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(_hideFormShape(int)));
   QObject::connect(_comboShapesEdit, SIGNAL(activated(int)), this, SLOT(fillFormShape(int)));
 }
 /**
@@ -50,7 +51,7 @@ CreateShape::Init()
    le dernier index
  **/
 void
-CreateShape::showFormShape(int index)
+CreateShape::_showFormShape(int index)
 {
   FormShape *sf = NULL; 
   index = index-1;
@@ -70,7 +71,7 @@ CreateShape::showFormShape(int index)
    
  **/
 void
-CreateShape::hideFormShape(int index)
+CreateShape::_hideFormShape(int index)
 {
   if (_lastIndex>=0)
     {
@@ -135,8 +136,8 @@ CreateShape::fillFormShape(int index)
   TrialInfo* si = _getCurrentTrial();
   if (si!=NULL)
     {
-          hideFormShape(_lastIndex);
-          showFormShape(index);
+      //        _hideFormShape(_lastIndex);
+      //        _showFormShape(index);
     }
 }
 

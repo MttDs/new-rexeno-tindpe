@@ -10,8 +10,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Ui::MainWindow* ui = w.getUi();
-    Controller* c = new Controller(ui);
-    c->Init();
+    Controller* c = NULL;
+    c = new Controller(ui);
 
     return a.exec();
 }

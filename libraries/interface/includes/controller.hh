@@ -45,22 +45,22 @@ public:
   Controller(Ui::MainWindow *ui);
   ~Controller();
 
-  void Init();
-
   void addItem(QString str);
   void updateItem(QString str);
   void deleteItem();
 
   bool trialExists();
   int getIndexTrial(){return _indexTrial;}
+
+private:
+  void _init();
+
 private slots:
   void _render(QString text);
-  //  void _save();
   void _updateLeftBar();
   void _changeCurrentTrial(int index);
 
 signals:
-
   void fillSessionForm(int);
 };
 

@@ -56,18 +56,17 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _gridForm->addWidget(_deleteSession);
 
   _gridForm->setSpacing(2);
-
-
-  Init();
+  resize(parent->size());
+  _init();
 }
 
 /**
    note: initialise les evenements relatifs a la vue
  **/
 void
-CreateSession::Init()
+CreateSession::_init()
 {
-  connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+  connect(_submit, SIGNAL(clicked()), this, SLOT(_save()));
   connect(_deleteSession, SIGNAL(clicked()), this, SLOT(_delete()));
   connect(_controller, SIGNAL(fillSessionForm(int)), this, SLOT(fillForm(int)));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
@@ -107,7 +106,7 @@ CreateSession::fillForm(int index)
    La meme chose est effectuee pour mettre a jour la liste
    des sessions disponibles (comboTrials)
  **/
-void CreateSession::save()
+void CreateSession::_save()
 {
 
       std::cout << "save from create session" << std::endl;
@@ -160,7 +159,7 @@ void CreateSession::save()
 
 
 /**
-   note: supprimer ou remet a zero (todo) la session
+   note: supprime ou remet a zero (todo) la session
  **/
 void
 CreateSession::_delete()

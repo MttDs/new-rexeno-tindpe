@@ -14,7 +14,7 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   _nbScreens = new QLabel("Nombre d'écran:");
   _nbTrials = new QLabel("Nombre d'essai:");
   _shuffle = new QLabel("Ordre d'affichage des sessions:");
-  _save = new QLabel("Emplacement de sauvegarde des données");
+  _savePath = new QLabel("Emplacement de sauvegarde des données");
 
   _frequencyField = new QLineEdit("60");
   _screenWidthField = new QLineEdit("1920");
@@ -22,7 +22,7 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   _nbScreensField = new QLineEdit("1");
   _nbTrialsField = new QLineEdit("20");
   _shuffleField = new QLineEdit("1");
-  _saveField = new QLineEdit("");
+  _savePathField = new QLineEdit("");
 
   _gridForm->addWidget(_frequency,0,0);
   _gridForm->addWidget(_frequencyField,0,1);
@@ -36,22 +36,22 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
   _gridForm->addWidget(_nbTrialsField,4,1);
   _gridForm->addWidget(_shuffle,5,0);
   _gridForm->addWidget(_shuffleField,5,1);
-  _gridForm->addWidget(_save,6,0);  
-  _gridForm->addWidget(_saveField,6,1);
-  resize(parent->size());
+  _gridForm->addWidget(_savePath,6,0);  
+  _gridForm->addWidget(_savePathField,6,1);
+
   _gridForm->addWidget(_submit, 7, 0, 1, 2);
    
-  Init();
-  // show();
+  resize(parent->size());
+  _init();
 }
 /**
    note: initialisation des evenements relatifs a
    la vue
 **/
 void
-CreateProtocole::Init()
+CreateProtocole::_init()
 {
-  connect(_submit, SIGNAL(clicked()), this, SLOT(save()));
+  connect(_submit, SIGNAL(clicked()), this, SLOT(_save()));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
 }
 /**
@@ -61,7 +61,7 @@ CreateProtocole::Init()
    gauche
 **/
 void 
-CreateProtocole::save()
+CreateProtocole::_save()
 {
   std::cout << "save from create protocole" << std::endl;
   _controller->sessionInfo->frequency = _frequencyField->text().toInt(); 
@@ -70,7 +70,7 @@ CreateProtocole::save()
   _controller->sessionInfo->nb_screens = _nbScreensField->text().toInt(); 
   _controller->sessionInfo->nb_trials = _nbTrialsField->text().toInt(); 
   _controller->sessionInfo->shuffle = _shuffleField->text().toInt(); 
-  _controller->sessionInfo->save = _saveField->text().toUtf8().constData();
+  _controller->sessionInfo->save = _savePathField->text().toUtf8().constData();
 
   emit changeLeftBar();
 }
