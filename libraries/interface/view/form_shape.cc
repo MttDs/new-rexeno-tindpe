@@ -22,13 +22,6 @@ FormShape::FormShape(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
 
   _submit = new QPushButton("Enregistrer la forme");
 
-  _layout->addWidget(_name,0,0);
-  _layout->addWidget(_nameField,0,1);
-  _layout->addWidget(_frameStart,1,0);
-  _layout->addWidget(_frameStartField,1,1) ;
-  _layout->addWidget(_frameEnd,2,0);
-  _layout->addWidget(_frameEndField,2,1);
-
   _parentLayout->addWidget(_parentWidget);
 
   _parentWidget->hide();

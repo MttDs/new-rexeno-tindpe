@@ -18,6 +18,7 @@ public:
 
   void Init();
   void fillForm(ShapeInfo* si, int index);
+  void reset();
 private:
   QLabel *_minStart;
   QLabel *_maxStart;

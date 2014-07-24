@@ -53,6 +53,8 @@ public:
   CreateSession(QWidget *parent, Controller *c);
   ~CreateSession();
 
+  void reset();
+private:
   void _init();
 
 private slots:

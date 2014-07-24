@@ -17,7 +17,6 @@ FormPlan::FormPlan(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   _nameField->setText("Plan");
   _frameStartField->setText("0");
   _frameEndField->setText("-1");
-
   _minStartField = new QLineEdit("0");
   _maxStartField = new QLineEdit("0");
   _xField = new QLineEdit("0");
@@ -26,14 +25,21 @@ FormPlan::FormPlan(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   _heightField = new QLineEdit("80");
   _repeatField = new QLineEdit("80");
 
-  _layout->addWidget(_minStart,3,0);
-  _layout->addWidget(_minStartField,3,1);
-  _layout->addWidget(_maxStart,4,0);
-  _layout->addWidget(_maxStartField,4,1);
-  _layout->addWidget(_x,5,0);
-  _layout->addWidget(_xField,5,1);
-  _layout->addWidget(_y,6,0);
-  _layout->addWidget(_yField,6,1);
+
+  _layout->addWidget(_name,0,0);
+  _layout->addWidget(_nameField,0,1);
+  _layout->addWidget(_minStart,1,0);
+  _layout->addWidget(_minStartField,1,1);
+  _layout->addWidget(_maxStart,2,0);
+  _layout->addWidget(_maxStartField,2,1);
+  _layout->addWidget(_x,3,0);
+  _layout->addWidget(_xField,3,1);
+  _layout->addWidget(_y,4,0);
+  _layout->addWidget(_yField,4,1);
+  _layout->addWidget(_frameStart,5,0);
+  _layout->addWidget(_frameStartField,5,1) ;
+  _layout->addWidget(_frameEnd,6,0);
+  _layout->addWidget(_frameEndField,6,1);
   _layout->addWidget(_width,7,0);
   _layout->addWidget(_widthField,7,1);
   _layout->addWidget(_height,8,0);
@@ -90,6 +96,7 @@ FormPlan::_save()
 	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
 	}
+      reset();
       FormShape::_save();
     }
   else{
@@ -112,4 +119,19 @@ FormPlan::fillForm(ShapeInfo* si, int index)
   _widthField->setText(str = si->attributes[7].c_str());
   _heightField->setText(str = si->attributes[8].c_str());
   _repeatField->setText(str = si->attributes[9].c_str());
+}
+
+void
+FormPlan::reset()
+{
+  _nameField->setText("Fixation");
+  _minStartField->setText("0");
+  _maxStartField->setText("0");
+  _xField->setText("0");
+  _yField->setText("0");
+  _frameStartField->setText("0");
+  _frameEndField->setText("-1");
+  _widthField->setText("40");
+  _heightField->setText("80");
+  _repeatField->setText("80");
 }

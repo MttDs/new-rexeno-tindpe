@@ -20,7 +20,7 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
   _centerZ = new QLabel("Direction de la camera en Z"); 
   _deleteSession = new QPushButton("Supprimer cette session");
 
-  _nameField = new QLineEdit("Session1");
+  _nameField = new QLineEdit("");
   _veloCmraXField = new QLineEdit("0");
   _veloCmraYField = new QLineEdit("0");
   _veloCmraZField = new QLineEdit("0");
@@ -154,6 +154,7 @@ void CreateSession::_save()
       QString str = trial.name.c_str();
       _controller->addItem(str);
     }
+  reset();
   emit(changeLeftBar());
 }
 
@@ -186,8 +187,10 @@ CreateSession::_delete()
 	  std::cout << 2 << std::endl;
 	  ti = lastTi;
 	  ti = NULL;
+	  
 	}
       _controller->deleteItem();
+      reset();
       emit(changeLeftBar());
     }
   else
@@ -195,6 +198,22 @@ CreateSession::_delete()
       std::cout << "theoriquement, je dois remettre a zero ici... " << std::endl;
     }
 }
+
+void
+CreateSession::reset()
+{
+  _nameField->setText("");
+  _veloCmraXField->setText("0");
+  _veloCmraYField->setText("0");
+  _veloCmraZField->setText("0");
+  _eyeXField->setText("0");
+  _eyeYField->setText("1");
+  _eyeZField->setText("1.8");
+  _centerXField->setText("0");
+  _centerYField->setText("0");
+  _centerZField->setText("0");
+}
+
 CreateSession::~CreateSession()
 {
 

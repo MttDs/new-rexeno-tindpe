@@ -24,12 +24,18 @@ FormSquare::FormSquare(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _opacityField = new QLineEdit("0.5");
   _sizeField = new QLineEdit("0.2");
 
-  _layout->addWidget(_x,3,0);
-  _layout->addWidget(_xField,3,1);
-  _layout->addWidget(_y,4,0);
-  _layout->addWidget(_yField,4,1);
-  _layout->addWidget(_z,5,0);
-  _layout->addWidget(_zField,5,1);
+  _layout->addWidget(_name,0,0);
+  _layout->addWidget(_nameField,0,1);
+  _layout->addWidget(_x,1,0);
+  _layout->addWidget(_xField,1,1);
+  _layout->addWidget(_y,2,0);
+  _layout->addWidget(_yField,2,1);
+  _layout->addWidget(_z,3,0);
+  _layout->addWidget(_zField,3,1);
+  _layout->addWidget(_frameStart,4,0);
+  _layout->addWidget(_frameStartField,4,1) ;
+  _layout->addWidget(_frameEnd,5,0);
+  _layout->addWidget(_frameEndField,5,1);
   _layout->addWidget(_r,6,0);
   _layout->addWidget(_rField,6,1);
   _layout->addWidget(_g,7,0);
@@ -90,7 +96,7 @@ FormSquare::_save()
 	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
 	}
-
+      reset();
       FormShape::_save();
     }
   else{
@@ -115,4 +121,21 @@ FormSquare::fillForm(ShapeInfo* si, int index)
   _bField->setText(str = si->attributes[8].c_str());
   _opacityField->setText(str = si->attributes[9].c_str());
   _sizeField->setText(str = si->attributes[10].c_str());
+}
+
+void
+FormSquare::reset()
+{  
+  _nameField->setText("Plan");
+  _xField->setText("0");
+  _yField->setText("0");
+  _zField->setText("-5");
+  _frameStartField->setText("0");
+  _frameEndField->setText("-1");
+  _rField->setText("255");
+  _gField->setText("255");
+  _bField->setText("0");
+  _opacityField->setText("0.5");
+  _sizeField->setText("0.2");
+
 }

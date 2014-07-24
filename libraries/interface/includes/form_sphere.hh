@@ -21,6 +21,7 @@ public:
 
   void Init();
   void fillForm(ShapeInfo* si, int index);
+  void reset();
 
 protected:
 
