@@ -59,7 +59,7 @@ FormSphere::FormSphere(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _layout->addWidget(_veloZ,13,0);
   _layout->addWidget(_veloZField,13,1);
   _layout->addWidget(_submit,14,0,1,2);
-
+  _layout->addWidget(_buttonDelete,15,0,1,2);
   Init();
 }
 
@@ -105,7 +105,6 @@ FormSphere::_save()
 	{
 	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
-	  _index=-1;
 	}
       else
 	{
@@ -116,7 +115,7 @@ FormSphere::_save()
       FormShape::_save();
     }
   else{
-    std::cout << "pas de session selectionnééée" << std::endl;
+    QMessageBox::information(0, tr("Information"), "Impossible, pas de session selectionnée.");
   }
 }
 
@@ -141,6 +140,7 @@ FormSphere::fillForm(ShapeInfo* si, int index)
   _veloXField->setText(str =(si->attributes[12].c_str()));
   _veloZField->setText(str =(si->attributes[13].c_str()));
 
+  _buttonDelete->show();
 }
 
 void 
@@ -160,5 +160,8 @@ FormSphere::reset()
   _radiusField->setText("0.2");
   _veloXField->setText("0");
   _veloZField->setText("0");
+
+  _buttonDelete->hide();
+  _index = -1;
 }
   

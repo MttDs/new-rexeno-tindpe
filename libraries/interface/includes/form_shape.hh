@@ -14,6 +14,7 @@
 #include <QGridLayout>
 #include <QString>
 #include <QPushButton>
+#include <QMessageBox>
 
 using namespace configuration;
 using namespace std;
@@ -31,9 +32,11 @@ public:
   virtual void fillForm(ShapeInfo* si, int index)=0;
   string getName(){ return _nameField->text().toUtf8().constData();}
   string getType(){ return _type->toUtf8().constData();}
+  virtual void reset() = 0;
 protected:
-  int _index;
-
+  int _index; // Form
+  int _posShape; 
+  
   QGridLayout *_layout;
   QVBoxLayout *_parentLayout;
   QWidget *_parentWidget;
@@ -49,8 +52,10 @@ protected:
   QLineEdit *_frameEndField;
 
   QPushButton *_submit;
-
+  QPushButton *_buttonDelete;
   virtual void _save();
+private slots:
+  void _deleteShape();
 signals:
   void afterSave();
 };

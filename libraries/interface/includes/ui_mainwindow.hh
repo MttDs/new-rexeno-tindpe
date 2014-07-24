@@ -87,7 +87,7 @@ public:
   {
     if (MainWindow->objectName().isEmpty())
       MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-    MainWindow->setFixedSize(900, 650);
+    MainWindow->setFixedSize(900, 700);
 
     loadFile = new QAction("Ouvrir", MainWindow);
 

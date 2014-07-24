@@ -47,6 +47,7 @@ FormSquare::FormSquare(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _layout->addWidget(_size,10,0);
   _layout->addWidget(_sizeField,10,1);
   _layout->addWidget(_submit,11,0,1,2);
+  _layout->addWidget(_buttonDelete,12,0,1,2);
 
   Init();
 }
@@ -89,7 +90,6 @@ FormSquare::_save()
 	{
 	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
-	  _index=-1;
 	}
       else
 	{
@@ -100,7 +100,7 @@ FormSquare::_save()
       FormShape::_save();
     }
   else{
-    std::cout << "pas de session selectionnééée" << std::endl;
+    QMessageBox::information(0, tr("Information"), "Impossible, pas de session selectionnée.");
   }
 }
 
@@ -121,12 +121,14 @@ FormSquare::fillForm(ShapeInfo* si, int index)
   _bField->setText(str = si->attributes[8].c_str());
   _opacityField->setText(str = si->attributes[9].c_str());
   _sizeField->setText(str = si->attributes[10].c_str());
+
+  _buttonDelete->show();
 }
 
 void
 FormSquare::reset()
 {  
-  _nameField->setText("Plan");
+  _nameField->setText("Fixation");
   _xField->setText("0");
   _yField->setText("0");
   _zField->setText("-5");
@@ -138,4 +140,6 @@ FormSquare::reset()
   _opacityField->setText("0.5");
   _sizeField->setText("0.2");
 
+  _buttonDelete->hide();
+  _index = -1;
 }
