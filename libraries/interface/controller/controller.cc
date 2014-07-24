@@ -11,12 +11,14 @@ Controller::Controller(Ui::MainWindow* ui)
 {
   _indexTrial = -1;
 
+
+  sessionInfo = new SessionInfo();
+ 
   _views.push_back(new Error(_ui->mainWidget, this));
   _views.push_back(new CreateProtocole(_ui->mainWidget, this));
   _views.push_back(new CreateSession(_ui->mainWidget, this));
   _views.push_back(new CreateShape(_ui->mainWidget, this));
 
-  sessionInfo = new SessionInfo();
   _model = new Model(sessionInfo);
   _init();
 }
@@ -33,7 +35,7 @@ Controller::~Controller()
  **/
 void
 Controller::_init()
-{
+{  
 
   QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(save()));
 
@@ -47,6 +49,8 @@ Controller::_init()
 
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
+
+  QObject::connect(_ui->loadFile, SIGNAL(triggered()), this, SLOT(_loadFile()));
 }
 
 /**
@@ -201,4 +205,38 @@ void
 Controller::deleteItem()
 {
   _ui->comboTrials->removeItem(_indexTrial+1);
+}
+
+/**
+   note: charge un ficher de definition et rempli 
+   la structure sessionInfo
+ **/
+
+void 
+Controller::_loadFile()
+{
+
+  QString filename = QFileDialog::getOpenFileName(
+						  0,
+						  tr("Open File"),
+						  "../../"
+						  "Text File (*.txt)"
+						  );
+
+  bool r = configuration::CreateConfiguration(filename.toUtf8().constData(), *sessionInfo);
+ // bool r = configuration::CreateConfiguration("definition", conf);
+  if (r)
+    {
+      std::cout << "load definition file" << std::endl;
+      
+      TrialInfo ti;
+      QString str;
+      foreach (ti, sessionInfo->trials)
+	{
+	  str = QString(ti.name.c_str());
+	  addItem(str);
+	}
+      _updateLeftBar();
+    }
+
 }

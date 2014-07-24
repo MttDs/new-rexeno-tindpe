@@ -52,6 +52,7 @@ public:
   QStatusBar *statusBar;
   QHBoxLayout *layout;
   
+  QAction* loadFile;
   QAction* showCreateProtocole;
   QAction* showCreateSession;
   QAction* showCreateShape;
@@ -88,8 +89,12 @@ public:
       MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
     MainWindow->setFixedSize(900, 650);
 
+    loadFile = new QAction("Ouvrir", MainWindow);
+
     menuFile = new QMenu("&File");
     menuFile->addAction("Nouveau");
+    menuFile->addAction(loadFile);
+
     menuBar = new QMenuBar(MainWindow);
     menuBar->setObjectName(QString::fromUtf8("menuBar"));
     menuBar->addMenu(menuFile);

@@ -8,6 +8,8 @@
 #include <QObjectList>
 #include <QString>
 #include <QSignalMapper>
+#include <QFileDialog>
+#include <QMessageBox>
 
 #include <boost/lexical_cast.hpp>
 
@@ -59,6 +61,7 @@ private slots:
   void _render(QString text);
   void _updateLeftBar();
   void _changeCurrentTrial(int index);
+  void _loadFile();
 
 signals:
   void fillSessionForm(int);
