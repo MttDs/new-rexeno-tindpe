@@ -36,20 +36,21 @@ CreateShape::~CreateShape()
 }
 /**
    note: initialise les evenements relatifs a la vue
- **/
+**/
 void
 CreateShape::_init()
 {
   QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_showFormShape(int)));
   QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(_hideFormShape(int)));
   QObject::connect(_comboShapesEdit, SIGNAL(activated(int)), this, SLOT(fillFormShape(int)));
+  QObject::connect(_controller, SIGNAL(fillComboShapesEdit()), this, SLOT(loadComboShapesEdit()));
 }
 /**
    @index: indice du formulaire demande
 
    note: affiche le formuaire et met a jour
    le dernier index
- **/
+**/
 void
 CreateShape::_showFormShape(int index)
 {
@@ -69,7 +70,7 @@ CreateShape::_showFormShape(int index)
 
    note: cache le dernier formulaire (_lastIndex)
    
- **/
+**/
 void
 CreateShape::_hideFormShape(int index)
 {
@@ -87,7 +88,7 @@ CreateShape::_hideFormShape(int index)
    (_getCurrentTrial()) apres avoir remii a zero la liste des 
    formes (pour mise a jour) (_comboShapeEdit).
    
- **/
+**/
 void
 CreateShape::loadComboShapesEdit()
 {
@@ -109,14 +110,14 @@ CreateShape::loadComboShapesEdit()
       std::cout <<_comboShapesEdit->count() << std::endl;
       foreach (si, ti->shapes)
 	{
-	  str = si.name.c_str();
+	  str = si.attributes[0].c_str();
 	  _comboShapesEdit->addItem(str);
 	}
     }
 }
 /**
    note: retourne l'essai  selectionne.
- **/
+**/
 TrialInfo* 
 CreateShape::_getCurrentTrial()
 {
@@ -132,12 +133,56 @@ CreateShape::_getCurrentTrial()
 void
 CreateShape::fillFormShape(int index)
 {
-  std::cout << index << std::endl;
-  TrialInfo* si = _getCurrentTrial();
+  std::cout << index-1 << std::endl;
+  vector<ShapeInfo> shapes = _getCurrentTrial()->shapes;
+  ShapeInfo* si = &shapes.at(index-1); 
+  ShapeInfo siTmp;
+  FormShape* fs = NULL;
+  int ii=0;
+  int posShape;
+  int posFormShape;
+
   if (si!=NULL)
     {
-      //        _hideFormShape(_lastIndex);
-      //        _showFormShape(index);
+      string s;
+      foreach(fs,  _formShapes)
+	{
+	  s = fs->getType();
+	  std::cout << "2 "<< si->name << " " << s << std::endl;
+	  if (strcmp(si->name.c_str(), s.c_str())==0)
+	    {
+	      posFormShape =ii;
+	      break;
+	    }
+	  ii++;
+	}
+      ii = 0;
+      foreach(siTmp, shapes)
+	{
+	  s = siTmp.attributes[0];
+	  std::cout << "1 "<< si->attributes[0]  << " " << s << std::endl;
+	
+	  if (strcmp(si->attributes[0].c_str(), s.c_str())==0)
+	    {
+	      posShape = ii;
+	      //     break;
+	    }
+	  ii++;
+	}
+      std::cout << "position de la shape" << posShape <<" position du form=> "<< posFormShape <<  std::endl;
+      fs->fillForm(si, posShape);
+      _hideFormShape(_lastIndex);
+      _showFormShape(posFormShape+1); // todo
     }
+  else{
+    std::cout << "impossible de trouver la forme demandé......." << std::endl;
+  }
 }
-
+/**
+   note: charge les formes disponibles pour cet essai
+**/
+void
+CreateShape::beforeDisplay()
+{
+  loadComboShapesEdit();
+}

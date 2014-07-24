@@ -18,6 +18,7 @@ public:
   View(QWidget *parent, Controller* con);
   ~View();
   const char* name;
+  virtual void beforeDisplay();
 };
 
 

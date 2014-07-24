@@ -4,6 +4,7 @@
 FormShape::FormShape(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   : View(parent, c)
 {
+  _index = -1;
 
   _parentLayout = parentLayout;
   _parentWidget = new QWidget;
@@ -31,12 +32,26 @@ FormShape::FormShape(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   _parentLayout->addWidget(_parentWidget);
 
   _parentWidget->hide();
+  Init();
   //resize(parent->size());
 }
+
 
 FormShape::~FormShape()
 {
 
+}
+
+void 
+FormShape::_save(){
+  _index = -1;
+  emit(afterSave());
+}
+
+void
+FormShape::Init()
+{
+  connect(this, SIGNAL(afterSave()), parent(), SLOT(loadComboShapesEdit()));
 }
 void 
 FormShape::activate()

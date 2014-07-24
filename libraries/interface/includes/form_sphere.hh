@@ -2,12 +2,15 @@
 # define FORM_SPHERE_HH_
 
 #include "form_shape.hh"
+#include "parser.hh"
 
 #include <QWidget>
 #include <QObject>
 #include <QLabel>
 #include <QLineEdit>
 #include <QVBoxLayout>
+
+using namespace configuration;
 
 class FormSphere : public FormShape
 {
@@ -17,9 +20,12 @@ public:
   ~FormSphere();
 
   void Init();
+  void fillForm(ShapeInfo* si, int index);
+
 protected:
 
 private:
+
   QLabel *_minStart;
   QLabel *_maxStart;
   QLabel *_x;

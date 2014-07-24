@@ -65,6 +65,7 @@ Controller::_changeCurrentTrial(int index){
   else{
     _indexTrial = (index-1);
      emit(fillSessionForm(_indexTrial));
+     emit(fillComboShapesEdit());
   }
 
   std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
@@ -94,6 +95,7 @@ Controller::_render(QString text)
 	  view = _views[0];
 	}
       view->setParent(parent);
+      view->beforeDisplay();
       view->show();
     }
   else

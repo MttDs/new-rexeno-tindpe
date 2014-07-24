@@ -37,6 +37,7 @@ public:
   CreateShape(QWidget *parent, Controller *c);
   ~CreateShape();
   
+  void beforeDisplay();
 private:
   void _init();
 

@@ -20,3 +20,12 @@ View::~View(){
 
 }
 
+/**
+   Execute une ou plusieurs tache(s)
+   avant l'affichage de la vue
+**/
+void
+View::beforeDisplay()
+{
+
+}

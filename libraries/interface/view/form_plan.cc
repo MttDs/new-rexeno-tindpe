@@ -77,10 +77,39 @@ FormPlan::_save()
       si.attributes.push_back(_widthField->text().toUtf8().constData());
       si.attributes.push_back(_heightField->text().toUtf8().constData());
       si.attributes.push_back(_repeatField->text().toUtf8().constData());
-      ti->shapes.push_back(si);
+
       std::cout << "add plan" << std::endl;
+      if (_index!=-1)
+	{
+	  std::cout << "Je dois remplacer " << _index << std::endl;
+	  ti->shapes.at(_index) = si;
+	  _index=-1;
+	}
+      else
+	{
+	  std::cout << "add normal" << std::endl;
+	  ti->shapes.push_back(si);
+	}
+      FormShape::_save();
     }
   else{
     std::cout << "pas de session selectionnééée" << std::endl;
   }
+}
+void
+FormPlan::fillForm(ShapeInfo* si, int index)
+{
+   _index = index;
+  std::cout << "fill form index " << _index << std::endl;
+  QString str;
+  _nameField->setText(str = si->attributes[0].c_str());
+  _minStartField->setText(str = si->attributes[1].c_str());
+  _maxStartField->setText(str = si->attributes[2].c_str());
+  _xField->setText(str = si->attributes[3].c_str());
+  _yField->setText(str = si->attributes[4].c_str());
+  _frameStartField->setText(str = si->attributes[5].c_str());
+  _frameEndField->setText(str = si->attributes[6].c_str());
+  _widthField->setText(str = si->attributes[7].c_str());
+  _heightField->setText(str = si->attributes[8].c_str());
+  _repeatField->setText(str = si->attributes[9].c_str());
 }

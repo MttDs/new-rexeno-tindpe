@@ -16,6 +16,7 @@ public:
   ~FormSquare();
 
   void Init();
+  void fillForm(ShapeInfo* si, int index);
 protected:
 
 private:
