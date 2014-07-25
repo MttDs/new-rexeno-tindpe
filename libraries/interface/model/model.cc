@@ -18,16 +18,18 @@ Model::save()
 
   _recorder = new Recorder("../../files/", 0);
   std::cout << "save!" << std::endl;
-  _recorder->AddFile("test.txt");
+  _recorder->AddFile("definition.txt");
 
-  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "test.txt");
-  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "test.txt");
-  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "test.txt");
-  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "test.txt");
-  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "test.txt");
-  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "test.txt");
-  _recorder->Save("save= " + sessionInfo->save, "test.txt");
-
+  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "definition.txt");
+  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "definition.txt");
+  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "definition.txt");
+  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "definition.txt");
+  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "definition.txt");
+  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "definition.txt");
+  if (sessionInfo->save != "")
+    {
+  _recorder->Save("save= " + sessionInfo->save, "definition.txt");
+    }
   TrialInfo ti;
   ShapeInfo si;
   ShapeListener sl;
@@ -48,7 +50,7 @@ Model::save()
 		      ti.attributes[6]+" "+
 		      ti.attributes[7]+" "+
 		      ti.attributes[8]
-		      , "test.txt");
+		      , "definition.txt");
       foreach (si, ti.shapes)
 	{
 	  //Shape
@@ -66,7 +68,7 @@ Model::save()
 		  str += " " + (*it) + " ";
 		}
 	    }
-	  _recorder->Save(str, "test.txt");
+	  _recorder->Save(str, "definition.txt");
 
 	  //Event
 
@@ -83,23 +85,10 @@ Model::save()
 			      + ss.str() +
 			      " "
 			      + lexical_cast<string>(sl.gain)+ 
-			      " ", "test.txt");
+			      " ", "definition.txt");
 	    }
-	  /*for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
-	    {
-	      if (first)
-		{
-		  first = false;
-		  str += "> "+ si.name + " " + (*it);
-		}
-	      else
-		{
-		  str += " " + (*it) + " ";
-		}
-		}*/
-	  //  _recorder->Save(str, "test.txt");
 	}
-      _recorder->Save(";", "test.txt");
+      _recorder->Save(";", "definition.txt");
     }
 }
 

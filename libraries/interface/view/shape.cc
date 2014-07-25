@@ -32,7 +32,11 @@ ShapeView::ShapeView(QWidget *parent, Controller *c)
 
 ShapeView::~ShapeView()
 {
-
+  FormShape *fs = NULL;
+  foreach(fs,  _formShapes)
+    {
+      delete fs;
+    }
 }
 /**
    note: initialise les evenements relatifs a la vue
@@ -103,7 +107,8 @@ ShapeView::loadComboShapesEdit()
       // Reset combo box
       int ii = 1;
       std::cout <<_comboShapesEdit->count() << std::endl;
-      for (ii= _comboShapesEdit->count(); ii!=0; --ii){
+      for (ii= _comboShapesEdit->count(); ii!=0; --ii)
+{
 	std::cout << ii <<_comboShapesEdit->count() <<  std::endl;
 	_comboShapesEdit->removeItem(ii);
       }

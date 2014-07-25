@@ -10,6 +10,7 @@
 #include <QSignalMapper>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QAction>
 
 #include <boost/lexical_cast.hpp>
 

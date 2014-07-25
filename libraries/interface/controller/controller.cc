@@ -25,14 +25,20 @@ Controller::Controller(Ui::MainWindow* ui)
 
 Controller::~Controller()
 {
-   delete _model;
-   delete sessionInfo;
+  View *v = NULL;
+  foreach(v, _views)
+    {
+      delete v;
+    }
+
+  delete _model;
+  delete sessionInfo;
 }
 
 /**
    note: Connexion des differentes routes et 
    evenements relevant de la template
- **/
+**/
 void
 Controller::_init()
 {  
@@ -40,6 +46,7 @@ Controller::_init()
   QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(save()));
 
   QSignalMapper* signalMapper = new QSignalMapper(this);
+
   QObject::connect(_ui->showSession, SIGNAL(triggered()), signalMapper, SLOT(map()));
   QObject::connect(_ui->showProtocole, SIGNAL(triggered()), signalMapper, SLOT(map()));
   QObject::connect(_ui->showShape, SIGNAL(triggered()), signalMapper, SLOT(map()));
@@ -49,7 +56,7 @@ Controller::_init()
   signalMapper->setMapping(_ui->showProtocole, _ui->showProtocole->text());
   signalMapper->setMapping(_ui->showShape, _ui->showShape->text());
   signalMapper->setMapping(_ui->showEvent, _ui->showEvent->text());
-
+  
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
 
@@ -71,8 +78,8 @@ Controller::_changeCurrentTrial(int index){
   }
   else{
     _indexTrial = (index-1);
-     emit(fillSessionForm(_indexTrial));
-     emit(fillComboShapes());
+    emit(fillSessionForm(_indexTrial));
+    emit(fillComboShapes());
   }
 
   std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
@@ -84,7 +91,7 @@ Controller::_changeCurrentTrial(int index){
 
    note: La vue doit porter le meme nom que 
    l'action cliquee
- **/
+**/
 void 
 Controller::_render(QString text)
 {
@@ -117,7 +124,7 @@ Controller::_render(QString text)
 
    note: retourne la vue correspondant au
    libelle
- **/
+**/
 View*
 Controller::_getView(QString text)
 {
@@ -155,7 +162,7 @@ Controller::trialExists()
 }
 /**
    note: mise a jour de la bar de gauche
- **/
+**/
 void
 Controller::_updateLeftBar()
 {
@@ -179,7 +186,7 @@ Controller::_updateLeftBar()
    
    note: ajoute dans la liste des sessions 
    une nouvelle session
- **/
+**/
 void
 Controller::addItem(QString str)
 {
@@ -213,7 +220,7 @@ Controller::deleteItem()
 /**
    note: charge un ficher de definition et rempli 
    la structure sessionInfo
- **/
+**/
 
 void 
 Controller::_loadFile()
@@ -227,7 +234,7 @@ Controller::_loadFile()
 						  );
 
   bool r = configuration::CreateConfiguration(filename.toUtf8().constData(), *sessionInfo);
- // bool r = configuration::CreateConfiguration("definition", conf);
+  // bool r = configuration::CreateConfiguration("definition", conf);
   if (r)
     {
       std::cout << "load definition file" << std::endl;

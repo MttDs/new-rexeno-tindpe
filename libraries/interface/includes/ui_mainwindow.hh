@@ -30,7 +30,6 @@
 #include <QSizePolicy>
 
 #include <iostream>
-
 using namespace std;
 
 QT_BEGIN_NAMESPACE
@@ -109,9 +108,8 @@ public:
     showSession = new QAction("Session", MainWindow);
     showShape = new QAction("Formes", MainWindow);
     showEvent = new QAction(QString::fromUtf8("Événement"), MainWindow);
-
     save = new QAction("Sauvegarder", MainWindow);
-    save->setShortcut(QKeySequence("Ctrl-S"));
+    save->setShortcut(QKeySequence("Ctrl-S")); 
 
     mainToolBar->addAction(showProtocole);
     mainToolBar->addAction(showSession);
