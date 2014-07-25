@@ -105,6 +105,7 @@ EventView::_loadEventsFromShape(int index)
   ShapeInfo* si = &ti->shapes.at(_currentShape);
   ShapeListener sl;
   int ii = 1;
+  stringstream ss (stringstream::in | stringstream::out);
 
   for (ii= _comboEvents->count(); ii!=0; --ii)
     {
@@ -112,10 +113,13 @@ EventView::_loadEventsFromShape(int index)
     }
   foreach(sl, si->listeners)
     {
- 
-      //  str = si.attributes[0].c_str();
-      _comboEvents->addItem("test");
-	
+      ss << sl.key 
+	 << " " 
+	 << sl.coef 
+	 << " " 
+	 << sl.gain;
+      _comboEvents->addItem(ss.str().c_str());	
+      ss.str("");
     }
 }
 void

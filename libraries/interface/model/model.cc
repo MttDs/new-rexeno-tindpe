@@ -72,13 +72,10 @@ Model::save()
 
 	  //Event
 
-	  first = true;
-	  str = "";
-
 	  foreach(sl, si.listeners)
 	    {
 	      stringstream ss (stringstream::in | stringstream::out);
-
+	      ss << sl.coef;
 	      _recorder->Save("+ "
 			      + lexical_cast<string>(sl.key) + 
 			      " "
