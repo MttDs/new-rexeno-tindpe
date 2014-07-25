@@ -65,7 +65,8 @@ void
 EventView::_deleteEvent(int index)
 {
   int nbEvent = index-1;
-
+  if (nbEvent>=0)
+    {
   TrialInfo* ti = _getCurrentTrial();
   ShapeInfo* si = &ti->shapes.at(_currentShape);
   vector<ShapeListener>* listeners = &si->listeners;
@@ -94,13 +95,14 @@ EventView::_deleteEvent(int index)
   else{
     std::cout << "rien a supprimer" << std::endl;
   }
-
+    }
 }
 void
 EventView::_loadEventsFromShape(int index)
 {
   _currentShape = index-1;
-
+  if (_currentShape>=0)
+    {
   TrialInfo* ti = _getCurrentTrial();
   ShapeInfo* si = &ti->shapes.at(_currentShape);
   ShapeListener sl;
@@ -120,6 +122,7 @@ EventView::_loadEventsFromShape(int index)
 	 << sl.gain;
       _comboEvents->addItem(ss.str().c_str());	
       ss.str("");
+    }
     }
 }
 void

@@ -10,13 +10,13 @@ ShapeView::ShapeView(QWidget *parent, Controller *c)
   _layout = new QVBoxLayout(this);
 
   _comboShapes = new QComboBox;
-  _comboShapes->addItem("/");
+  _comboShapes->addItem("Choisir une forme");
   _comboShapes->addItem("Damier");
   _comboShapes->addItem("Sphere");
   _comboShapes->addItem("Square");
 
   _comboShapesEdit = new QComboBox;
-  _comboShapesEdit->addItem("/");
+  _comboShapesEdit->addItem(QString::fromUtf8("Selectionnez une forme de la session à éditer"));
   loadComboShapesEdit();
 
   _layout->addWidget(_comboShapes);
@@ -44,11 +44,13 @@ ShapeView::~ShapeView()
 void
 ShapeView::_init()
 {
+  QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_resetIndex(int)));
   QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_showFormShape(int)));
   QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(_hideFormShape(int)));
   QObject::connect(_comboShapesEdit, SIGNAL(activated(int)), this, SLOT(fillFormShape(int)));
   QObject::connect(_controller, SIGNAL(fillComboShapes()), this, SLOT(loadComboShapesEdit()));
 }
+
 /**
    @index: indice du formulaire demande
 
@@ -58,15 +60,19 @@ ShapeView::_init()
 void
 ShapeView::_showFormShape(int index)
 {
-  FormShape *sf = NULL; 
   index = index-1;
-  sf = _formShapes.at(index);
+  if (index>=0)
+    {
 
-  std::cout << "show shape" << std::endl;
+      FormShape *sf = NULL; 
+      sf = _formShapes.at(index);
 
-  _formShapes.at(index)->activate();
-  std::cout << "current index => " << index << std::endl;
-  _lastIndex = index;
+      std::cout << "show shape" << std::endl;
+
+      _formShapes.at(index)->activate();
+      std::cout << "current index => " << index << std::endl;
+      _lastIndex = index;
+    }
 }
 
 /**
@@ -108,10 +114,10 @@ ShapeView::loadComboShapesEdit()
       int ii = 1;
       std::cout <<_comboShapesEdit->count() << std::endl;
       for (ii= _comboShapesEdit->count(); ii!=0; --ii)
-{
-	std::cout << ii <<_comboShapesEdit->count() <<  std::endl;
-	_comboShapesEdit->removeItem(ii);
-      }
+	{
+	  std::cout << ii <<_comboShapesEdit->count() <<  std::endl;
+	  _comboShapesEdit->removeItem(ii);
+	}
       std::cout <<_comboShapesEdit->count() << std::endl;
       foreach (si, ti->shapes)
 	{
@@ -128,6 +134,16 @@ void
 ShapeView::fillFormShape(int index)
 {
   std::cout << index-1 << std::endl;
+  if (index-1>=0){
+    _comboShapes->setEnabled(false);
+  }
+    else
+      {
+	_comboShapes->setEnabled(true);
+      }
+
+  if ((index-1)>=0)
+    {
   vector<ShapeInfo> shapes = _getCurrentTrial()->shapes;
   ShapeInfo* si = &shapes.at(index-1); 
   ShapeInfo siTmp;
@@ -168,9 +184,11 @@ ShapeView::fillFormShape(int index)
       _hideFormShape(_lastIndex);
       _showFormShape(posFormShape+1); // todo
     }
-  else{
+  else
+    {
     std::cout << "impossible de trouver la forme demandé......." << std::endl;
-  }
+    }
+    }
 }
 /**
    note: charge les formes disponibles pour cet essai
