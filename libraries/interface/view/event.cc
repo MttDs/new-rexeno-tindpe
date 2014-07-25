@@ -1,7 +1,7 @@
 #include "event.hh"
 #include "controller.hh"
 
-Event::Event(QWidget *parent, Controller *c)
+EventView::EventView(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "Événement";
@@ -47,13 +47,13 @@ Event::Event(QWidget *parent, Controller *c)
   _init();
 }
 
-Event::~Event()
+EventView::~EventView()
 {
 
 }
 
 void 
-Event::_init()
+EventView::_init()
 {
   connect(_comboEvents, SIGNAL(activated(int)), this, SLOT(_deleteEvent(int)));
   connect(_controller, SIGNAL(fillComboShapes()), this, SLOT(loadComboShapes()));
@@ -62,7 +62,7 @@ Event::_init()
 }
 
 void
-Event::_deleteEvent(int index)
+EventView::_deleteEvent(int index)
 {
   int nbEvent = index-1;
 
@@ -97,7 +97,7 @@ Event::_deleteEvent(int index)
 
 }
 void
-Event::_loadEventsFromShape(int index)
+EventView::_loadEventsFromShape(int index)
 {
   _currentShape = index-1;
 
@@ -119,7 +119,7 @@ Event::_loadEventsFromShape(int index)
     }
 }
 void
-Event::_save()
+EventView::_save()
 {
   std::cout << "Je dois enregistrer " << _currentShape <<std::endl;
   TrialInfo* ti = _getCurrentTrial();
@@ -135,7 +135,7 @@ Event::_save()
 }
 
 void
-Event::loadComboShapes()
+EventView::loadComboShapes()
 {
   
   if (_controller->trialExists())
@@ -161,14 +161,14 @@ Event::loadComboShapes()
     }
 }
 void 
-Event::beforeDisplay()
+EventView::beforeDisplay()
 {
   loadComboShapes();
   _reset();
 }
 
 void 
-Event::_reset()
+EventView::_reset()
 {
   _keyField->setText("");
   _coefField->setText("");

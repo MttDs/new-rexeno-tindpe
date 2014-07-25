@@ -1,5 +1,5 @@
-#ifndef CREATE_SESSION_HH_
-#define CREATE_SESSION_HH_
+#ifndef SESSION_VIEW_HH_
+#define SESSION_VIEW_HH_
 
 #include "view.hh"
 
@@ -14,11 +14,10 @@
 #include <QLineEdit>
 
 #include <iostream>
-
 #include <vector>
-
 #include <string>
-class CreateSession : public View
+
+class SessionView : public View
 {
 Q_OBJECT
 private:
@@ -50,8 +49,8 @@ private:
   QPushButton *_deleteSession;
 
 public:
-  CreateSession(QWidget *parent, Controller *c);
-  ~CreateSession();
+  SessionView(QWidget *parent, Controller *c);
+  ~SessionView();
 
   void reset();
 private:

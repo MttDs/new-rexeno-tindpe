@@ -1,7 +1,7 @@
-#include "create_protocole.hh"
+#include "protocole.hh"
 #include "controller.hh"
 
-CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
+ProtocoleView::ProtocoleView(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "Protocole";
@@ -49,7 +49,7 @@ CreateProtocole::CreateProtocole(QWidget *parent, Controller *c)
    la vue
 **/
 void
-CreateProtocole::_init()
+ProtocoleView::_init()
 {
   connect(_submit, SIGNAL(clicked()), this, SLOT(_save()));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
@@ -61,7 +61,7 @@ CreateProtocole::_init()
    gauche
 **/
 void 
-CreateProtocole::_save()
+ProtocoleView::_save()
 {
   std::cout << "save from create protocole" << std::endl;
   _controller->sessionInfo->frequency = _frequencyField->text().toInt(); 
@@ -76,6 +76,6 @@ CreateProtocole::_save()
 }
 
 
-CreateProtocole::~CreateProtocole()
+ProtocoleView::~ProtocoleView()
 {
 }

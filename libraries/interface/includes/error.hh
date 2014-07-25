@@ -1,16 +1,16 @@
-#ifndef ERROR_HH_
-#define ERROR_HH_
+#ifndef ERROR_VIEW_HH_
+#define ERROR_VIEW_HH_
 
 #include <QWidget>
 #include <QLabel>
 
 #include "view.hh"
 
-class Error : public View
+class ErrorView : public View
 {
 public:
-  Error(QWidget *parent, Controller *c);
-  ~Error();
+  ErrorView(QWidget *parent, Controller *c);
+  ~ErrorView();
 private:
   QLabel *_error;
 };

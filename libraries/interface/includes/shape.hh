@@ -1,5 +1,5 @@
-#ifndef CREATE_SHAPE_HH_
-# define CREATE_SHAPE_HH_
+#ifndef SHAPE_VIEW_HH_
+#define SHAPE_VIEW_HH_
 
 #include "view.hh"
 #include "form_shape.hh"
@@ -20,7 +20,8 @@
 
 using namespace std;
 using namespace configuration;
-class CreateShape : public View
+
+class ShapeView : public View
 {
 Q_OBJECT
 private:
@@ -32,8 +33,8 @@ private:
   int _lastIndex;
 
 public:
-  CreateShape(QWidget *parent, Controller *c);
-  ~CreateShape();
+  ShapeView(QWidget *parent, Controller *c);
+  ~ShapeView();
   
   void beforeDisplay();
 private:

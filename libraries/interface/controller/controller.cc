@@ -13,11 +13,11 @@ Controller::Controller(Ui::MainWindow* ui)
 
   sessionInfo = new SessionInfo();
  
-  _views.push_back(new Error(_ui->mainWidget, this));
-  _views.push_back(new CreateProtocole(_ui->mainWidget, this));
-  _views.push_back(new CreateSession(_ui->mainWidget, this));
-  _views.push_back(new CreateShape(_ui->mainWidget, this));
-  _views.push_back(new Event(_ui->mainWidget, this));
+  _views.push_back(new ErrorView(_ui->mainWidget, this));
+  _views.push_back(new ProtocoleView(_ui->mainWidget, this));
+  _views.push_back(new SessionView(_ui->mainWidget, this));
+  _views.push_back(new ShapeView(_ui->mainWidget, this));
+  _views.push_back(new EventView(_ui->mainWidget, this));
 
   _model = new Model(sessionInfo);
   _init();

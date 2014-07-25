@@ -1,5 +1,5 @@
-#ifndef SESSION_VIEW_HH_
-# define SESSION_VIEW_HH_
+#ifndef VIEW_HH_
+# define VIEW_HH_
 
 #include "parser.hh"
 
@@ -31,4 +31,4 @@ public:
 
 
 
-#endif /* SESSION_VIEW_HH_ */
+#endif

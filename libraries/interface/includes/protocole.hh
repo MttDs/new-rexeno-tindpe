@@ -1,5 +1,5 @@
-#ifndef CREATE_PROTOCOLE_HH_
-# define CREATE_PROTOCOLE_HH_
+#ifndef PROTOCOLE_VIEW_HH_
+#define PROTOCOLE_VIEW_HH_
 
 #include <iostream>
 
@@ -12,7 +12,7 @@
 #include <QtDebug>
 #include "view.hh"
 
-class CreateProtocole : public View
+class ProtocoleView : public View
 {
 Q_OBJECT
 private: 
@@ -37,8 +37,8 @@ private:
   QLineEdit *_savePathField;
    
 public:
-  CreateProtocole(QWidget *parent, Controller *c);
-  ~CreateProtocole();
+  ProtocoleView(QWidget *parent, Controller *c);
+  ~ProtocoleView();
 
 private:
   void _init();

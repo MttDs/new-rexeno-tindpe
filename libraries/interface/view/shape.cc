@@ -1,7 +1,7 @@
-#include "create_shape.hh"
+#include "shape.hh"
 #include "controller.hh"
 
-CreateShape::CreateShape(QWidget *parent, Controller *c)
+ShapeView::ShapeView(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "Formes";
@@ -30,7 +30,7 @@ CreateShape::CreateShape(QWidget *parent, Controller *c)
 
 }
 
-CreateShape::~CreateShape()
+ShapeView::~ShapeView()
 {
 
 }
@@ -38,7 +38,7 @@ CreateShape::~CreateShape()
    note: initialise les evenements relatifs a la vue
 **/
 void
-CreateShape::_init()
+ShapeView::_init()
 {
   QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_showFormShape(int)));
   QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(_hideFormShape(int)));
@@ -52,7 +52,7 @@ CreateShape::_init()
    le dernier index
 **/
 void
-CreateShape::_showFormShape(int index)
+ShapeView::_showFormShape(int index)
 {
   FormShape *sf = NULL; 
   index = index-1;
@@ -72,7 +72,7 @@ CreateShape::_showFormShape(int index)
    
 **/
 void
-CreateShape::_hideFormShape(int index)
+ShapeView::_hideFormShape(int index)
 {
   if (_lastIndex>=0)
     {
@@ -90,7 +90,7 @@ CreateShape::_hideFormShape(int index)
    
 **/
 void
-CreateShape::loadComboShapesEdit()
+ShapeView::loadComboShapesEdit()
 {
   
   if (_controller->trialExists())
@@ -120,7 +120,7 @@ CreateShape::loadComboShapesEdit()
     note: todo
 **/
 void
-CreateShape::fillFormShape(int index)
+ShapeView::fillFormShape(int index)
 {
   std::cout << index-1 << std::endl;
   vector<ShapeInfo> shapes = _getCurrentTrial()->shapes;
@@ -171,7 +171,7 @@ CreateShape::fillFormShape(int index)
    note: charge les formes disponibles pour cet essai
 **/
 void
-CreateShape::beforeDisplay()
+ShapeView::beforeDisplay()
 {
   loadComboShapesEdit();
 }

@@ -1,6 +1,6 @@
 #include "error.hh"
 
-Error::Error(QWidget *parent, Controller *c)
+ErrorView::ErrorView(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "error",
@@ -8,7 +8,7 @@ Error::Error(QWidget *parent, Controller *c)
   // show();
 }
 
-Error::~Error()
+ErrorView::~ErrorView()
 {
 
 }

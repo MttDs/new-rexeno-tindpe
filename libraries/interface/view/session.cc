@@ -1,7 +1,7 @@
-#include "create_session.hh"
+#include "session.hh"
 #include "controller.hh"
 
-CreateSession::CreateSession(QWidget *parent, Controller *c)
+SessionView::SessionView(QWidget *parent, Controller *c)
   : View(parent, c)
 {
   name = "Session"; 
@@ -64,7 +64,7 @@ CreateSession::CreateSession(QWidget *parent, Controller *c)
    note: initialise les evenements relatifs a la vue
  **/
 void
-CreateSession::_init()
+SessionView::_init()
 {
   connect(_submit, SIGNAL(clicked()), this, SLOT(_save()));
   connect(_deleteSession, SIGNAL(clicked()), this, SLOT(_delete()));
@@ -79,7 +79,7 @@ CreateSession::_init()
    et rempli le formulaire de la session
  **/
 void
-CreateSession::fillForm(int index)
+SessionView::fillForm(int index)
 {
   std::cout << index << std::endl;
   if (index>=0)
@@ -106,7 +106,8 @@ CreateSession::fillForm(int index)
    La meme chose est effectuee pour mettre a jour la liste
    des sessions disponibles (comboTrials)
  **/
-void CreateSession::_save()
+void 
+SessionView::_save()
 {
 
   std::cout << "save from create session " << std::endl;
@@ -163,7 +164,7 @@ void CreateSession::_save()
    note: supprime ou remet a zero (todo) la session
  **/
 void
-CreateSession::_delete()
+SessionView::_delete()
 {
   if (_controller->trialExists())
     {
@@ -185,9 +186,6 @@ CreateSession::_delete()
 	  trials->at(indexTrial)= trials->back();
 	  trials->erase(trials->end()-1);
 	  std::cout << 2 << std::endl;
-	  ti = lastTi;
-	  ti = NULL;
-	  
 	}
       _controller->deleteItem();
       reset();
@@ -200,7 +198,7 @@ CreateSession::_delete()
 }
 
 void
-CreateSession::reset()
+SessionView::reset()
 {
   _nameField->setText("");
   _veloCmraXField->setText("0");
@@ -214,7 +212,7 @@ CreateSession::reset()
   _centerZField->setText("0");
 }
 
-CreateSession::~CreateSession()
+SessionView::~SessionView()
 {
 
 }

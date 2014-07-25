@@ -1,5 +1,5 @@
-#ifndef EVENT_HH_
-#define EVENT_HH_
+#ifndef EVENT_VIEW_HH_
+#define EVENT_VIEW_HH_
 
 #include "view.hh"
 
@@ -22,12 +22,12 @@
 
 using namespace boost;
 
-class Event : public View
+class EventView : public View
 {
 Q_OBJECT
 public:
-  Event(QWidget *parent, Controller *c);
-  ~Event();
+  EventView(QWidget *parent, Controller *c);
+  ~EventView();
 
   void beforeDisplay();
 private:
@@ -55,6 +55,7 @@ private slots:
   void _save();
   void _loadEventsFromShape(int index);
   void _deleteEvent(int index);
+
 signals:
   void deleteEvent(int index); 
 };

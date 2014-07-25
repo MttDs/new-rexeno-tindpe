@@ -1,10 +1,7 @@
 #include "view.hh"
 #include <QFileDialog>
-#include <wordexp.h>
-
-//#include <boost/filesystem.hpp>
-#include <math.h>       /* pow */
 #include "controller.hh"
+
 View::View(QWidget *parent)
   : QWidget(parent)
 {
