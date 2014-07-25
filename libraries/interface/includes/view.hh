@@ -1,17 +1,25 @@
 #ifndef SESSION_VIEW_HH_
 # define SESSION_VIEW_HH_
 
-# include <QObject>
-# include <QMainWindow>
+#include "parser.hh"
+
+#include <QObject>
+#include <QMainWindow>
 #include <QString>
+#include <QPushButton>
+
+using namespace configuration;
 
 class Controller;
 class View : public QWidget
 {
   Q_OBJECT
-  protected:
-
+protected:
   Controller *_controller;
+  QPushButton *_submit;
+  QPushButton *_buttonDelete;
+
+  TrialInfo* _getCurrentTrial();
 public:
   View(QWidget *parent);
 

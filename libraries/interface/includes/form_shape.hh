@@ -51,8 +51,6 @@ protected:
   QLineEdit *_frameStartField;
   QLineEdit *_frameEndField;
 
-  QPushButton *_submit;
-  QPushButton *_buttonDelete;
   virtual void _save();
 private slots:
   void _deleteShape();

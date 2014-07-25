@@ -11,13 +11,13 @@ Controller::Controller(Ui::MainWindow* ui)
 {
   _indexTrial = -1;
 
-
   sessionInfo = new SessionInfo();
  
   _views.push_back(new Error(_ui->mainWidget, this));
   _views.push_back(new CreateProtocole(_ui->mainWidget, this));
   _views.push_back(new CreateSession(_ui->mainWidget, this));
   _views.push_back(new CreateShape(_ui->mainWidget, this));
+  _views.push_back(new Event(_ui->mainWidget, this));
 
   _model = new Model(sessionInfo);
   _init();
@@ -40,12 +40,15 @@ Controller::_init()
   QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(save()));
 
   QSignalMapper* signalMapper = new QSignalMapper(this);
-  QObject::connect(_ui->showCreateSession, SIGNAL( triggered() ), signalMapper, SLOT(map()));
-  QObject::connect(_ui->showCreateProtocole, SIGNAL( triggered() ), signalMapper, SLOT(map()));
-  QObject::connect(_ui->showCreateShape, SIGNAL( triggered() ), signalMapper, SLOT(map()));
-  signalMapper->setMapping(_ui->showCreateSession, _ui->showCreateSession->text());
-  signalMapper->setMapping(_ui->showCreateProtocole, _ui->showCreateProtocole->text());
-  signalMapper->setMapping(_ui->showCreateShape, _ui->showCreateShape->text());
+  QObject::connect(_ui->showSession, SIGNAL(triggered()), signalMapper, SLOT(map()));
+  QObject::connect(_ui->showProtocole, SIGNAL(triggered()), signalMapper, SLOT(map()));
+  QObject::connect(_ui->showShape, SIGNAL(triggered()), signalMapper, SLOT(map()));
+  QObject::connect(_ui->showEvent, SIGNAL(triggered()), signalMapper, SLOT(map()));
+
+  signalMapper->setMapping(_ui->showSession, _ui->showSession->text());
+  signalMapper->setMapping(_ui->showProtocole, _ui->showProtocole->text());
+  signalMapper->setMapping(_ui->showShape, _ui->showShape->text());
+  signalMapper->setMapping(_ui->showEvent, _ui->showEvent->text());
 
   QObject::connect(signalMapper, SIGNAL(mapped(QString)), this, SLOT(_render(QString)));
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
@@ -69,7 +72,7 @@ Controller::_changeCurrentTrial(int index){
   else{
     _indexTrial = (index-1);
      emit(fillSessionForm(_indexTrial));
-     emit(fillComboShapesEdit());
+     emit(fillComboShapes());
   }
 
   std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
@@ -219,7 +222,7 @@ Controller::_loadFile()
   QString filename = QFileDialog::getOpenFileName(
 						  0,
 						  tr("Open File"),
-						  "../../"
+						  "../../protocole/test/"
 						  "Text File (*.txt)"
 						  );
 

@@ -1,5 +1,5 @@
-#ifndef  CONTROLLER_HH_
-# define CONTROLLER_HH_
+#ifndef CONTROLLER_HH_
+#define CONTROLLER_HH_
 
 #include <QObject>
 #include <QWidget>
@@ -15,10 +15,11 @@
 
 #include "ui_mainwindow.hh"
 #include "view.hh"
+#include "error.hh"
 #include "create_protocole.hh"
 #include "create_session.hh"
 #include "create_shape.hh"
-#include "error.hh"
+#include "event.hh"
 #include "parser.hh"
 #include "recorder.hh"
 #include "model.hh"
@@ -65,7 +66,7 @@ private slots:
 
 signals:
   void fillSessionForm(int);
-  void fillComboShapesEdit();
+  void fillComboShapes();
 };
 
 #endif 

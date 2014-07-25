@@ -19,6 +19,19 @@ View::View(QWidget *parent, Controller *c)
 View::~View(){
 
 }
+/**
+   note: retourne l'essai  selectionne.
+**/
+TrialInfo* 
+View::_getCurrentTrial()
+{
+  if (_controller->trialExists())
+    {
+      return &(_controller->sessionInfo->trials.at(_controller->getIndexTrial()));
+    }
+  return NULL;
+}
+
 
 /**
    Execute une ou plusieurs tache(s)

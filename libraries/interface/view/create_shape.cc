@@ -43,7 +43,7 @@ CreateShape::_init()
   QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_showFormShape(int)));
   QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(_hideFormShape(int)));
   QObject::connect(_comboShapesEdit, SIGNAL(activated(int)), this, SLOT(fillFormShape(int)));
-  QObject::connect(_controller, SIGNAL(fillComboShapesEdit()), this, SLOT(loadComboShapesEdit()));
+  QObject::connect(_controller, SIGNAL(fillComboShapes()), this, SLOT(loadComboShapesEdit()));
 }
 /**
    @index: indice du formulaire demande
@@ -115,18 +115,7 @@ CreateShape::loadComboShapesEdit()
 	}
     }
 }
-/**
-   note: retourne l'essai  selectionne.
-**/
-TrialInfo* 
-CreateShape::_getCurrentTrial()
-{
-  if (_controller->trialExists())
-    {
-      return &(_controller->sessionInfo->trials.at(_controller->getIndexTrial()));
-    }
-  return NULL;
-}
+
 /** 
     note: todo
 **/

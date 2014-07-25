@@ -53,9 +53,10 @@ public:
   QHBoxLayout *layout;
   
   QAction* loadFile;
-  QAction* showCreateProtocole;
-  QAction* showCreateSession;
-  QAction* showCreateShape;
+  QAction* showProtocole;
+  QAction* showSession;
+  QAction* showShape;
+  QAction* showEvent;
   QAction* save;
 
   // Left bar
@@ -104,16 +105,18 @@ public:
     mainToolBar = new QToolBar(MainWindow);
     mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
     
-    showCreateProtocole = new QAction("Protocole", MainWindow);
-    showCreateSession = new QAction("Session", MainWindow);
-    showCreateShape = new QAction("Formes", MainWindow);
+    showProtocole = new QAction("Protocole", MainWindow);
+    showSession = new QAction("Session", MainWindow);
+    showShape = new QAction("Formes", MainWindow);
+    showEvent = new QAction(QString::fromUtf8("Événement"), MainWindow);
 
     save = new QAction("Sauvegarder", MainWindow);
     save->setShortcut(QKeySequence("Ctrl-S"));
 
-    mainToolBar->addAction(showCreateProtocole);
-    mainToolBar->addAction(showCreateSession);
-    mainToolBar->addAction(showCreateShape);
+    mainToolBar->addAction(showProtocole);
+    mainToolBar->addAction(showSession);
+    mainToolBar->addAction(showShape);
+    mainToolBar->addAction(showEvent);
     mainToolBar->addAction(save);
 
     MainWindow->addToolBar(mainToolBar);

@@ -30,6 +30,8 @@ Model::save()
 
   TrialInfo ti;
   ShapeInfo si;
+  ShapeListener sl;
+
   vector<string>::iterator it;
   bool first;
   string str = "";
@@ -49,9 +51,10 @@ Model::save()
 		      , "test.txt");
       foreach (si, ti.shapes)
 	{
+	  //Shape
 	  first = true;
 	  str = "";
-	  for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
+	   for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
 	    {
 	      if (first)
 		{
@@ -64,6 +67,37 @@ Model::save()
 		}
 	    }
 	  _recorder->Save(str, "test.txt");
+
+	  //Event
+
+	  first = true;
+	  str = "";
+
+	  foreach(sl, si.listeners)
+	    {
+	      stringstream ss (stringstream::in | stringstream::out);
+
+	      _recorder->Save("+ "
+			      + lexical_cast<string>(sl.key) + 
+			      " "
+			      + ss.str() +
+			      " "
+			      + lexical_cast<string>(sl.gain)+ 
+			      " ", "test.txt");
+	    }
+	  /*for (it = si.attributes.begin(); it != si.attributes.end(); ++it)
+	    {
+	      if (first)
+		{
+		  first = false;
+		  str += "> "+ si.name + " " + (*it);
+		}
+	      else
+		{
+		  str += " " + (*it) + " ";
+		}
+		}*/
+	  //  _recorder->Save(str, "test.txt");
 	}
       _recorder->Save(";", "test.txt");
     }

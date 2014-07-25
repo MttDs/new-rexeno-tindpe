@@ -31,8 +31,6 @@ private:
   vector<FormShape*> _formShapes;
   int _lastIndex;
 
-  TrialInfo* _getCurrentTrial();
-
 public:
   CreateShape(QWidget *parent, Controller *c);
   ~CreateShape();
