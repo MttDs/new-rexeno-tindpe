@@ -66,9 +66,11 @@ SessionView::SessionView(QWidget *parent, Controller *c)
 void
 SessionView::_init()
 {
+  
   connect(_submit, SIGNAL(clicked()), this, SLOT(_save()));
   connect(_deleteSession, SIGNAL(clicked()), this, SLOT(_delete()));
   connect(_controller, SIGNAL(fillSessionForm(int)), this, SLOT(fillForm(int)));
+  connect(_controller, SIGNAL(resetIndexTrial()), this, SLOT(reset()));
   connect(this, SIGNAL(changeLeftBar()), _controller, SLOT(_updateLeftBar()));
 }
 

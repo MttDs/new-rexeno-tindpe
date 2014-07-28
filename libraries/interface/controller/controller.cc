@@ -92,6 +92,7 @@ Controller::_changeCurrentTrial(int index){
     {
       _ui->showShape->setEnabled(false);
       _ui->showEvent->setEnabled(false);
+      emit(resetIndexTrial());
     }
 
 }

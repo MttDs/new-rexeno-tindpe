@@ -69,6 +69,7 @@ private slots:
 signals:
   void fillSessionForm(int);
   void fillComboShapes();
+  void resetIndexTrial();
 };
 
 #endif 

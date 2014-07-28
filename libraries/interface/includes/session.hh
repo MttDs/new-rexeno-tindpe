@@ -53,7 +53,6 @@ public:
   SessionView(QWidget *parent, Controller *c);
   ~SessionView();
 
-  void reset();
 private:
   void _init();
 
@@ -63,6 +62,7 @@ private slots:
 
 public slots:
   void fillForm(int index);
+  void reset();
 
 signals:
   void changeLeftBar();
