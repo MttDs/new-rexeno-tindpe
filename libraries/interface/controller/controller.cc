@@ -64,6 +64,7 @@ Controller::_init()
   QObject::connect(_ui->comboTrials, SIGNAL(activated(int)), this, SLOT(_changeCurrentTrial(int)));
 
   QObject::connect(_ui->loadFile, SIGNAL(triggered()), this, SLOT(_loadFile()));
+  QObject::connect(_ui->newDef, SIGNAL(triggered()), this, SLOT(_reset()));
 }
 
 /**
@@ -216,6 +217,14 @@ Controller::deleteItem()
   _ui->comboTrials->removeItem(_indexTrial+1);
 }
 
+void 
+Controller::setMessage(const char* str)
+{
+  _ui->statusBar->showMessage(QString::fromUtf8(str), 8000);
+}
+
+
+
 /**
    note: charge un ficher de definition et rempli 
    la structure sessionInfo
@@ -232,10 +241,13 @@ Controller::_loadFile()
 						  "Text File (*.txt)"
 						  );
 
+
+  // _reset();
   bool r = configuration::CreateConfiguration(filename.toUtf8().constData(), *sessionInfo);
   // bool r = configuration::CreateConfiguration("definition", conf);
   if (r)
     {
+      
       TrialInfo ti;
       QString str;
       foreach (ti, sessionInfo->trials)
@@ -249,7 +261,16 @@ Controller::_loadFile()
 }
 
 void 
-Controller::setMessage(const char* str)
+Controller::_reset()
 {
-  _ui->statusBar->showMessage(QString::fromUtf8(str), 8000);
+  sessionInfo = NULL;
+  sessionInfo = new SessionInfo();
+  int ii;
+
+  for(ii=_ui->comboTrials->count(); ii>0 ; --ii)
+    {
+      _ui->comboTrials->removeItem(ii);
+    }
+
+   _updateLeftBar();
 }

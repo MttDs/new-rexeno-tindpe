@@ -65,7 +65,7 @@ private slots:
   void _updateLeftBar();
   void _changeCurrentTrial(int index);
   void _loadFile();
-
+  void _reset();
 signals:
   void fillSessionForm(int);
   void fillComboShapes();

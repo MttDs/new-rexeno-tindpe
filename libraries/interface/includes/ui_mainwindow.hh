@@ -51,12 +51,13 @@ public:
   QStatusBar *statusBar;
   QHBoxLayout *layout;
   
-  QAction* loadFile;
-  QAction* showProtocole;
-  QAction* showSession;
-  QAction* showShape;
-  QAction* showEvent;
-  QAction* save;
+  QAction *newDef;
+  QAction *loadFile;
+  QAction *showProtocole;
+  QAction *showSession;
+  QAction *showShape;
+  QAction *showEvent;
+  QAction *save;
 
   // Left bar
 
@@ -89,10 +90,17 @@ public:
       MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
     MainWindow->setFixedSize(900, 700);
 
+    newDef = new QAction("Nouveau", MainWindow);
     loadFile = new QAction("Ouvrir", MainWindow);
+    showProtocole = new QAction("Protocole", MainWindow);
+    showSession = new QAction("Session", MainWindow);
+    showShape = new QAction("Formes", MainWindow);
+    showEvent = new QAction(QString::fromUtf8("Événement"), MainWindow);
+    save = new QAction("Sauvegarder", MainWindow);
+    save->setShortcut(QKeySequence("Ctrl-S")); 
 
     menuFile = new QMenu("&File");
-    menuFile->addAction("Nouveau");
+    menuFile->addAction(newDef);
     menuFile->addAction(loadFile);
 
     menuBar = new QMenuBar(MainWindow);
@@ -104,13 +112,6 @@ public:
     mainToolBar = new QToolBar(MainWindow);
     mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
     
-    showProtocole = new QAction("Protocole", MainWindow);
-    showSession = new QAction("Session", MainWindow);
-    showShape = new QAction("Formes", MainWindow);
-    showEvent = new QAction(QString::fromUtf8("Événement"), MainWindow);
-    save = new QAction("Sauvegarder", MainWindow);
-    save->setShortcut(QKeySequence("Ctrl-S")); 
-
     mainToolBar->addAction(showProtocole);
     mainToolBar->addAction(showSession);
     mainToolBar->addAction(showShape);
