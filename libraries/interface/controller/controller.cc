@@ -228,7 +228,7 @@ Controller::_loadFile()
   QString filename = QFileDialog::getOpenFileName(
 						  0,
 						  tr("Open File"),
-						  "../../protocole/test/"
+						  "protocoles/"
 						  "Text File (*.txt)"
 						  );
 

@@ -19,7 +19,10 @@ link_libraries(${Boost_SYSTEM_LIBRARY})
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
-qt4_wrap_cpp(TrialCreator_MOC includes/protocole.hh includes/mainwindow.hh  includes/ui_mainwindow.hh includes/controller.hh includes/view.hh includes/session.hh includes/error.hh includes/form_shape.hh includes/form_sphere.hh includes/form_square.hh includes/form_plan.hh includes/shape.hh includes/model.hh includes/event.hh )#view/popup.hh )
-#qt4_wrap_cpp(TrialCreator_Popup includes/view.hh view/popup.hh)
-add_executable(TrialCreator ${TrialCreator_MOC} main.cc view/protocole.cc controller/controller.cc view/mainwindow.cc view/view.cc view/session.cc view/form_plan.cc view/form_sphere.cc view/form_square.cc view/error.cc view/form_shape.cc view/shape.cc model/model.cc view/event.cc ../configuration/parser.cc ) #model/model.cc  controler/controler.cc )#view/popup.cc)
-target_link_libraries(TrialCreator ${QT_LIBRARIES})
+qt4_wrap_cpp(Interface_MOC includes/protocole.hh includes/mainwindow.hh  includes/ui_mainwindow.hh includes/controller.hh includes/view.hh includes/session.hh includes/error.hh includes/form_shape.hh includes/form_sphere.hh includes/form_square.hh includes/form_plan.hh includes/shape.hh includes/model.hh includes/event.hh )
+
+add_executable(Interface ${Interface_MOC} main.cc view/protocole.cc controller/controller.cc view/mainwindow.cc view/view.cc view/session.cc view/form_plan.cc view/form_sphere.cc view/form_square.cc view/error.cc view/form_shape.cc view/shape.cc model/model.cc view/event.cc ../configuration/parser.cc ) 
+
+target_link_libraries(Interface ${QT_LIBRARIES})
+
+INSTALL(TARGETS Interface DESTINATION ${PROJECT_SOURCE_DIR}/../)
