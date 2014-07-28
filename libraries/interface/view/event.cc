@@ -28,6 +28,9 @@ EventView::EventView(QWidget *parent, Controller *c)
   _comboType->addItem("d");
   _comboType->addItem("v");
 
+  _fields.push_back(_keyField);
+  _fields.push_back(_coefField);
+
   _submit = new QPushButton("Ajouter");
 
   _parentForm->addWidget(_key,1,0);
@@ -121,32 +124,39 @@ EventView::_loadEventsFromShape(int index)
 void
 EventView::_save()
 {
-  if (_currentShape>=0)
+  if (_isValid())
     {
-      TrialInfo* ti = NULL;
-      ti = _getCurrentTrial();
-      if (ti!=NULL)
+      if (_currentShape>=0)
 	{
-	  ShapeInfo* si = &ti->shapes.at(_currentShape);
-	  ShapeListener sl;
+	  TrialInfo* ti = NULL;
+	  ti = _getCurrentTrial();
+	  if (ti!=NULL)
+	    {
+	      ShapeInfo* si = &ti->shapes.at(_currentShape);
+	      ShapeListener sl;
 
-	  sl.key = _keyField->text().toInt();
-	  sl.coef = _coefField->text().toFloat();
-	  sl.gain = _comboType->itemText(_comboType->currentIndex()).toUtf8().constData();
+	      sl.key = _keyField->text().toInt();
+	      sl.coef = _coefField->text().toFloat();
+	      sl.gain = _comboType->itemText(_comboType->currentIndex()).toUtf8().constData();
 
-	  si->listeners.push_back(sl);
-	  _loadEventsFromShape(_currentShape+1);
-	  _reset();
-	  _controller->setMessage("Événement ajouté à la forme");
+	      si->listeners.push_back(sl);
+	      _loadEventsFromShape(_currentShape+1);
+	      _reset();
+	      _controller->setMessage("Événement ajouté à la forme");
+	    }
+	  else
+	    {
+	      QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une session."));
+	    }
 	}
       else
 	{
-	  QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une session."));
+	  QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une forme"));
 	}
     }
   else
     {
-      QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une forme"));
+      QMessageBox::warning(0, "Information", "Impossible, vous devez remplir chacun des champs");
     }
 }
 

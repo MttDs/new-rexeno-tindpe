@@ -27,6 +27,18 @@ FormSquare::FormSquare(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _opacityField = new QLineEdit("0.5");
   _sizeField = new QLineEdit("0.2");
 
+  _fields.push_back(_nameField);
+  _fields.push_back(_xField);
+  _fields.push_back(_yField);
+  _fields.push_back(_zField);
+  _fields.push_back(_frameStartField);
+  _fields.push_back(_frameEndField);
+  _fields.push_back(_rField);
+  _fields.push_back(_gField);
+  _fields.push_back(_bField);
+  _fields.push_back(_opacityField);
+  _fields.push_back(_sizeField);
+
   _layout->addWidget(_name,0,0);
   _layout->addWidget(_nameField,0,1);
   _layout->addWidget(_x,1,0);
@@ -88,22 +100,30 @@ FormSquare::_save()
       si.attributes.push_back(_opacityField->text().toUtf8().constData());
       si.attributes.push_back(_sizeField->text().toUtf8().constData());
 
-      if (shapeValid())
+      if (_isValid())
 	{
-	  ti->shapes.at(_index) = si;
-	  _controller->setMessage("La forme a bien été modifiée");
+	  if (shapeValid())
+	    {
+	      ti->shapes.at(_index) = si;
+	      _controller->setMessage("La forme a bien été modifiée");
+	    }
+	  else
+	    {
+	      ti->shapes.push_back(si);
+	      _controller->setMessage("Nouvelle forme ajoutée!");
+	    }
+	  reset();
+	  FormShape::_save();
 	}
       else
 	{
-	  ti->shapes.push_back(si);
-	  _controller->setMessage("Nouvelle forme ajoutée!");
+	  QMessageBox::warning(0, "Information", "Impossible, vous devez remplir chacun des champs");
 	}
-      reset();
-      FormShape::_save();
     }
-  else{
-    QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));
-  }
+  else
+    {
+      QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));
+    }
 }
 
 void

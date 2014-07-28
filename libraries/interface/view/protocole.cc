@@ -24,6 +24,13 @@ ProtocoleView::ProtocoleView(QWidget *parent, Controller *c)
   _shuffleField = new QLineEdit("1");
   _savePathField = new QLineEdit("");
 
+  _fields.push_back(_frequencyField);
+  _fields.push_back(_screenWidthField);
+  _fields.push_back(_screenHeightField);
+  _fields.push_back(_nbScreensField);
+  _fields.push_back(_nbTrialsField);
+  _fields.push_back(_shuffleField);
+
   _gridForm->addWidget(_frequency,0,0);
   _gridForm->addWidget(_frequencyField,0,1);
   _gridForm->addWidget(_screenWidth,1,0);
@@ -63,6 +70,8 @@ ProtocoleView::_init()
 void 
 ProtocoleView::_save()
 {
+  if (_isValid())
+    {
   _controller->sessionInfo->frequency = _frequencyField->text().toInt(); 
   _controller->sessionInfo->width = _screenWidthField->text().toInt(); 
   _controller->sessionInfo->height = _screenHeightField->text().toInt();
@@ -74,6 +83,11 @@ ProtocoleView::_save()
   emit changeLeftBar();
 
   _controller->setMessage("Paramètre du protocole enregistrés.");
+    }
+  else
+    {
+      QMessageBox::warning(0, "Information", QString::fromUtf8("Impossible, seul le dernier champs peut être vide."));
+    }
 }
 
 

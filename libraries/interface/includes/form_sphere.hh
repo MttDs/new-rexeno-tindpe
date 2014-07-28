@@ -4,6 +4,8 @@
 #include "form_shape.hh"
 #include "parser.hh"
 
+#include <vector>
+
 #include <QWidget>
 #include <QObject>
 #include <QLabel>

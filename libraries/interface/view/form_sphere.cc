@@ -33,6 +33,21 @@ FormSphere::FormSphere(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _veloXField = new QLineEdit("0");
   _veloZField = new QLineEdit("0");
 
+  _fields.push_back(_nameField);
+  _fields.push_back(_minStartField);
+  _fields.push_back(_maxStartField);
+  _fields.push_back(_xField);
+  _fields.push_back(_zField);
+  _fields.push_back(_randomXField);
+  _fields.push_back(_randomZField);
+  _fields.push_back(_frameStartField);
+  _fields.push_back(_frameEndField);
+  _fields.push_back(_stacksField);
+  _fields.push_back(_slicesField);
+  _fields.push_back(_radiusField);
+  _fields.push_back(_veloXField);
+  _fields.push_back(_veloZField);
+
   _layout->addWidget(_name,0,0);
   _layout->addWidget(_nameField,0,1);
   _layout->addWidget(_minStart,1,0);
@@ -103,22 +118,30 @@ FormSphere::_save()
       si.attributes.push_back(_veloXField->text().toUtf8().constData());
       si.attributes.push_back(_veloZField->text().toUtf8().constData());
 
-      if (shapeValid())
+      if (_isValid())
 	{
-	  ti->shapes.at(_index) = si;
-	  _controller->setMessage("La forme a bien été modifiée");
+	  if (shapeValid())
+	    {
+	      ti->shapes.at(_index) = si;
+	      _controller->setMessage("La forme a bien été modifiée");
+	    }
+	  else
+	    {
+	      ti->shapes.push_back(si);
+	      _controller->setMessage("Nouvelle forme ajoutée!");
+	    }
+	  reset();
+	  FormShape::_save();
 	}
       else
 	{
-	  ti->shapes.push_back(si);
-	  _controller->setMessage("Nouvelle forme ajoutée!");
+	  QMessageBox::warning(0, "Information", "Impossible, vous devez remplir chacun des champs");
 	}
-      reset();
-      FormShape::_save();
     }
-  else{
+  else
+    {
     QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));
-  }
+    }
 }
 
 void 

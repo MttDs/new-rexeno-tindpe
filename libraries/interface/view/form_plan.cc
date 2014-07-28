@@ -25,6 +25,16 @@ FormPlan::FormPlan(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   _heightField = new QLineEdit("80");
   _repeatField = new QLineEdit("80");
 
+  _fields.push_back(_nameField);
+  _fields.push_back(_frameStartField);
+  _fields.push_back(_frameEndField);
+  _fields.push_back(_minStartField);
+  _fields.push_back(_maxStartField);
+  _fields.push_back(_xField);
+  _fields.push_back(_yField);
+  _fields.push_back(_widthField);
+  _fields.push_back(_heightField);
+  _fields.push_back(_repeatField);
 
   _layout->addWidget(_name,0,0);
   _layout->addWidget(_nameField,0,1);
@@ -85,18 +95,26 @@ FormPlan::_save()
       si.attributes.push_back(_heightField->text().toUtf8().constData());
       si.attributes.push_back(_repeatField->text().toUtf8().constData());
 
-      if (shapeValid())
+      if (_isValid())
 	{
-	  ti->shapes.at(_index) = si;
-	  _controller->setMessage("La forme a bien été modifiée");
-	}
+	  if (shapeValid())
+	    {
+	      ti->shapes.at(_index) = si;
+	      _controller->setMessage("La forme a bien été modifiée");
+	    }
+	  else
+	    {
+	      ti->shapes.push_back(si);
+	      _controller->setMessage("Nouvelle forme ajoutée!");
+	    }
+	  reset();
+	  FormShape::_save();
+	}      
       else
 	{
-	  ti->shapes.push_back(si);
-	  _controller->setMessage("Nouvelle forme ajoutée!");
+	  QMessageBox::warning(0, "Information", "Impossible, vous devez remplir chacun des champs");
 	}
-      reset();
-      FormShape::_save();
+
     }
   else{
     QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));

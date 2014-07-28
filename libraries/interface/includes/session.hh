@@ -18,12 +18,16 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class SessionView : public View
 {
 Q_OBJECT
 private:
   QVBoxLayout *_gridForm;
+
   QPushButton *_submit;
+  QPushButton *_deleteSession;
 
   QLabel *_name;
   QLabel *_veloCameraX;
@@ -47,15 +51,13 @@ private:
   QLineEdit *_centerYField;
   QLineEdit *_centerZField;
 
-  QPushButton *_deleteSession;
-
 public:
   SessionView(QWidget *parent, Controller *c);
   ~SessionView();
 
 private:
   void _init();
-
+ 
 private slots:
   void _save();
   void _delete();

@@ -39,3 +39,21 @@ View::beforeDisplay()
 {
 
 }
+
+bool 
+View::_isValid()
+{
+  QLineEdit* qLE;
+  vector<TrialInfo> trials = _controller->sessionInfo->trials;
+  TrialInfo trial;
+  bool b = true;
+
+  foreach(qLE, _fields)
+    {
+      if (qLE->text()=="")
+	{
+	  b=false;
+	}
+    }
+  return b;
+}

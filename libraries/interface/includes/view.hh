@@ -6,9 +6,11 @@
 #include <QObject>
 #include <QMainWindow>
 #include <QString>
+#include <QLineEdit>
 #include <QPushButton>
 
 using namespace configuration;
+using namespace std;
 
 class Controller;
 class View : public QWidget
@@ -19,7 +21,10 @@ protected:
   QPushButton *_submit;
   QPushButton *_buttonDelete;
 
+  vector<QLineEdit*> _fields;
+
   TrialInfo* _getCurrentTrial();
+  bool _isValid();
 public:
   View(QWidget *parent);
 

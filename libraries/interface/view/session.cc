@@ -32,6 +32,18 @@ SessionView::SessionView(QWidget *parent, Controller *c)
   _centerZField = new QLineEdit("0");
 
   _nameField->setMinimumWidth(250);
+
+  _fields.push_back(_nameField);
+  _fields.push_back(_veloCmraXField);
+  _fields.push_back(_veloCmraYField);
+  _fields.push_back(_veloCmraZField);
+  _fields.push_back(_eyeXField);
+  _fields.push_back(_eyeYField);
+  _fields.push_back(_eyeZField);
+  _fields.push_back(_centerXField);
+  _fields.push_back(_centerYField);
+  _fields.push_back(_centerZField);
+  
   _gridForm->addWidget(_name);
   _gridForm->addWidget(_nameField);
   _gridForm->addWidget(_veloCameraX);
@@ -135,21 +147,29 @@ SessionView::_save()
   attributes.push_back(_centerZField->text().toUtf8().constData());
 
   trial.attributes = attributes;
-  if (b)
+  
+  if (_isValid())
     {
-      trials->at(indexTrial)= trial;
-      _controller->updateItem(trial.name.c_str());
-      _controller->setMessage("La session a bien été modifiée");
+      if (b)
+	{
+	  trials->at(indexTrial)= trial;
+	  _controller->updateItem(trial.name.c_str());
+	  _controller->setMessage("La session a bien été modifiée");
+	}
+      else
+	{
+	  trials->push_back(trial);
+	  QString str = trial.name.c_str();
+	  _controller->addItem(str);
+	  _controller->setMessage("Nouvelle session créée");
+	}
+      reset();
+      emit(changeLeftBar());
     }
   else
     {
-      trials->push_back(trial);
-      QString str = trial.name.c_str();
-      _controller->addItem(str);
-      _controller->setMessage("Nouvelle session créée");
+      QMessageBox::warning(0, "Information", "Impossible, vous devez remplir chacun des champs");
     }
-  reset();
-  emit(changeLeftBar());
 }
 
 
@@ -207,3 +227,15 @@ SessionView::~SessionView()
 {
 
 }
+
+
+/*
+  foreach(trial, trials)
+    {
+      if (trial.name==_nameField->text().toUtf8().constData())
+	{
+	  error=2;
+	  break;
+	}
+    }
+*/
