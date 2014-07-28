@@ -123,18 +123,26 @@ EventView::_save()
 {
   if (_currentShape>=0)
     {
-      TrialInfo* ti = _getCurrentTrial();
-      ShapeInfo* si = &ti->shapes.at(_currentShape);
-      ShapeListener sl;
+      TrialInfo* ti = NULL;
+      ti = _getCurrentTrial();
+      if (ti!=NULL)
+	{
+	  ShapeInfo* si = &ti->shapes.at(_currentShape);
+	  ShapeListener sl;
 
-      sl.key = _keyField->text().toInt();
-      sl.coef = _coefField->text().toFloat();
-      sl.gain = _comboType->itemText(_comboType->currentIndex()).toUtf8().constData();
+	  sl.key = _keyField->text().toInt();
+	  sl.coef = _coefField->text().toFloat();
+	  sl.gain = _comboType->itemText(_comboType->currentIndex()).toUtf8().constData();
 
-      si->listeners.push_back(sl);
-      _loadEventsFromShape(_currentShape+1);
-      _reset();
-      _controller->setMessage("Événement ajouté à la forme");
+	  si->listeners.push_back(sl);
+	  _loadEventsFromShape(_currentShape+1);
+	  _reset();
+	  _controller->setMessage("Événement ajouté à la forme");
+	}
+      else
+	{
+	  QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une session."));
+	}
     }
   else
     {
