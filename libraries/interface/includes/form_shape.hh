@@ -29,6 +29,7 @@ public:
   void Init();
   void activate();
   void inactivate();
+  bool shapeValid();
   virtual void fillForm(ShapeInfo* si, int index)=0;
   string getName(){ return _nameField->text().toUtf8().constData();}
   string getType(){ return _type->toUtf8().constData();}

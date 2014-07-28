@@ -103,7 +103,7 @@ FormSphere::_save()
       si.attributes.push_back(_veloXField->text().toUtf8().constData());
       si.attributes.push_back(_veloZField->text().toUtf8().constData());
 
-      if (_index!=-1)
+      if (shapeValid())
 	{
 	  ti->shapes.at(_index) = si;
 	  _controller->setMessage("La forme a bien été modifiée");

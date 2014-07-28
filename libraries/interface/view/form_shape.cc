@@ -61,6 +61,16 @@ FormShape::inactivate()
   _parentWidget->hide();
 }
 
+bool
+FormShape::shapeValid()
+{
+  if (_index>=0)
+    {
+      return true;
+    }
+  return false;
+}
+
 void 
 FormShape::_deleteShape()
 {
@@ -71,7 +81,7 @@ FormShape::_deleteShape()
   ShapeInfo* lastSi = &shapes->back();
   int nbOfShape = shapes->size();
 
-  if (_index!=-1)
+  if (shapeValid())
     {
     if (nbOfShape==1 || si == lastSi)
       {
