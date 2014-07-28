@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QtDebug>
+#include <QMessageBox>
 #include "view.hh"
 
 class ProtocoleView : public View

@@ -12,7 +12,7 @@ FormPlan::FormPlan(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
   _y = new QLabel("Position y:");
   _width = new QLabel("Largeur:");
   _height = new QLabel("Longueur:");
-  _repeat = new QLabel("Répétition de la texture");
+  _repeat = new QLabel(QString::fromUtf8("Répétition de la texture"));
 
   _nameField->setText("Plan");
   _frameStartField->setText("0");
@@ -90,17 +90,19 @@ FormPlan::_save()
 	{
 	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
+	  _controller->setMessage("La forme a bien été modifiée");
 	}
       else
 	{
 	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
+	  _controller->setMessage("Nouvelle forme ajoutée!");
 	}
       reset();
       FormShape::_save();
     }
   else{
-    QMessageBox::information(0, tr("Information"), "Impossible, pas de session selectionnée.");
+    QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));
   }
 }
 void

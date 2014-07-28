@@ -90,7 +90,7 @@ EventView::_deleteEvent(int index)
 	  listeners->erase( listeners->end()-1);
 	}
       _loadEventsFromShape(_currentShape+1);
-
+      _controller->setMessage("Événement supprimé.");
     }
   else{
     std::cout << "rien a supprimer" << std::endl;
@@ -128,7 +128,11 @@ EventView::_loadEventsFromShape(int index)
 void
 EventView::_save()
 {
+ if (_currentShape>=0)
+    {
   std::cout << "Je dois enregistrer " << _currentShape <<std::endl;
+ 
+
   TrialInfo* ti = _getCurrentTrial();
   ShapeInfo* si = &ti->shapes.at(_currentShape);
   ShapeListener sl;
@@ -139,6 +143,12 @@ EventView::_save()
   si->listeners.push_back(sl);
   _loadEventsFromShape(_currentShape+1);
   _reset();
+  _controller->setMessage("Événement ajouté à la forme");
+    }
+ else
+   {
+     QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une forme"));
+   }
 }
 
 void

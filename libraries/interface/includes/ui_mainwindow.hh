@@ -146,6 +146,7 @@ public:
     
     statusBar = new QStatusBar(MainWindow);
     statusBar->setObjectName(QString::fromUtf8("statusBar"));
+    statusBar->showMessage("Ready", 4000);
     MainWindow->setStatusBar(statusBar);
     retranslateUi(MainWindow);
     

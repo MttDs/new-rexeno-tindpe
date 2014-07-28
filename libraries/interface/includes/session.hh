@@ -12,6 +12,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLineEdit>
+#include <QMessageBox>
 
 #include <iostream>
 #include <vector>

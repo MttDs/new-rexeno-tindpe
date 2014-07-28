@@ -51,6 +51,7 @@ public:
 
   void addItem(QString str);
   void updateItem(QString str);
+  void setMessage(const char* str);
   void deleteItem();
 
   bool trialExists();

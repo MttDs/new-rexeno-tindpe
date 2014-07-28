@@ -19,6 +19,9 @@ Controller::Controller(Ui::MainWindow* ui)
   _views.push_back(new ShapeView(_ui->mainWidget, this));
   _views.push_back(new EventView(_ui->mainWidget, this));
 
+  _ui->showShape->setEnabled(false);
+  _ui->showEvent->setEnabled(false);
+
   _model = new Model(sessionInfo);
   _init();
 }
@@ -73,15 +76,22 @@ Controller::_init()
 **/
 void 
 Controller::_changeCurrentTrial(int index){
-  if (index==0){
-    _indexTrial = -1;
-  }
-  else{
-    _indexTrial = (index-1);
-    emit(fillSessionForm(_indexTrial));
-    emit(fillComboShapes());
-  }
+  _indexTrial = (index-1);
+  if (_indexTrial>=0)
+    {
+      emit(fillSessionForm(_indexTrial));
+      emit(fillComboShapes());
+    
+      _ui->showShape->setEnabled(true);
+      _ui->showEvent->setEnabled(true);
 
+      setMessage("Session selectionnée");
+    }
+  else
+    {
+      _ui->showShape->setEnabled(false);
+      _ui->showEvent->setEnabled(false);
+    }
   std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
 
 }
@@ -249,4 +259,10 @@ Controller::_loadFile()
       _updateLeftBar();
     }
 
+}
+
+void 
+Controller::setMessage(const char* str)
+{
+  _ui->statusBar->showMessage(QString::fromUtf8(str), 8000);
 }

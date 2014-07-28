@@ -44,7 +44,6 @@ ShapeView::~ShapeView()
 void
 ShapeView::_init()
 {
-  QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_resetIndex(int)));
   QObject::connect(_comboShapes, SIGNAL(activated(int)), this, SLOT(_showFormShape(int)));
   QObject::connect(_comboShapes, SIGNAL(currentIndexChanged(int)), this, SLOT(_hideFormShape(int)));
   QObject::connect(_comboShapesEdit, SIGNAL(activated(int)), this, SLOT(fillFormShape(int)));
@@ -137,57 +136,57 @@ ShapeView::fillFormShape(int index)
   if (index-1>=0){
     _comboShapes->setEnabled(false);
   }
-    else
-      {
-	_comboShapes->setEnabled(true);
-      }
+  else
+    {
+      _comboShapes->setEnabled(true);
+    }
 
   if ((index-1)>=0)
     {
-  vector<ShapeInfo> shapes = _getCurrentTrial()->shapes;
-  ShapeInfo* si = &shapes.at(index-1); 
-  ShapeInfo siTmp;
-  FormShape* fs = NULL;
-  int ii=0;
-  int posShape;
-  int posFormShape;
+      vector<ShapeInfo> shapes = _getCurrentTrial()->shapes;
+      ShapeInfo* si = &shapes.at(index-1); 
+      ShapeInfo siTmp;
+      FormShape* fs = NULL;
+      int ii=0;
+      int posShape;
+      int posFormShape;
 
-  if (si!=NULL)
-    {
-      string s;
-      foreach(fs,  _formShapes)
+      if (si!=NULL)
 	{
-	  s = fs->getType();
-	  std::cout << "2 "<< si->name << " " << s << std::endl;
-	  if (strcmp(si->name.c_str(), s.c_str())==0)
+	  string s;
+	  foreach(fs,  _formShapes)
 	    {
-	      posFormShape =ii;
-	      break;
+	      s = fs->getType();
+	      std::cout << "2 "<< si->name << " " << s << std::endl;
+	      if (strcmp(si->name.c_str(), s.c_str())==0)
+		{
+		  posFormShape =ii;
+		  break;
+		}
+	      ii++;
 	    }
-	  ii++;
-	}
-      ii = 0;
-      foreach(siTmp, shapes)
-	{
-	  s = siTmp.attributes[0];
-	  std::cout << "1 "<< si->attributes[0]  << " " << s << std::endl;
+	  ii = 0;
+	  foreach(siTmp, shapes)
+	    {
+	      s = siTmp.attributes[0];
+	      std::cout << "1 "<< si->attributes[0]  << " " << s << std::endl;
 	
-	  if (strcmp(si->attributes[0].c_str(), s.c_str())==0)
-	    {
-	      posShape = ii;
-	      //     break;
+	      if (strcmp(si->attributes[0].c_str(), s.c_str())==0)
+		{
+		  posShape = ii;
+		  //     break;
+		}
+	      ii++;
 	    }
-	  ii++;
+	  std::cout << "position de la shape" << posShape <<" position du form=> "<< posFormShape <<  std::endl;
+	  fs->fillForm(si, posShape);
+	  _hideFormShape(_lastIndex);
+	  _showFormShape(posFormShape+1); // todo
 	}
-      std::cout << "position de la shape" << posShape <<" position du form=> "<< posFormShape <<  std::endl;
-      fs->fillForm(si, posShape);
-      _hideFormShape(_lastIndex);
-      _showFormShape(posFormShape+1); // todo
-    }
-  else
-    {
-    std::cout << "impossible de trouver la forme demandé......." << std::endl;
-    }
+      else
+	{
+	  std::cout << "impossible de trouver la forme demandé......." << std::endl;
+	}
     }
 }
 /**

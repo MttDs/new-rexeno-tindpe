@@ -13,12 +13,12 @@ FormShape::FormShape(QWidget *parent, Controller *c, QVBoxLayout *parentLayout)
 
   _type = new QString("");
   _name = new QLabel("Nom de la forme:");
-  _frameStart = new QLabel("Frame de départ:");
+  _frameStart = new QLabel(QString::fromUtf8("Frame de départ:"));
   _frameEnd = new QLabel("Frame de fin:");
 
-  _nameField = new QLineEdit("Shape");
+  _nameField = new QLineEdit("");
   _frameStartField = new QLineEdit("0");
-  _frameEndField = new QLineEdit("60");
+  _frameEndField = new QLineEdit("0");
 
   _submit = new QPushButton("Enregistrer la forme");
   _buttonDelete = new QPushButton("Supprimer cette forme");
@@ -85,6 +85,7 @@ FormShape::_deleteShape()
 	  shapes->at(_index)= shapes->back();
 	  shapes->erase(shapes->end()-1);
       }
+    _controller->setMessage("Forme supprimée!");
     reset();
     afterSave();
   }

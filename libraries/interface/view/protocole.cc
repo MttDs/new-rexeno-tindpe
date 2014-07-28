@@ -8,13 +8,13 @@ ProtocoleView::ProtocoleView(QWidget *parent, Controller *c)
   _gridForm = new QGridLayout(this);
   _submit = new QPushButton("Creer le protocole");
   //_gridForm->setStyleSheet("border-right: 1px solid blue;");
-  _frequency = new QLabel("Rafraichissement de l'écran:");
-  _screenWidth = new QLabel("Largeur de l'écran:");
-  _screenHeight = new QLabel("Hauteur de l'écran:");
-  _nbScreens = new QLabel("Nombre d'écran:");
-  _nbTrials = new QLabel("Nombre d'essai:");
+  _frequency = new QLabel(QString::fromUtf8("Rafraichissement de l'écran:"));
+  _screenWidth = new QLabel(QString::fromUtf8("Largeur de l'écran:"));
+  _screenHeight = new QLabel(QString::fromUtf8("Hauteur de l'écran:"));
+  _nbScreens = new QLabel(QString::fromUtf8("Nombre d'écran:"));
+  _nbTrials = new QLabel(QString::fromUtf8("Nombre d'essai:"));
   _shuffle = new QLabel("Ordre d'affichage des sessions:");
-  _savePath = new QLabel("Emplacement de sauvegarde des données");
+ _savePath = new QLabel(QString::fromUtf8("Emplacement de sauvegarde des données"));
 
   _frequencyField = new QLineEdit("60");
   _screenWidthField = new QLineEdit("1920");
@@ -73,6 +73,8 @@ ProtocoleView::_save()
   _controller->sessionInfo->save = _savePathField->text().toUtf8().constData();
 
   emit changeLeftBar();
+
+  _controller->setMessage("Paramètre du protocole enregistrés.");
 }
 
 

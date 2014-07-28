@@ -147,6 +147,7 @@ SessionView::_save()
       std::cout << (trials->begin()+indexTrial)->name << " " << trial.name <<std::endl;
       std::cout << "index trial (from create_session)" << indexTrial << std::endl;
       std::cout << "il existe deja "  << std::endl;
+      _controller->setMessage("La session a bien été modifiée");
     }
   else
     {
@@ -154,6 +155,7 @@ SessionView::_save()
       trials->push_back(trial);
       QString str = trial.name.c_str();
       _controller->addItem(str);
+      _controller->setMessage("Nouvelle session créée");
     }
   reset();
   emit(changeLeftBar());
@@ -190,6 +192,7 @@ SessionView::_delete()
       _controller->deleteItem();
       reset();
       emit(changeLeftBar());
+      _controller->setMessage("Session supprimée!");
     }
   else
     {

@@ -12,22 +12,25 @@ FormSphere::FormSphere(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _z = new QLabel("centre Z:");
   _randomX = new QLabel("Random center min:");
   _randomZ = new QLabel("Random center max:");
-  _stacks = new QLabel("Précision de la sphére horizontale:");
-  _slices = new QLabel("Précision de la sphère verticale:");
+  _stacks = new QLabel(QString::fromUtf8("Précision de la sphére horizontale:"));
+  _slices = new QLabel(QString::fromUtf8("Précision de la sphère verticale:"));
   _radius = new QLabel("Rayon:");
   _veloX = new QLabel("Vitesse en X:");
   _veloZ = new QLabel("Vitesse en Y:");
 
+  _nameField->setText("");
   _minStartField = new QLineEdit("0");
-  _maxStartField = new  QLineEdit("60");
-  _xField = new QLineEdit("2");
+  _maxStartField = new  QLineEdit("0");
+  _xField = new QLineEdit("0");
   _zField = new QLineEdit("0");
   _randomXField = new QLineEdit("0.2");
   _randomZField = new QLineEdit("0");
+  _frameStartField->setText("");
+  _frameEndField->setText("");
   _stacksField = new QLineEdit("20");
   _slicesField = new QLineEdit("20");
-  _radiusField = new QLineEdit("0.2");
-  _veloXField = new QLineEdit("0.4");
+  _radiusField = new QLineEdit("0.1");
+  _veloXField = new QLineEdit("0");
   _veloZField = new QLineEdit("0");
 
   _layout->addWidget(_name,0,0);
@@ -105,17 +108,19 @@ FormSphere::_save()
 	{
 	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
+	  _controller->setMessage("La forme a bien été modifiée");
 	}
       else
 	{
 	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
+	  _controller->setMessage("Nouvelle forme ajoutée!");
 	}
       reset();
       FormShape::_save();
     }
   else{
-    QMessageBox::information(0, tr("Information"), "Impossible, pas de session selectionnée.");
+    QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));
   }
 }
 
@@ -157,7 +162,7 @@ FormSphere::reset()
   _frameEndField->setText("");
   _stacksField->setText("20");
   _slicesField->setText("20");
-  _radiusField->setText("0.2");
+  _radiusField->setText("0.1");
   _veloXField->setText("0");
   _veloZField->setText("0");
 

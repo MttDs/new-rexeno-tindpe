@@ -15,9 +15,12 @@ FormSquare::FormSquare(QWidget *parent, Controller *c, QVBoxLayout *parentLayout
   _opacity = new QLabel("Opacity:");
   _size = new QLabel("Size:");
 
+  _nameField->setText("Fixation");
   _xField = new QLineEdit("0");   
   _yField = new QLineEdit("0"); 
-  _zField = new QLineEdit("-4"); 
+  _zField = new QLineEdit("-5"); 
+  _frameStartField->setText("0");
+  _frameEndField->setText("-1");
   _rField = new QLineEdit("255"); 
   _gField = new QLineEdit("255"); 
   _bField = new QLineEdit("0");
@@ -90,17 +93,19 @@ FormSquare::_save()
 	{
 	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
+	  _controller->setMessage("La forme a bien été modifiée");
 	}
       else
 	{
 	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
+	  _controller->setMessage("Nouvelle forme ajoutée!");
 	}
       reset();
       FormShape::_save();
     }
   else{
-    QMessageBox::information(0, tr("Information"), "Impossible, pas de session selectionnée.");
+    QMessageBox::warning(0, tr("Information"), QString::fromUtf8("Impossible, pas de session selectionnée."));
   }
 }
 
