@@ -62,7 +62,7 @@ SessionView::SessionView(QWidget *parent, Controller *c)
 
 /**
    note: initialise les evenements relatifs a la vue
- **/
+**/
 void
 SessionView::_init()
 {
@@ -77,25 +77,24 @@ SessionView::_init()
   
    note: recupere l'essai a l'indice "index"
    et rempli le formulaire de la session
- **/
+**/
 void
 SessionView::fillForm(int index)
 {
-  std::cout << index << std::endl;
   if (index>=0)
     {
-  TrialInfo ti = _controller->sessionInfo->trials[index];
-  QString str;
-  _nameField->setText( str =ti.name.c_str());
-  _veloCmraXField->setText( str =ti.attributes[0].c_str());
-  _veloCmraYField->setText( str =ti.attributes[1].c_str());
-  _veloCmraZField->setText(str =ti.attributes[2].c_str());
-  _eyeXField->setText(str =ti.attributes[3].c_str());
-  _eyeYField->setText(str =ti.attributes[4].c_str());
-  _eyeZField->setText(str =ti.attributes[5].c_str());
-  _centerXField->setText(str =ti.attributes[6].c_str());
-  _centerYField->setText(str =ti.attributes[7].c_str());
-  _centerZField->setText(str =ti.attributes[8].c_str());
+      TrialInfo ti = _controller->sessionInfo->trials[index];
+      QString str;
+      _nameField->setText( str =ti.name.c_str());
+      _veloCmraXField->setText( str =ti.attributes[0].c_str());
+      _veloCmraYField->setText( str =ti.attributes[1].c_str());
+      _veloCmraZField->setText(str =ti.attributes[2].c_str());
+      _eyeXField->setText(str =ti.attributes[3].c_str());
+      _eyeYField->setText(str =ti.attributes[4].c_str());
+      _eyeZField->setText(str =ti.attributes[5].c_str());
+      _centerXField->setText(str =ti.attributes[6].c_str());
+      _centerYField->setText(str =ti.attributes[7].c_str());
+      _centerZField->setText(str =ti.attributes[8].c_str());
     }
 }
 /**
@@ -105,24 +104,19 @@ SessionView::fillForm(int index)
    sinon on remplace l'essai
    La meme chose est effectuee pour mettre a jour la liste
    des sessions disponibles (comboTrials)
- **/
+**/
 void 
 SessionView::_save()
 {
-
-  std::cout << "save from create session " << std::endl;
-
   vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
   TrialInfo trial;
   bool b = false;
   int indexTrial = _controller->getIndexTrial();
-  std::cout << indexTrial << std::endl;
+
   if (_controller->trialExists())
     {
-
       b = true;
       trial = trials->at(indexTrial);
-
     }
 
   trial.name = _nameField->text().toUtf8().constData();
@@ -143,15 +137,10 @@ SessionView::_save()
     {
       trials->at(indexTrial)= trial;
       _controller->updateItem(trial.name.c_str());
-      
-      std::cout << (trials->begin()+indexTrial)->name << " " << trial.name <<std::endl;
-      std::cout << "index trial (from create_session)" << indexTrial << std::endl;
-      std::cout << "il existe deja "  << std::endl;
       _controller->setMessage("La session a bien été modifiée");
     }
   else
     {
-      std::cout << "il existe pas" << std::endl;
       trials->push_back(trial);
       QString str = trial.name.c_str();
       _controller->addItem(str);
@@ -164,7 +153,7 @@ SessionView::_save()
 
 /**
    note: supprime ou remet a zero (todo) la session
- **/
+**/
 void
 SessionView::_delete()
 {
@@ -172,31 +161,28 @@ SessionView::_delete()
     {
 
       int indexTrial = _controller->getIndexTrial();
-      int nbOfTrial = _controller->sessionInfo->trials.size();
-      std::cout << "suppression du trial! "<< nbOfTrial << std::endl;
+      int nbOfTrials = _controller->sessionInfo->trials.size();
       vector<TrialInfo>* trials = &_controller->sessionInfo->trials;
       TrialInfo* ti = &(_controller->sessionInfo->trials.at(indexTrial));
       TrialInfo* lastTi = &(_controller->sessionInfo->trials.back());
-      if (nbOfTrial==1 || ti==lastTi )
+      if (nbOfTrials==1 || ti==lastTi )
 	{
-	  std::cout << 1 << std::endl;
 	  trials->erase(trials->begin()+indexTrial);
 	}	  
       else
-	{
-	  
+	{	  
 	  trials->at(indexTrial)= trials->back();
 	  trials->erase(trials->end()-1);
-	  std::cout << 2 << std::endl;
 	}
       _controller->deleteItem();
       reset();
       emit(changeLeftBar());
+
       _controller->setMessage("Session supprimée!");
     }
   else
     {
-      std::cout << "theoriquement, je dois remettre a zero ici... " << std::endl;
+      reset();
     }
 }
 

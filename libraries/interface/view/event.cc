@@ -67,34 +67,27 @@ EventView::_deleteEvent(int index)
   int nbEvent = index-1;
   if (nbEvent>=0)
     {
-  TrialInfo* ti = _getCurrentTrial();
-  ShapeInfo* si = &ti->shapes.at(_currentShape);
-  vector<ShapeListener>* listeners = &si->listeners;
-  ShapeListener* sl = &listeners->at(nbEvent);
-  ShapeListener* end = &listeners->back();
+      TrialInfo* ti = _getCurrentTrial();
+      ShapeInfo* si = &ti->shapes.at(_currentShape);
+      vector<ShapeListener>* listeners = &si->listeners;
+      ShapeListener* sl = &listeners->at(nbEvent);
+      ShapeListener* end = &listeners->back();
 
-  int nbOfListeners =  listeners->size();
-  std::cout << "nbindex => "<< nbEvent << std::endl;
-  if (nbEvent>=0)
-    {
- 
-      if (nbOfListeners==1 || sl == end)
+      int nbOfListeners =  listeners->size();
+      if (nbEvent>=0)
 	{
-	  std::cout << "suppresion event premier ou dernier" << std::endl;
-	  si->listeners.erase(listeners->begin()+nbEvent);
+	  if (nbOfListeners==1 || sl == end)
+	    {
+	      si->listeners.erase(listeners->begin()+nbEvent);
+	    }
+	  else
+	    {
+	      listeners->at(nbEvent)=  listeners->back();
+	      listeners->erase( listeners->end()-1);
+	    }
+	  _loadEventsFromShape(_currentShape+1);
+	  _controller->setMessage("Événement supprimé.");
 	}
-      else
-	{
-	  std::cout << "suppresion event milieu" << std::endl;
-	  listeners->at(nbEvent)=  listeners->back();
-	  listeners->erase( listeners->end()-1);
-	}
-      _loadEventsFromShape(_currentShape+1);
-      _controller->setMessage("Événement supprimé.");
-    }
-  else{
-    std::cout << "rien a supprimer" << std::endl;
-  }
     }
 }
 void
@@ -103,52 +96,50 @@ EventView::_loadEventsFromShape(int index)
   _currentShape = index-1;
   if (_currentShape>=0)
     {
-  TrialInfo* ti = _getCurrentTrial();
-  ShapeInfo* si = &ti->shapes.at(_currentShape);
-  ShapeListener sl;
-  int ii = 1;
-  stringstream ss (stringstream::in | stringstream::out);
+      TrialInfo* ti = _getCurrentTrial();
+      ShapeInfo* si = &ti->shapes.at(_currentShape);
+      ShapeListener sl;
+      int ii = 1;
+      stringstream ss (stringstream::in | stringstream::out);
 
-  for (ii= _comboEvents->count(); ii!=0; --ii)
-    {
-      _comboEvents->removeItem(ii);
-    }
-  foreach(sl, si->listeners)
-    {
-      ss << sl.key 
-	 << " " 
-	 << sl.coef 
-	 << " " 
-	 << sl.gain;
-      _comboEvents->addItem(ss.str().c_str());	
-      ss.str("");
-    }
+      for (ii= _comboEvents->count(); ii!=0; --ii)
+	{
+	  _comboEvents->removeItem(ii);
+	}
+      foreach(sl, si->listeners)
+	{
+	  ss << sl.key 
+	     << " " 
+	     << sl.coef 
+	     << " " 
+	     << sl.gain;
+	  _comboEvents->addItem(ss.str().c_str());	
+	  ss.str("");
+	}
     }
 }
 void
 EventView::_save()
 {
- if (_currentShape>=0)
+  if (_currentShape>=0)
     {
-  std::cout << "Je dois enregistrer " << _currentShape <<std::endl;
- 
+      TrialInfo* ti = _getCurrentTrial();
+      ShapeInfo* si = &ti->shapes.at(_currentShape);
+      ShapeListener sl;
 
-  TrialInfo* ti = _getCurrentTrial();
-  ShapeInfo* si = &ti->shapes.at(_currentShape);
-  ShapeListener sl;
-  sl.key = _keyField->text().toInt();
-  sl.coef = _coefField->text().toFloat();
-  sl.gain = _comboType->itemText(_comboType->currentIndex()).toUtf8().constData();
+      sl.key = _keyField->text().toInt();
+      sl.coef = _coefField->text().toFloat();
+      sl.gain = _comboType->itemText(_comboType->currentIndex()).toUtf8().constData();
 
-  si->listeners.push_back(sl);
-  _loadEventsFromShape(_currentShape+1);
-  _reset();
-  _controller->setMessage("Événement ajouté à la forme");
+      si->listeners.push_back(sl);
+      _loadEventsFromShape(_currentShape+1);
+      _reset();
+      _controller->setMessage("Événement ajouté à la forme");
     }
- else
-   {
-     QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une forme"));
-   }
+  else
+    {
+      QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une forme"));
+    }
 }
 
 void
@@ -157,19 +148,15 @@ EventView::loadComboShapes()
   
   if (_controller->trialExists())
     {
-      std::cout << "index (from create shape) " <<  _controller->getIndexTrial()<< std::endl;
       TrialInfo* ti =_getCurrentTrial();
       ShapeInfo si;
       QString str;
 
       // Reset combo box
       int ii = 1;
-      std::cout <<_comboShapes->count() << std::endl;
       for (ii= _comboShapes->count(); ii!=0; --ii){
-	std::cout << ii <<_comboShapes->count() <<  std::endl;
 	_comboShapes->removeItem(ii);
       }
-      std::cout <<_comboShapes->count() << std::endl;
       foreach (si, ti->shapes)
 	{
 	  str = si.attributes[0].c_str();

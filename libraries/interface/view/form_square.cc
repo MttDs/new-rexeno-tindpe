@@ -87,17 +87,14 @@ FormSquare::_save()
       si.attributes.push_back(_bField->text().toUtf8().constData());
       si.attributes.push_back(_opacityField->text().toUtf8().constData());
       si.attributes.push_back(_sizeField->text().toUtf8().constData());
-     
-      std::cout << "add square" << std::endl;
+
       if (_index!=-1)
 	{
-	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
 	  _controller->setMessage("La forme a bien été modifiée");
 	}
       else
 	{
-	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
 	  _controller->setMessage("Nouvelle forme ajoutée!");
 	}
@@ -113,19 +110,18 @@ void
 FormSquare::fillForm(ShapeInfo* si, int index)
 {
   _index = index;
-  std::cout << "fill form index " << _index << std::endl;
-  QString str;
-  _nameField->setText(str = si->attributes[0].c_str());
-  _xField->setText(str = si->attributes[1].c_str());
-  _yField->setText(str = si->attributes[2].c_str());
-  _zField->setText(str = si->attributes[3].c_str());
-  _frameStartField->setText(str = si->attributes[4].c_str());
-  _frameEndField->setText(str = si->attributes[5].c_str());
-  _rField->setText(str = si->attributes[6].c_str());
-  _gField->setText(str = si->attributes[7].c_str());
-  _bField->setText(str = si->attributes[8].c_str());
-  _opacityField->setText(str = si->attributes[9].c_str());
-  _sizeField->setText(str = si->attributes[10].c_str());
+
+  _nameField->setText(si->attributes[0].c_str());
+  _xField->setText(si->attributes[1].c_str());
+  _yField->setText( si->attributes[2].c_str());
+  _zField->setText(si->attributes[3].c_str());
+  _frameStartField->setText(si->attributes[4].c_str());
+  _frameEndField->setText(si->attributes[5].c_str());
+  _rField->setText(si->attributes[6].c_str());
+  _gField->setText(si->attributes[7].c_str());
+  _bField->setText(si->attributes[8].c_str());
+  _opacityField->setText(si->attributes[9].c_str());
+  _sizeField->setText(si->attributes[10].c_str());
 
   _buttonDelete->show();
 }

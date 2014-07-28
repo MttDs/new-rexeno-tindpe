@@ -149,7 +149,7 @@ public:
     statusBar->showMessage("Ready", 4000);
     MainWindow->setStatusBar(statusBar);
     retranslateUi(MainWindow);
-    
+
     InitLeftBar(leftWidget);
 
     QMetaObject::connectSlotsByName(MainWindow);
@@ -162,13 +162,13 @@ public:
   
     comboLabel = new QLabel("Editer la session:");
     nbSessions = new QLabel("Nombre de sessions:");
-    frequency = new QLabel("Rafraichissement de l'écran:");
-    screenWidth = new QLabel("Largeur de l'écran:");
-    screenHeight = new QLabel("Hauteur de l'écran:");
-    nbScreens = new QLabel("Nombre d'écran:");
-    nbTrials = new QLabel("Nombre d'essai:");
-    shuffle = new QLabel("Ordre d'affichage des sessions:");
-    saveLabel = new QLabel("Dossier de sauvegarde des données:");
+    frequency = new QLabel(QString::fromUtf8("Rafraichissement de l'écran:"));
+    screenWidth = new QLabel(QString::fromUtf8("Largeur de l'écran:"));
+    screenHeight = new QLabel(QString::fromUtf8("Hauteur de l'écran:"));
+    nbScreens = new QLabel(QString::fromUtf8("Nombre d'écran:"));
+    nbTrials = new QLabel(QString::fromUtf8("Nombre d'essai:"));
+    shuffle = new QLabel(QString::fromUtf8("Ordre d'affichage des sessions:"));
+    saveLabel = new QLabel(QString::fromUtf8("Dossier de sauvegarde des données:"));
 
     frequencyField = new QLabel("");
     screenWidthField = new QLabel("");
@@ -180,6 +180,7 @@ public:
     nbSessionsField = new QLabel("0");
 
     comboTrials = new QComboBox;
+    comboTrials->setMaxVisibleItems(10);
     comboTrials->addItem("/");
 
     leftWidgetLayout->addWidget(new QLabel("Les sessions:"));

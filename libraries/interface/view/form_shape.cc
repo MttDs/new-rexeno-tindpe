@@ -71,20 +71,18 @@ FormShape::_deleteShape()
   ShapeInfo* lastSi = &shapes->back();
   int nbOfShape = shapes->size();
 
-  std::cout << "delete index => " << _index << std::endl;
   if (_index!=-1)
     {
     if (nbOfShape==1 || si == lastSi)
       {
-	  std::cout << 1 << std::endl;
 	  shapes->erase(shapes->begin()+_index);
       }
     else
       {
-	  std::cout << 2 << std::endl;
 	  shapes->at(_index)= shapes->back();
 	  shapes->erase(shapes->end()-1);
       }
+
     _controller->setMessage("Forme supprimée!");
     reset();
     afterSave();

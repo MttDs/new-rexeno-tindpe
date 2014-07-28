@@ -17,7 +17,7 @@ Model::save()
 {
 
   _recorder = new Recorder("../../files/", 0);
-  std::cout << "save!" << std::endl;
+
   _recorder->AddFile("definition.txt");
 
   _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "definition.txt");

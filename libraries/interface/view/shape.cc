@@ -62,14 +62,9 @@ ShapeView::_showFormShape(int index)
   index = index-1;
   if (index>=0)
     {
-
       FormShape *sf = NULL; 
       sf = _formShapes.at(index);
-
-      std::cout << "show shape" << std::endl;
-
       _formShapes.at(index)->activate();
-      std::cout << "current index => " << index << std::endl;
       _lastIndex = index;
     }
 }
@@ -88,8 +83,6 @@ ShapeView::_hideFormShape(int index)
       FormShape *sf = NULL; 
       sf = _formShapes.at(_lastIndex);
       _formShapes.at(_lastIndex)->inactivate();
-
-      std::cout << "last => " << _lastIndex << " current => " << index << std::endl;
     }
 }
 /**
@@ -104,20 +97,18 @@ ShapeView::loadComboShapesEdit()
   
   if (_controller->trialExists())
     {
-      std::cout << "index (from create shape) " <<  _controller->getIndexTrial()<< std::endl;
       TrialInfo* ti =_getCurrentTrial();
       ShapeInfo si;
       QString str;
 
       // Reset combo box
       int ii = 1;
-      std::cout <<_comboShapesEdit->count() << std::endl;
+
       for (ii= _comboShapesEdit->count(); ii!=0; --ii)
 	{
-	  std::cout << ii <<_comboShapesEdit->count() <<  std::endl;
 	  _comboShapesEdit->removeItem(ii);
 	}
-      std::cout <<_comboShapesEdit->count() << std::endl;
+
       foreach (si, ti->shapes)
 	{
 	  str = si.attributes[0].c_str();
@@ -132,7 +123,6 @@ ShapeView::loadComboShapesEdit()
 void
 ShapeView::fillFormShape(int index)
 {
-  std::cout << index-1 << std::endl;
   if (index-1>=0){
     _comboShapes->setEnabled(false);
   }
@@ -157,7 +147,7 @@ ShapeView::fillFormShape(int index)
 	  foreach(fs,  _formShapes)
 	    {
 	      s = fs->getType();
-	      std::cout << "2 "<< si->name << " " << s << std::endl;
+
 	      if (strcmp(si->name.c_str(), s.c_str())==0)
 		{
 		  posFormShape =ii;
@@ -169,8 +159,7 @@ ShapeView::fillFormShape(int index)
 	  foreach(siTmp, shapes)
 	    {
 	      s = siTmp.attributes[0];
-	      std::cout << "1 "<< si->attributes[0]  << " " << s << std::endl;
-	
+
 	      if (strcmp(si->attributes[0].c_str(), s.c_str())==0)
 		{
 		  posShape = ii;
@@ -178,14 +167,10 @@ ShapeView::fillFormShape(int index)
 		}
 	      ii++;
 	    }
-	  std::cout << "position de la shape" << posShape <<" position du form=> "<< posFormShape <<  std::endl;
+
 	  fs->fillForm(si, posShape);
 	  _hideFormShape(_lastIndex);
 	  _showFormShape(posFormShape+1); // todo
-	}
-      else
-	{
-	  std::cout << "impossible de trouver la forme demandé......." << std::endl;
 	}
     }
 }

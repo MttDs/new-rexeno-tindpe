@@ -92,7 +92,6 @@ Controller::_changeCurrentTrial(int index){
       _ui->showShape->setEnabled(false);
       _ui->showEvent->setEnabled(false);
     }
-  std::cout << "index trial (from controller) =>" << index << " " << _indexTrial << std::endl;
 
 }
 
@@ -105,13 +104,10 @@ Controller::_changeCurrentTrial(int index){
 void 
 Controller::_render(QString text)
 {
-  const char* name = NULL;
-  name = text.toUtf8();
-  std::cout << "name => " << name << std::endl;
   View *view = NULL;
-  view = _getView(text);
   QWidget* parent = _ui->mainWidget;
-  
+
+  view = _getView(text);
   if (parent!=0)
     {
       if (!view)
@@ -122,11 +118,6 @@ Controller::_render(QString text)
       view->beforeDisplay();
       view->show();
     }
-  else
-    {
-      std::cout << "ERROR!" << std::endl;
-    }
- 
 }
 
 /**
@@ -140,10 +131,9 @@ Controller::_getView(QString text)
 {
   View* view = NULL;
   vector<View*>::iterator it;
-  std::cout << _views.size() << std::endl;
+  
   for (it = _views.begin(); it != _views.end(); ++it)
     {
-      std::cout << (*it)->name << std::endl;
       if (strcmp((*it)->name,(text.toUtf8()))==0)
 	{
 	  view = (*it);	  
@@ -184,8 +174,7 @@ Controller::_updateLeftBar()
   _ui->shuffleField->setText(lexical_cast<string>(sessionInfo->shuffle).c_str());
   _ui->saveField->setText(lexical_cast<string>(sessionInfo->save).c_str());
   _ui->nbSessionsField->setText(lexical_cast<string>(sessionInfo->trials.size()).c_str());
-  std::cout << "left bar updated" << std::endl;
-
+ 
   //Reset view
 
   _ui->comboTrials->setCurrentIndex(0);
@@ -247,8 +236,6 @@ Controller::_loadFile()
   // bool r = configuration::CreateConfiguration("definition", conf);
   if (r)
     {
-      std::cout << "load definition file" << std::endl;
-      
       TrialInfo ti;
       QString str;
       foreach (ti, sessionInfo->trials)

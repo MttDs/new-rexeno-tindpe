@@ -7,7 +7,7 @@ ProtocoleView::ProtocoleView(QWidget *parent, Controller *c)
   name = "Protocole";
   _gridForm = new QGridLayout(this);
   _submit = new QPushButton("Creer le protocole");
-  //_gridForm->setStyleSheet("border-right: 1px solid blue;");
+
   _frequency = new QLabel(QString::fromUtf8("Rafraichissement de l'écran:"));
   _screenWidth = new QLabel(QString::fromUtf8("Largeur de l'écran:"));
   _screenHeight = new QLabel(QString::fromUtf8("Hauteur de l'écran:"));
@@ -63,7 +63,6 @@ ProtocoleView::_init()
 void 
 ProtocoleView::_save()
 {
-  std::cout << "save from create protocole" << std::endl;
   _controller->sessionInfo->frequency = _frequencyField->text().toInt(); 
   _controller->sessionInfo->width = _screenWidthField->text().toInt(); 
   _controller->sessionInfo->height = _screenHeightField->text().toInt();

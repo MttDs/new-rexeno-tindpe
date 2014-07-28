@@ -103,16 +103,13 @@ FormSphere::_save()
       si.attributes.push_back(_veloXField->text().toUtf8().constData());
       si.attributes.push_back(_veloZField->text().toUtf8().constData());
 
-      std::cout << "add sphere" << std::endl;
       if (_index!=-1)
 	{
-	  std::cout << "Je dois remplacer " << _index << std::endl;
 	  ti->shapes.at(_index) = si;
 	  _controller->setMessage("La forme a bien été modifiée");
 	}
       else
 	{
-	  std::cout << "add normal" << std::endl;
 	  ti->shapes.push_back(si);
 	  _controller->setMessage("Nouvelle forme ajoutée!");
 	}
@@ -128,22 +125,21 @@ void
 FormSphere::fillForm(ShapeInfo* si, int index)
 {
   _index = index;
-  std::cout << "fill form index " << _index << std::endl;
-  QString str;
-  _nameField->setText(str = si->attributes[0].c_str());
-  _minStartField->setText(str =(si->attributes[1].c_str()));
-  _maxStartField->setText(str =(si->attributes[2].c_str()));
-  _xField->setText(str =(si->attributes[3].c_str()));
-  _zField->setText(str =(si->attributes[4].c_str()));
-  _randomXField->setText(str =(si->attributes[5].c_str()));
-  _randomZField->setText(str =(si->attributes[6].c_str()));
-  _frameStartField->setText(str = si->attributes[7].c_str());
-  _frameEndField->setText(str = si->attributes[8].c_str());
-  _stacksField->setText(str =(si->attributes[9].c_str()));
-  _slicesField->setText(str =(si->attributes[10].c_str()));
-  _radiusField->setText(str =(si->attributes[11].c_str()));
-  _veloXField->setText(str =(si->attributes[12].c_str()));
-  _veloZField->setText(str =(si->attributes[13].c_str()));
+
+  _nameField->setText(si->attributes[0].c_str());
+  _minStartField->setText( si->attributes[1].c_str());
+  _maxStartField->setText(si->attributes[2].c_str());
+  _xField->setText(si->attributes[3].c_str());
+  _zField->setText(si->attributes[4].c_str());
+  _randomXField->setText(si->attributes[5].c_str());
+  _randomZField->setText(si->attributes[6].c_str());
+  _frameStartField->setText(si->attributes[7].c_str());
+  _frameEndField->setText(si->attributes[8].c_str());
+  _stacksField->setText(si->attributes[9].c_str());
+  _slicesField->setText(si->attributes[10].c_str());
+  _radiusField->setText(si->attributes[11].c_str());
+  _veloXField->setText(si->attributes[12].c_str());
+  _veloZField->setText(si->attributes[13].c_str());
 
   _buttonDelete->show();
 }
