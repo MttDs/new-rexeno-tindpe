@@ -45,8 +45,8 @@ Controller::~Controller()
 void
 Controller::_init()
 {  
-
-  QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(save()));
+  QObject::connect(_ui->save, SIGNAL(triggered()), _model, SLOT(checkAndSave()));
+  QObject::connect(_ui->save2, SIGNAL(triggered()), _model, SLOT(save()));
 
   QSignalMapper* signalMapper = new QSignalMapper(this);
 
@@ -243,7 +243,7 @@ Controller::_loadFile()
 						  );
 
 
-  // _reset();
+   _reset();
   bool r = configuration::CreateConfiguration(filename.toUtf8().constData(), *sessionInfo);
   // bool r = configuration::CreateConfiguration("definition", conf);
   if (r)
@@ -264,8 +264,7 @@ Controller::_loadFile()
 void 
 Controller::_reset()
 {
-  sessionInfo = NULL;
-  sessionInfo = new SessionInfo();
+  sessionInfo->trials.clear();
   int ii;
 
   for(ii=_ui->comboTrials->count(); ii>0 ; --ii)

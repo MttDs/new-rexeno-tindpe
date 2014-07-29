@@ -227,15 +227,3 @@ SessionView::~SessionView()
 {
 
 }
-
-
-/*
-  foreach(trial, trials)
-    {
-      if (trial.name==_nameField->text().toUtf8().constData())
-	{
-	  error=2;
-	  break;
-	}
-    }
-*/

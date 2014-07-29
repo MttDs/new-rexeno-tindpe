@@ -58,6 +58,7 @@ public:
   QAction *showShape;
   QAction *showEvent;
   QAction *save;
+  QAction *save2;
 
   // Left bar
 
@@ -96,8 +97,9 @@ public:
     showSession = new QAction("Session", MainWindow);
     showShape = new QAction("Formes", MainWindow);
     showEvent = new QAction(QString::fromUtf8("Événement"), MainWindow);
-    save = new QAction("Sauvegarder", MainWindow);
+    save = new QAction("Sauver", MainWindow);
     save->setShortcut(QKeySequence("Ctrl-S")); 
+    save2 = new QAction(QString::fromUtf8("Sauver sans vérifier"), MainWindow);
 
     menuFile = new QMenu("&File");
     menuFile->addAction(newDef);
@@ -117,6 +119,7 @@ public:
     mainToolBar->addAction(showShape);
     mainToolBar->addAction(showEvent);
     mainToolBar->addAction(save);
+    mainToolBar->addAction(save2);
 
     MainWindow->addToolBar(mainToolBar);
 
