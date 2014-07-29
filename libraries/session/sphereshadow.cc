@@ -40,7 +40,6 @@ SphereShadow::Display()
       glTranslated(_x,0,_z);
 
       glDisable(GL_LIGHTING);
-
       glBegin(GL_TRIANGLES);
 
       for (ii=0; ii<=_stacks; ii++)
@@ -59,7 +58,6 @@ SphereShadow::Display()
 	}
 
       glEnd();
-
       glEnable(GL_LIGHTING); 
       glPopMatrix();
     }

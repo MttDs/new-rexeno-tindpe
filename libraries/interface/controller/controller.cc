@@ -218,6 +218,11 @@ Controller::deleteItem()
   _ui->comboTrials->removeItem(_indexTrial+1);
 }
 
+/**
+   @str = libelle du message
+
+   note: affiche un message dans la 'statusBar'
+ **/
 void 
 Controller::setMessage(const char* str)
 {
@@ -261,6 +266,10 @@ Controller::_loadFile()
 
 }
 
+/**
+   note: Remet a zero la session et vide la liste des sessions
+   disponible
+ **/
 void 
 Controller::_reset()
 {

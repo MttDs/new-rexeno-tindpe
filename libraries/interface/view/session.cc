@@ -208,6 +208,9 @@ SessionView::_delete()
     }
 }
 
+/**
+   note: vide le formulaire
+ **/
 void
 SessionView::reset()
 {

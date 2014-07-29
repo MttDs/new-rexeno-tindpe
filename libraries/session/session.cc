@@ -308,14 +308,14 @@ Session::displayHeader()
   if (!initialized())
     {				
 
+      glClear (GL_DEPTH_BUFFER_BIT);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glDisable (GL_LIGHTING);
+
       if (!_initShape)
 	{
 	  initShape();
 	}
-
-      glClear (GL_DEPTH_BUFFER_BIT);
-      glClear(GL_COLOR_BUFFER_BIT);
-      glDisable (GL_LIGHTING);
       
       glBegin(GL_QUADS);
       glColor3ub(255, 155, 255);    
@@ -442,8 +442,8 @@ Session::run(int argc,
   glutCreateWindow((char*)"Time in Dynamic Perspective");
 
   glutGameModeString(setup->gameModeString().c_str());
-  //  glutEnterGameMode();
-  //glutFullScreen();
+  glutEnterGameMode();
+  glutFullScreen();
   glutSetCursor(GLUT_CURSOR_NONE);
   glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
   glutReshapeFunc(&reshape);

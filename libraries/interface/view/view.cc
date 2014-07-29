@@ -31,7 +31,7 @@ View::_getCurrentTrial()
 
 
 /**
-   Execute une ou plusieurs tache(s)
+   note: Execute 0, une ou plusieurs tache(s)
    avant l'affichage de la vue
 **/
 void
@@ -40,6 +40,10 @@ View::beforeDisplay()
 
 }
 
+/**
+   note: parcours l'ensemble des 'QLineEdit' et verifi
+   qu'aucun champs n'est vide
+**/
 bool 
 View::_isValid()
 {

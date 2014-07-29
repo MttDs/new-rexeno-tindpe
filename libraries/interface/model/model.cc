@@ -11,6 +11,11 @@ Model::~Model()
 {
 
 }
+/**
+   note: Verifie si chacune des sessions porte un nom !=
+   et si chacune des formes (de chaque session) porte un 
+   nom !=
+ **/
 
 bool
 Model::_isValid()
@@ -29,6 +34,11 @@ Model::_isValid()
   int ii, jj, kk, ll;
   ii = jj = kk = ll = 0;
 
+  string test, test1;
+  vector<string>::iterator it, it2;
+  bool b = true;
+
+  // Recherche si deux sessions ont le meme nom
   foreach(trial, trials)
     {
       foreach(trial2, trials2)
@@ -41,6 +51,8 @@ Model::_isValid()
 	}
       jj=0;
       ii++;
+
+      // Recherche si deux formes ont le meme nom
 
       shapes = trial.shapes;
       foreach(shape, shapes)
@@ -59,9 +71,8 @@ Model::_isValid()
       kk=0;
     }
 
-  string test, test1;
-  vector<string>::iterator it, it2;
-  bool b = true;
+  // Enleve les redondances (vecteur nom des sessions)
+
   for(it=trialName.begin();it!=trialName.end(); ++it)
     {
       for (it2=tmp.begin(); it2!=tmp.end(); ++it2)
@@ -78,16 +89,15 @@ Model::_isValid()
 	}
       b=true;
     }
-  trialName = tmp;
-  /* std::cout << "1 >"<< std::endl;
-     foreach(test1, trialName)
-     {
-     std::cout << test1 << ", ";
-     }
-     std::cout << std::endl;*/
 
+  trialName = tmp;
   tmp.clear();
+
   b = true;
+  
+  // Enleve les redondances (vecteur nom des parent ayant une ou
+  // plusieurs formes avec le meme nom
+
   for(it=parentName.begin();it!=parentName.end(); ++it)
     {
       for (it2=tmp.begin(); it2!=tmp.end(); ++it2)
@@ -104,14 +114,11 @@ Model::_isValid()
 	}
       b=true;
     }
-  parentName = tmp;
-  /* std::cout << "2 >"<< std::endl;
 
-     foreach(test, parentName)
-     {
-     std::cout << test << ", ";
-     }
-     std::cout << std::endl;*/
+  parentName = tmp;
+
+  // Prepare le message
+
   string str = "";
   b = true;
   if (parentName.size()!=0)
@@ -136,25 +143,30 @@ Model::_isValid()
        
     }
   _message = "Impossible: "+ str;
+
   return b;
 }
+
+/**
+   note: Note dans le fichier "definition" la configuration
+ **/
 void
 Model::save()
 {
 
   _recorder = new Recorder("files/", 0);
 
-  _recorder->AddFile("definition.txt");
+  _recorder->AddFile("definition");
 
-  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "definition.txt");
-  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "definition.txt");
-  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "definition.txt");
-  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "definition.txt");
-  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "definition.txt");
-  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "definition.txt");
+  _recorder->Save("frequency= "+ lexical_cast<string>(sessionInfo->frequency), "definition");
+  _recorder->Save("width= "+ lexical_cast<string>(sessionInfo->width), "definition");
+  _recorder->Save("height= "+ lexical_cast<string>(sessionInfo->height), "definition");
+  _recorder->Save("nb_screens= "+ lexical_cast<string>(sessionInfo->nb_screens), "definition");
+  _recorder->Save("nb_trials= "+ lexical_cast<string>(sessionInfo->nb_trials), "definition");
+  _recorder->Save("shuffle= "+ lexical_cast<string>(sessionInfo->shuffle), "definition");
   if (sessionInfo->save != "")
     {
-      _recorder->Save("save= " + sessionInfo->save, "definition.txt");
+      _recorder->Save("save= " + sessionInfo->save, "definition");
     }
   TrialInfo ti;
   ShapeInfo si;
@@ -176,7 +188,7 @@ Model::save()
 		      ti.attributes[6]+" "+
 		      ti.attributes[7]+" "+
 		      ti.attributes[8]
-		      , "definition.txt");
+		      , "definition");
       foreach (si, ti.shapes)
 	{
 	  //Shape
@@ -194,7 +206,7 @@ Model::save()
 		  str += " " + (*it) + " ";
 		}
 	    }
-	  _recorder->Save(str, "definition.txt");
+	  _recorder->Save(str, "definition");
 
 	  //Event
 
@@ -208,15 +220,18 @@ Model::save()
 			      + ss.str() +
 			      " "
 			      + lexical_cast<string>(sl.gain)+ 
-			      " ", "definition.txt");
+			      " ", "definition");
 	    }
 	}
-      _recorder->Save(";", "definition.txt");
+      _recorder->Save(";", "definition");
     }
   QMessageBox::information(0, "Information", QString::fromUtf8("Fichier enregistré dans le dossier 'files/'"));
 
 }
-
+/**
+   note: Note dans le fichier "definition" la configuration 
+   apres avoir verifie la validité de la configuration
+ **/
 void
 Model::checkAndSave()
 {

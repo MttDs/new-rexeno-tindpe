@@ -29,7 +29,9 @@ ShapeView::ShapeView(QWidget *parent, Controller *c)
   _init();
 
 }
-
+/**
+   note: supprime les formulaires
+ **/
 ShapeView::~ShapeView()
 {
   FormShape *fs = NULL;
@@ -118,7 +120,11 @@ ShapeView::loadComboShapesEdit()
 }
 
 /** 
-    note: todo
+    note: affiche et rempli le formulaire en fonction de l'index
+    recupere la position de la forme demandee ('index') dans le 
+    vecteur des formulaires (_formShapes) 
+    recupere la position dans le vecteur de shapesInfo (shapes)
+    cache le precedent formulaire (_lastIndex)
 **/
 void
 ShapeView::fillFormShape(int index)

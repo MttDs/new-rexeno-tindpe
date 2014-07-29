@@ -42,24 +42,26 @@ Plan::~Plan()
 
 }
 
-void Plan::Display()
+void 
+Plan::Display()
 {
 
   glBindTexture(GL_TEXTURE_2D, _texture[0]);
   glTranslated(_x->value,(_y->value-0.01),_z->value);
+
   glBegin(GL_QUADS);
-
   glNormal3f(0.0f,0.0f,1.0f);
-
-  glTexCoord2i(0.0f,0.0f);glVertex3f(-*_height,0.0f, -*_width);
-  glTexCoord2i(*_repeat,0.0f);glVertex3f(*_height,0.0f, -*_width);
-  glTexCoord2i(*_repeat,*_repeat);glVertex3f(*_height,0.0f, *_width);
-  glTexCoord2i(0.0f,*_repeat);glVertex3f(-*_height,0.0f, *_width);
+  
+  glTexCoord2f(0.0f,0.0f); glVertex3f(-_height->value, 0,-_width->value);  
+  glTexCoord2f(0.0f,_repeat->value); glVertex3f(_height->value, 0, -_width->value);    
+  glTexCoord2f(_repeat->value,_repeat->value); glVertex3f(_height->value, 0,_width->value); 
+  glTexCoord2f(_repeat->value, 0.0f); glVertex3f(-_height->value, 0,_width->value);  
+ 
   glEnd();
-
   glBindTexture(GL_TEXTURE_2D, 0);
 
 }
+
 string
 Plan::toString()
 {
