@@ -146,12 +146,12 @@ EventView::_save()
 	    }
 	  else
 	    {
-	      QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une session."));
+	      QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionner une session."));
 	    }
 	}
       else
 	{
-	  QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionnée une forme"));
+	  QMessageBox::warning(0, tr("Informations"), QString::fromUtf8("Impossible, vous devez selectionner une forme"));
 	}
     }
   else
